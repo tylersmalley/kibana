@@ -10,6 +10,8 @@ import FilterBarLibExtractTimeFilterProvider from 'ui/filter_bar/lib/extract_tim
 import FilterBarLibFilterOutTimeBasedFilterProvider from 'ui/filter_bar/lib/filter_out_time_based_filter';
 import FilterBarLibChangeTimeFilterProvider from 'ui/filter_bar/lib/change_time_filter';
 import FilterBarQueryFilterProvider from 'ui/filter_bar/query_filter';
+import filterEditor from 'ui/filter_editor/filter_editor';
+
 import uiModules from 'ui/modules';
 var module = uiModules.get('kibana');
 

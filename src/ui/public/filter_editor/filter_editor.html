@@ -1,0 +1,31 @@
+<h1>Filter Editor</h1>
+
+<input ng-model="filter.bool.should[0].match.agent.query" />
+
+<div class="filter-editor-clauses">
+  <div ng-if="filter.bool" class="filter-editor-clause" ng-repeat="(clause, expressions) in filter.bool">
+    <div class="filter-editor-expression" ng-repeat="expression in expressions">
+      <div ng-repeat="(fieldName, value) in expression.match">
+        <div class="form-group">
+          <select ng-model="fieldName">
+            <option ng-repeat="field in fields" value="{{field.name}}">
+              {{field.name}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <select ng-model="clause" ng-change="changeClause('{{clause}}', clause, expression)">
+            <option value="must">must</option>
+            <option value="must_not">must not</option>
+            <option value="should">should</option>
+          </select> be
+        </div>
+
+        <div class="form-group">
+          <input ng-model="value.query" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
