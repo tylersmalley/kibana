@@ -7,8 +7,6 @@ import IndexPatternsFieldListProvider from 'ui/index_patterns/_field_list';
 import uiModules from 'ui/modules';
 var module = uiModules.get('kibana');
 
-// TODO: ability to add filter
-// TODO: ability to change clause
 // TODO: fade in/out filters when chang clause
 // TODO: fields should be consistant with list in discover
 // TODO: auto-complete for query

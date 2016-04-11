@@ -1,7 +1,29 @@
 filter-editor {
   display: flex;
-  
-  .filter-editor-clause {
+  color: @white;
+
+  .filter-editor-clauses {
     display: flex;
+  }
+
+  .filter-editor-clause {
+    display: inline-block;
+    width: 120px;
+  }
+
+  .filter-editor-expression {
+    background-color: @kibanaBlue3;
+    margin: 0 6px 6px 0;
+    padding: 6px;
+  }
+
+  .filter-editor-add {
+    align-items: center;
+    background-color: @kibanaGreen1;
+    display: flex;
+    font-size: 3rem;
+    justify-content: center;
+    margin: 0 6px 6px 0;
+    width: 50px;
   }
 }
