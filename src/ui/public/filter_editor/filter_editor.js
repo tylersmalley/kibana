@@ -7,12 +7,12 @@ import IndexPatternsFieldListProvider from 'ui/index_patterns/_field_list';
 import uiModules from 'ui/modules';
 var module = uiModules.get('kibana');
 
-// TODO: button to add filter
+// TODO: ability to add filter
+// TODO: ability to change clause
 // TODO: fade in/out filters when chang clause
 // TODO: fields should be consistant with list in discover
 // TODO: auto-complete for query
 // TODO: fix consistancy in JSON editor (query not triggering update)
-
 
 /**
  * Notes:
@@ -64,30 +64,38 @@ module.directive('filterEditor', function ($route, Private) {
       /**
        * Resets expression query on field change
        */
-      $scope.changeField = function (fromField, toField, expression) {
-        // resets query
-        expression.query = '';
+      $scope.changeField = function (fromField, toField, filter) {
 
+        ensureBoolFilters();
+
+        filter.match[toField] = filter.match[fromField];
+        delete filter.match[fromField];
+
+        // resets query
+        filter.match[toField].query = '';
       };
 
-      $scope.addClause = function () {
+      $scope.add = function () {
+        let expression = { match: {}};
         let clauses;
-        $scope.filter = boolFilters();
+
+        ensureBoolFilters();
 
         clauses = Object.keys($scope.filter.bool);
-        window.filter = $scope.filter;
-        // get last clause
+        expression.match[$scope.fields[0].name] = { query: '', type: 'phrase' };
 
-        $scope.filter.bool[clauses[clauses.length - 1]].push({
-          match: {}
-        });
+        $scope.filter.bool[clauses[clauses.length - 1]].push(expression);
+      };
+
+      $scope.remove = function (clause, index) {
+        delete $scope.filter.bool[clause][index];
       };
 
       /**
        * @returns {object}
        */
 
-      function boolFilters() {
+      function ensureBoolFilters() {
 
         /**
          * Normalize
@@ -97,7 +105,7 @@ module.directive('filterEditor', function ($route, Private) {
          */
 
         if ($scope.filter.query) {
-          return {
+          $scope.filter = {
             bool: {
               should: [
                 $scope.filter.query
@@ -105,16 +113,7 @@ module.directive('filterEditor', function ($route, Private) {
             }
           };
         }
-
-        if ($scope.filter.bool) {
-          return $scope.filter;
-        }
-
-        console.warn('only support for bool compound queries');
       };
-      //
-      // window.boolFilters = $scope.boolFilters;
-      // console.log($scope.boolFilters);
     }
   };
 });

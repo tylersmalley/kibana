@@ -1,9 +1,15 @@
-<div ng-if="filter.bool" class="filter-editor-clause" ng-repeat="(clause, expressions) in filter.bool">
-  <div class="filter-editor-expression" ng-repeat="expression in expressions">
+<div
+  ng-if="filter.bool"
+  ng-repeat="(clause, expressions) in filter.bool"
+  class="filter-editor-clause">
+
+  <div ng-repeat="expression in expressions" class="filter-editor-expression">
     <div ng-repeat="(fieldName, value) in expression.match">
-      in expression.match
       <div class="form-group">
-        <select ng-model="fieldName" ng-change="changeField('{{field}}', field, value)">
+        <select
+          ng-model="fieldName"
+          ng-change="changeField('{{fieldName}}', fieldName, expression)">
+
           <option ng-repeat="field in fields" value="{{field.name}}">
             {{field.name}}
           </option>
@@ -11,7 +17,10 @@
       </div>
 
       <div class="form-group">
-        <select ng-model="clause" ng-change="changeClause('{{clause}}', clause, expression)">
+        <select
+          ng-model="clause"
+          ng-change="changeClause('{{clause}}', clause, expression)">
+
           <option value="must">must</option>
           <option value="must_not">must not</option>
           <option value="should">should</option>
@@ -21,10 +30,14 @@
       <div class="form-group">
         <input ng-model="value.query" />
       </div>
+
+      <div ng-click="remove(clause, $parent.$index)">
+        remove
+      </div>
     </div>
   </div>
 </div>
 
-<div ng-click="addClause()">
+<div ng-click="add()">
   Add
 </div>
