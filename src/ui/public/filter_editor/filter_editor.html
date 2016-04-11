@@ -1,6 +1,7 @@
 <div ng-if="filter.bool" class="filter-editor-clause" ng-repeat="(clause, expressions) in filter.bool">
   <div class="filter-editor-expression" ng-repeat="expression in expressions">
     <div ng-repeat="(fieldName, value) in expression.match">
+      in expression.match
       <div class="form-group">
         <select ng-model="fieldName" ng-change="changeField('{{field}}', field, value)">
           <option ng-repeat="field in fields" value="{{field.name}}">

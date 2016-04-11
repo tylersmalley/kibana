@@ -67,13 +67,14 @@ module.directive('filterEditor', function ($route, Private) {
       $scope.changeField = function (fromField, toField, expression) {
         // resets query
         expression.query = '';
+
       };
 
       $scope.addClause = function () {
         let clauses;
         $scope.filter = boolFilters();
 
-        clauses = Object.keys(filter.bool)
+        clauses = Object.keys($scope.filter.bool);
         window.filter = $scope.filter;
         // get last clause
 
