@@ -1,40 +1,46 @@
 filter-editor {
   display: flex;
-  color: @white;
+  color: @black;
   flex-wrap: wrap;
 
-  .filter-editor-clauses {
-    display: flex;
-    flex-wrap: wrap;
+  .filter-editor-filter {
+    background-color: @kibanaGray6;
+    border-radius: 2px;
+    display: inline-block;
+    margin: 0 6px 6px 0;
+    padding: 6px;
+    width: 200px;
+
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .filter-editor-must .filter-editor-clause {
+    border-color: @kibanaGreen2;
+  }
+
+  .filter-editor-must_not .filter-editor-clause {
+    border-color: @kibanaRed2;
   }
 
   .filter-editor-clause {
+    border-color: @kibanaYellow2;
     display: inline-block;
-    width: 120px;
+    transition: border-color 1s ease;
+    width: 140px;
   }
 
   .filter-editor-fieldname {
     display: flex;
   }
 
-  .filter-editor-expression {
-    background-color: @kibanaBlue3;
-    margin: 0 6px 6px 0;
-    padding: 6px;
-
-    opacity: 1;
-    transition: opacity 2s ease-in-out;
-    -moz-transition: opacity 2s ease-in-out;
-    -webkit-transition: opacity 2s ease-in-out;
-
-    .form-group:last-child {
-      margin-bottom: inherit;
-    }
-  }
-
   .filter-editor-add {
     align-items: center;
     background-color: @kibanaGreen1;
+    border-radius: 2px;
+    color: @white;
     display: flex;
     font-size: 2em;
     justify-content: center;
@@ -44,7 +50,7 @@ filter-editor {
 
   .filter-editor-remove {
     align-items: center;
-    color: @kibanaGray5;
+    color: @kibanaRed1;
     display: flex;
     font-size: 1.5em;
     justify-content: center;

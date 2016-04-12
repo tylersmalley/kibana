@@ -1,42 +1,36 @@
 <div
-  ng-if="filter.bool"
-  ng-repeat="(clause, expressions) in filter.bool"
-  class="filter-editor-clauses">
+  ng-repeat="filter in filters"
+  class="filter-editor-filter filter-editor-{{filter.clause}}">
 
-  <div ng-repeat="expression in expressions" class="filter-editor-expression">
-    <div ng-repeat="(fieldName, value) in expression.match">
-      <div class="form-group filter-editor-fieldname">
-        <select
-          ng-model="fieldName"
-          ng-change="changeField('{{fieldName}}', fieldName, expression)"
-          class="form-control filter-editor-fieldname">
+    <div class="form-group filter-editor-fieldname">
+      <select
+        ng-model="filter.field"
+        class="form-control filter-editor-fieldname">
 
-          <option ng-repeat="field in fields" value="{{field.name}}">
-            {{field.name}}
-          </option>
-        </select>
+        <option ng-repeat="field in fields" value="{{field.name}}">
+          {{field.name}}
+        </option>
+      </select>
 
-        <i
-          ng-click="remove(clause, $parent.$index)"
-          class="fa fa-trash-o filter-editor-remove"></i>
+      <i
+        ng-click="remove($index)"
+        class="fa fa-trash-o filter-editor-remove"></i>
 
-      </div>
+    </div>
 
-      <div class="form-group">
-        <select
-          ng-model="clause"
-          ng-change="changeClause('{{clause}}', clause, expression)"
-          class="form-control filter-editor-clause">
+    <div class="form-group">
+      <select
+        ng-model="filter.clause"
+        class="form-control filter-editor-clause">
 
-          <option value="must">must</option>
-          <option value="must_not">must not</option>
-          <option value="should">should</option>
-        </select> equal
-      </div>
+        <option value="must">must</option>
+        <option value="must_not">must not</option>
+        <option value="should">should</option>
+      </select> equal
+    </div>
 
-      <div class="form-group">
-        <input ng-model="value.query" class="form-control" />
-      </div>
+    <div class="form-group">
+      <input ng-model="filter.match.query" class="form-control" />
     </div>
   </div>
 </div>

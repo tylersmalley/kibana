@@ -1,5 +1,5 @@
 import angular from 'angular';
-import { pull, isEmpty } from 'lodash';
+import { debounce } from 'lodash';
 
 import template from 'ui/filter_editor/filter_editor.html';
 import IndexPatternsFieldListProvider from 'ui/index_patterns/_field_list';
@@ -7,7 +7,8 @@ import IndexPatternsFieldListProvider from 'ui/index_patterns/_field_list';
 import uiModules from 'ui/modules';
 var module = uiModules.get('kibana');
 
-// TODO: fade in/out filters when chang clause
+// TODO: able to persist
+// TODO: improved naming of filter/filters
 // TODO: fields should be consistant with list in discover
 // TODO: auto-complete for query
 // TODO: fix consistancy in JSON editor (query not triggering update)
@@ -39,82 +40,115 @@ module.directive('filterEditor', function ($route, Private) {
       });
 
       // TODO: remove me
-      window.scope = $scope;
+      window.$scope = $scope;
 
-      /**
-       * Changes the clause for the filter
-       *
-       * Valid clauses are: must, must_not, should, filter
-       */
-      $scope.changeClause = function (fromClause, toClause, filter) {
-        pull($scope.filter.bool[fromClause], filter);
+      $scope.filters = destructuredFilter();
 
-        // removes clause if there are no longer any filter
-        if (isEmpty($scope.filter.bool[fromClause])) {
-          delete $scope.filter.bool[fromClause];
-        }
+      $scope.$watch('filters', debounce(function (filters) {
+        $scope.filter = structuredFilter();
+      }, 10), true);
 
-        if ($scope.filter.bool[toClause] instanceof Array) {
-          // append since we already have the clause defined
-          $scope.filter.bool[toClause].push(filter);
-        } else {
-          $scope.filter.bool[toClause] = [filter];
-        }
-      };
-
-      /**
-       * Resets expression query on field change
-       */
-      $scope.changeField = function (fromField, toField, filter) {
-
-        ensureBoolFilters();
-
-        filter.match[toField] = filter.match[fromField];
-        delete filter.match[fromField];
-
-        // resets query
-        filter.match[toField].query = '';
-      };
+      // $scope.$watch('filter', debounce(function (filter) {
+      //   if (flag) {
+      //     flag = false;
+      //     return;
+      //   }
+      //
+      //   $scope.filters = destructuredFilter();
+      //   flag = true;
+      //
+      //   console.log('json filter changed', filter);
+      // }, 10), true);
 
       $scope.add = function () {
-        let expression = { match: {}};
-        let clauses;
-
-        ensureBoolFilters();
-
-        clauses = Object.keys($scope.filter.bool);
-        expression.match[$scope.fields[0].name] = { query: '', type: 'phrase' };
-
-        $scope.filter.bool[clauses[clauses.length - 1]].push(expression);
+        $scope.filters.push({
+          match: {
+            query: '',
+            type: 'phrase'
+          },
+          field: $scope.fields[0].name,
+          clause: 'must'
+        });
       };
 
-      $scope.remove = function (clause, index) {
-        $scope.filter.bool[clause].splice(index, 1);
+      $scope.remove = function (index) {
+        $scope.filters.splice(index, 1);
       };
 
       /**
-       * @returns {object}
+       * Converts:
+       *   agent: {
+       *     query: 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)',
+       *     type: 'phrase'
+       *   }
+       *
+       * to:
+       *   {
+       *     match: {
+       *       query: 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)',
+       *       type: 'phrase'
+       *     },
+       *     field: 'agent'
+       *   }
        */
 
-      function ensureBoolFilters() {
+      function transformMatch(match) {
+        const keys = Object.keys(match);
 
-        /**
-         * Normalize
-         *
-         * TODO: migrate to helper lib
-         * TODO: enforce array for type
-         */
+        // TODO: handle exception
+        const field = keys[0];
+
+        return {
+          match: match[field],
+          field: field,
+          clause: 'must'
+        };
+      }
+
+      function destructuredFilter() {
+        let filters = [];
+
+        console.time('destructuredFilter');
 
         if ($scope.filter.query) {
-          $scope.filter = {
-            bool: {
-              should: [
-                $scope.filter.query
-              ]
-            }
-          };
+          return [ transformMatch($scope.filter.query.match) ];
         }
-      };
+
+        if ($scope.filter.bool) {
+          Object.keys($scope.filter.bool).forEach(function forEachClause(clause) {
+            let filter = $scope.filter.bool[clause];
+
+            filter.forEach(function forEachFilter(filter) {
+              filters.push(Object.assign(transformMatch(filter.match), { clause: clause }));
+            });
+          });
+
+          console.timeEnd('destructuredFilter');
+
+          return filters;
+        }
+      }
+
+      function structuredFilter() {
+        let bool = {};
+
+        console.time('structuredFilter');
+
+        $scope.filters.forEach(function (filter) {
+          let match = {};
+
+          if (!bool.hasOwnProperty(filter.clause)) {
+            bool[filter.clause] = [];
+          }
+
+          match[filter.field] = filter.match;
+          bool[filter.clause].push({ match: match });
+        });
+
+        console.timeEnd('structuredFilter');
+
+        return { bool: bool };
+      }
     }
   };
 });
