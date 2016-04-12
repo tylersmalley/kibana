@@ -1,9 +1,11 @@
 filter-editor {
   display: flex;
   color: @white;
+  flex-wrap: wrap;
 
   .filter-editor-clauses {
     display: flex;
+    flex-wrap: wrap;
   }
 
   .filter-editor-clause {
@@ -11,19 +13,41 @@ filter-editor {
     width: 120px;
   }
 
+  .filter-editor-fieldname {
+    display: flex;
+  }
+
   .filter-editor-expression {
     background-color: @kibanaBlue3;
     margin: 0 6px 6px 0;
     padding: 6px;
+
+    opacity: 1;
+    transition: opacity 2s ease-in-out;
+    -moz-transition: opacity 2s ease-in-out;
+    -webkit-transition: opacity 2s ease-in-out;
+
+    .form-group:last-child {
+      margin-bottom: inherit;
+    }
   }
 
   .filter-editor-add {
     align-items: center;
     background-color: @kibanaGreen1;
     display: flex;
-    font-size: 3rem;
+    font-size: 2em;
     justify-content: center;
     margin: 0 6px 6px 0;
     width: 50px;
+  }
+
+  .filter-editor-remove {
+    align-items: center;
+    color: @kibanaGray5;
+    display: flex;
+    font-size: 1.5em;
+    justify-content: center;
+    width: 40px;
   }
 }

@@ -38,6 +38,9 @@ module.directive('filterEditor', function ($route, Private) {
         return 0;
       });
 
+      // TODO: remove me
+      window.scope = $scope;
+
       /**
        * Changes the clause for the filter
        *
@@ -86,7 +89,7 @@ module.directive('filterEditor', function ($route, Private) {
       };
 
       $scope.remove = function (clause, index) {
-        delete $scope.filter.bool[clause][index];
+        $scope.filter.bool[clause].splice(index, 1);
       };
 
       /**

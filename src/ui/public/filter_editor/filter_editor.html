@@ -5,16 +5,21 @@
 
   <div ng-repeat="expression in expressions" class="filter-editor-expression">
     <div ng-repeat="(fieldName, value) in expression.match">
-      <div class="form-group">
+      <div class="form-group filter-editor-fieldname">
         <select
           ng-model="fieldName"
           ng-change="changeField('{{fieldName}}', fieldName, expression)"
-          class="form-control">
+          class="form-control filter-editor-fieldname">
 
           <option ng-repeat="field in fields" value="{{field.name}}">
             {{field.name}}
           </option>
         </select>
+
+        <i
+          ng-click="remove(clause, $parent.$index)"
+          class="fa fa-trash filter-editor-remove"></i>
+
       </div>
 
       <div class="form-group">
@@ -26,20 +31,16 @@
           <option value="must">must</option>
           <option value="must_not">must not</option>
           <option value="should">should</option>
-        </select> be
+        </select> equal
       </div>
 
       <div class="form-group">
         <input ng-model="value.query" class="form-control" />
-      </div>
-
-      <div ng-click="remove(clause, $parent.$index)">
-        remove
       </div>
     </div>
   </div>
 </div>
 
 <div ng-click="add()" class="filter-editor-add">
-  &#43;
+  <i class="fa fa-fw fa-plus"></i>
 </div>
