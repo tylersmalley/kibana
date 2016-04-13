@@ -48,6 +48,8 @@ module.directive('filterBar', function (Private, Promise, getAppState) {
 
       $scope.state = getAppState();
 
+      $scope.editor = 'json';
+
       $scope.aceLoaded = function (editor) {
         editor.$blockScrolling = Infinity;
         var session = editor.getSession();

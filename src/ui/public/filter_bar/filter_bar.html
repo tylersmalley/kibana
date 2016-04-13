@@ -51,18 +51,27 @@
           class="form-control">
       </div>
 
-      <filter-editor filter="editingFilter.model"></filter-editor>
+      <ul class="nav nav-tabs">
+        <li role="editor" ng-class="{ active: editor === 'json' }">
+          <a ng-click="editor = 'json'">JSON</a>
+        </li>
+
+        <li role="editor" ng-class="{ active: editor === 'visual' }">
+          <a ng-click="editor = 'visual'">Visual</a>
+        </li>
+      </ul>
+
+      <filter-editor ng-if="editor === 'visual'" filter="editingFilter.model"></filter-editor>
 
       <div
         json-input
         require-keys="true"
+        ng-if="editor === 'json'"
         ui-ace="{
           mode: 'json',
           onLoad: aceLoaded
         }"
         ng-model="editingFilter.model"></div>
-
-      {{editingFilter.model}}
 
       <div class="form-group">
         <button class="btn btn-primary" ng-click="stopEditingFilter()">Cancel</button>
