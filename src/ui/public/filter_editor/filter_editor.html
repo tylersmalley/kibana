@@ -2,11 +2,8 @@
   ng-repeat="filter in filters"
   class="filter-editor-filter filter-editor-{{filter.clause}}">
 
-    <div class="form-group filter-editor-fieldname">
-      <select
-        ng-model="filter.field"
-        class="form-control filter-editor-fieldname">
-
+    <div class="form-group filter-editor-field">
+      <select ng-model="filter.field" class="form-control">
         <option ng-repeat="field in fields" value="{{field.name}}">
           {{field.name}}
         </option>
@@ -30,7 +27,10 @@
     </div>
 
     <div class="form-group">
-      <input ng-model="filter.match.query" class="form-control" />
+      <input
+        ng-model="filter.match.query"
+        class="form-control filter-editor-query" />
+
     </div>
   </div>
 </div>
