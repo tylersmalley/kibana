@@ -8,6 +8,7 @@ module.exports = function (grunt) {
         'webpackShims/**',
         'config/kibana.yml',
         '!src/**/__tests__/**',
+        'npm-shrinkwrap.json',
         '!src/testUtils/**',
         '!src/fixtures/**',
         '!src/plugins/devMode/**',
