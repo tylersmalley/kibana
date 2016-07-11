@@ -142,6 +142,7 @@
     "script-loader": "0.6.1",
     "semver": "5.1.0",
     "style-loader": "0.12.3",
+    "supertest": "1.2.0",
     "tar": "2.2.0",
     "trunc-html": "1.0.2",
     "trunc-text": "1.0.2",
@@ -197,7 +198,7 @@
     "mocha": "2.3.0",
     "ncp": "2.0.0",
     "nock": "2.10.0",
-    "npm": "2.15.8",
+    "npm": "3.9.5",
     "portscanner": "1.0.0",
     "simple-git": "1.37.0",
     "sinon": "1.17.2",
@@ -206,7 +207,7 @@
     "supertest-as-promised": "2.0.2"
   },
   "engines": {
-    "node": "4.4.7",
-    "npm": "2.15.8"
+    "node": "6.2.2",
+    "npm": "3.9.5"
   }
 }

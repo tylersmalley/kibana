@@ -1,3 +1,3 @@
 require('jquery');
-require('node_modules/gridster/dist/jquery.gridster.css');
-require('script!node_modules/gridster/dist/jquery.gridster');
+require('gridster/dist/jquery.gridster.css');
+require('script!gridster/dist/jquery.gridster');

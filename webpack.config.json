@@ -1,0 +1,236 @@
+{
+   "context":"/Users/tyler/Code/tylersmalley/kibana",
+   "entry":{
+      "console":"/Users/tyler/Code/tylersmalley/kibana/optimize/bundles/console.entry.js",
+      "kibana":"/Users/tyler/Code/tylersmalley/kibana/optimize/bundles/kibana.entry.js",
+      "sense-tests":"/Users/tyler/Code/tylersmalley/kibana/optimize/bundles/sense-tests.entry.js",
+      "status_page":"/Users/tyler/Code/tylersmalley/kibana/optimize/bundles/status_page.entry.js"
+   },
+   "devtool":"#eval",
+   "profile":false,
+   "output":{
+      "path":"/Users/tyler/Code/tylersmalley/kibana/optimize/bundles",
+      "filename":"[name].bundle.js",
+      "sourceMapFilename":"[file].map",
+      "publicPath":"/bzc/bundles/",
+      "devtoolModuleFilenameTemplate":"[absolute-resource-path]"
+   },
+   "recordsPath":"/Users/tyler/Code/tylersmalley/kibana/optimize/bundles/webpack.records",
+   "plugins":[
+      {
+         "plugins":[
+            {
+
+            }
+         ],
+         "types":[
+            "normal"
+         ]
+      },
+      {
+
+      },
+      {
+         "filename":"[name].style.css",
+         "options":{
+            "allChunks":true
+         },
+         "id":1
+      },
+      {
+         "chunkNames":"commons",
+         "filenameTemplate":"commons.bundle.js"
+      }
+   ],
+   "module":{
+      "loaders":[
+         {
+            "test":{
+
+            },
+            "loader":"/Users/tyler/Code/tylersmalley/kibana/node_modules/extract-text-webpack-plugin/loader.js?{\"omit\":1,\"extract\":true,\"remove\":true}!style!css?sourceMap!autoprefixer?sourceMap&{ \"browsers\": [\"last 2 versions\",\"> 5%\"] }!less?sourceMap&dumpLineNumbers=comments"
+         },
+         {
+            "test":{
+
+            },
+            "loader":"/Users/tyler/Code/tylersmalley/kibana/node_modules/extract-text-webpack-plugin/loader.js?{\"omit\":1,\"extract\":true,\"remove\":true}!style!css?sourceMap"
+         },
+         {
+            "test":{
+
+            },
+            "loader":"jade"
+         },
+         {
+            "test":{
+
+            },
+            "loader":"json"
+         },
+         {
+            "test":{
+
+            },
+            "loader":"raw"
+         },
+         {
+            "test":{
+
+            },
+            "loader":"url?limit=10000&name=[path][name].[ext]"
+         },
+         {
+            "test":{
+
+            },
+            "loader":"file?name=[path][name].[ext]"
+         },
+         {
+            "test":{
+
+            },
+            "loader":"rjs-repack?sourceMap"
+         },
+         {
+            "test":{
+
+            },
+            "exclude":[
+               {
+
+               },
+               {
+
+               },
+               {
+
+               },
+               "/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public/webpackShims/ace/",
+               "/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public/webpackShims/moment_src/moment/",
+               "/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public/src/sense_editor/mode/worker.js"
+            ],
+            "loader":"babel",
+            "query":{
+               "stage":1,
+               "nonStandard":false,
+               "optional":[
+                  "runtime"
+               ]
+            }
+         },
+         {
+            "test":{
+
+            },
+            "exclude":[
+               {
+
+               },
+               {
+
+               },
+               {
+
+               },
+               "/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public/webpackShims/ace/",
+               "/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public/webpackShims/moment_src/moment/",
+               "/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public/src/sense_editor/mode/worker.js"
+            ],
+            "loader":"babel",
+            "query":{
+               "nonStandard":true,
+               "stage":1,
+               "optional":[
+                  "runtime"
+               ]
+            }
+         },
+         {
+            "test":{
+
+            },
+            "loader":"imports?angular"
+         }
+      ],
+      "postLoaders":[
+
+      ],
+      "noParse":[
+         {
+
+         },
+         {
+
+         },
+         "/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public/webpackShims/ace/",
+         "/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public/webpackShims/moment_src/moment/",
+         "/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public/src/sense_editor/mode/worker.js"
+      ]
+   },
+   "resolve":{
+      "extensions":[
+         ".js",
+         ".json",
+         ".jsx",
+         ".less",
+         ""
+      ],
+      "postfixes":[
+         ""
+      ],
+      "modulesDirectories":[
+         "webpackShims",
+         "node_modules"
+      ],
+      "fallback":[
+         "/Users/tyler/Code/tylersmalley/kibana/webpackShims",
+         "/Users/tyler/Code/tylersmalley/kibana/node_modules"
+      ],
+      "loaderPostfixes":[
+         "-loader",
+         ""
+      ],
+      "root":"/Users/tyler/Code/tylersmalley/kibana",
+      "alias":{
+         "ui":"/Users/tyler/Code/tylersmalley/kibana/src/ui/public",
+         "test_harness":"/Users/tyler/Code/tylersmalley/kibana/src/test_harness/public",
+         "plugins/console":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/console/public",
+         "plugins/dev_mode":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/dev_mode/public",
+         "plugins/elasticsearch":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/elasticsearch/public",
+         "plugins/kbn_doc_views":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/kbn_doc_views/public",
+         "plugins/kbn_vislib_vis_types":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/kbn_vislib_vis_types/public",
+         "plugins/kibana":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/kibana/public",
+         "plugins/markdown_vis":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/markdown_vis/public",
+         "plugins/metric_vis":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/metric_vis/public",
+         "plugins/spy_modes":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/spy_modes/public",
+         "plugins/status_page":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/status_page/public",
+         "plugins/table_vis":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/table_vis/public",
+         "plugins/tests_bundle":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/tests_bundle/public",
+         "ng_mock$":"/Users/tyler/Code/tylersmalley/kibana/src/core_plugins/dev_mode/public/ng_mock",
+         "fixtures":"/Users/tyler/Code/tylersmalley/kibana/src/fixtures",
+         "test_utils":"/Users/tyler/Code/tylersmalley/kibana/src/test_utils",
+         "angular-mocks":"/Users/tyler/Code/tylersmalley/kibana/node_modules/angular-mocks/angular-mocks.js"
+      },
+      "unsafeCache":true
+   },
+   "resolveLoader":{
+      "alias":{
+         "autoprefixer":"/Users/tyler/Code/tylersmalley/kibana/node_modules/autoprefixer-loader/index.js",
+         "babel":"/Users/tyler/Code/tylersmalley/kibana/node_modules/babel-loader/index.js",
+         "css":"/Users/tyler/Code/tylersmalley/kibana/node_modules/css-loader/index.js",
+         "exports":"/Users/tyler/Code/tylersmalley/kibana/node_modules/exports-loader/index.js",
+         "expose":"/Users/tyler/Code/tylersmalley/kibana/node_modules/expose-loader/index.js",
+         "file":"/Users/tyler/Code/tylersmalley/kibana/node_modules/file-loader/index.js",
+         "imports":"/Users/tyler/Code/tylersmalley/kibana/node_modules/imports-loader/index.js",
+         "jade":"/Users/tyler/Code/tylersmalley/kibana/node_modules/jade-loader/index.js",
+         "json":"/Users/tyler/Code/tylersmalley/kibana/node_modules/json-loader/index.js",
+         "less":"/Users/tyler/Code/tylersmalley/kibana/node_modules/less-loader/index.js",
+         "raw":"/Users/tyler/Code/tylersmalley/kibana/node_modules/raw-loader/index.js",
+         "rjs-repack":"/Users/tyler/Code/tylersmalley/kibana/node_modules/rjs-repack-loader/index.js",
+         "script":"/Users/tyler/Code/tylersmalley/kibana/node_modules/script-loader/index.js",
+         "style":"/Users/tyler/Code/tylersmalley/kibana/node_modules/style-loader/index.js",
+         "url":"/Users/tyler/Code/tylersmalley/kibana/node_modules/url-loader/index.js"
+      }
+   }
+}
