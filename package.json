@@ -73,7 +73,6 @@
     "@bigfunger/decompress-zip": "0.2.0-stripfix3",
     "@bigfunger/jsondiffpatch": "0.1.38-webpack",
     "@elastic/datemath": "2.3.0",
-    "@elastic/httpolyglot": "0.1.2-elasticpatch1",
     "@elastic/kibana-ui-framework": "0.0.13",
     "@elastic/webpack-directory-name-as-main": "2.0.2",
     "@spalger/filesaver": "1.1.2",

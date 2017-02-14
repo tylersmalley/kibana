@@ -1,6 +1,5 @@
 import { readFileSync } from 'fs';
 import { format as formatUrl } from 'url';
-import httpolyglot from '@elastic/httpolyglot';
 
 import tlsCiphers from './tls_ciphers';
 
@@ -36,15 +35,14 @@ export default function (kbnServer, server, config) {
 
   server.connection({
     ...connectionOptions,
-    tls: true,
-    listener: httpolyglot.createServer({
+    tls: {
       key: readFileSync(config.get('server.ssl.key')),
       cert: readFileSync(config.get('server.ssl.cert')),
 
       ciphers: tlsCiphers,
       // We use the server's cipher order rather than the client's to prevent the BEAST attack
       honorCipherOrder: true
-    })
+    }
   });
 
   server.ext('onRequest', function (req, reply) {
