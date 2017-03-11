@@ -22,6 +22,7 @@ module.exports = async function (kbnServer, server, config) {
 
   // provide a simple way to expose static directories
   server.decorate('server', 'exposeStaticDir', function (routePath, dirPath) {
+    console.log(routePath, dirPath);
     this.route({
       path: routePath,
       method: 'GET',

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import chrome from 'ui/chrome/chrome';
+import chrome from 'ui/chrome';
 import breadCrumbsTemplate from './bread_crumbs.html';
 import { getBreadCrumbUrls } from './bread_crumb_urls';
 import uiModules from 'ui/modules';
