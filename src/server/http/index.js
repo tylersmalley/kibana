@@ -36,6 +36,8 @@ module.exports = async function (kbnServer, server, config) {
     });
   });
 
+  // server.exposeStaticDir('')
+
   // provide a simple way to expose static files
   server.decorate('server', 'exposeStaticFile', function (routePath, filePath) {
     this.route({
@@ -144,6 +146,8 @@ module.exports = async function (kbnServer, server, config) {
   // Expose static assets (fonts, favicons).
   server.exposeStaticDir('/ui/fonts/{path*}', resolve(__dirname, '../../ui/public/assets/fonts'));
   server.exposeStaticDir('/ui/favicons/{path*}', resolve(__dirname, '../../ui/public/assets/favicons'));
+  server.exposeStaticDir('/bundles/{path*}', resolve(__dirname, '../../../optimize/bundles'));
+
 
   kbnServer.mixin(versionCheckMixin);
 

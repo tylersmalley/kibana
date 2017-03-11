@@ -18,7 +18,7 @@ import pluginsCheckVersionMixin from './plugins/check_version';
 import configCompleteMixin from './config/complete';
 import uiMixin from '../ui';
 import uiSettingsMixin from '../ui/settings';
-import optimizeMixin from '../optimize';
+// import optimizeMixin from '../optimize';
 import pluginsInitializeMixin from './plugins/initialize';
 
 const rootDir = fromRoot('.');
@@ -60,7 +60,7 @@ module.exports = class KbnServer {
 
       // ensure that all bundles are built, or that the
       // lazy bundle server is running
-      optimizeMixin,
+      // optimizeMixin,
       // finally, initialize the plugins
       pluginsInitializeMixin,
       () => {

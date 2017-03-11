@@ -105,10 +105,8 @@ block content
         return anchor.href;
       }
       var files = [
-        bundleFile('commons.style.css'),
-        bundleFile('#{app.id}.style.css'),
         bundleFile('commons.bundle.js'),
-        bundleFile('#{app.id}.bundle.js')
+        bundleFile('kibana.bundle.js')
       ];
 
       (function next() {
