@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 import errors from 'ui/errors';
 import RequestQueueProvider from 'ui/courier/_request_queue';
-import FetchProvider from 'ui/courier/fetch/fetch';
+import FetchProvider from 'ui/courier/fetch';
 
 export default function (Promise, Private, es, esAdmin, kbnIndex) {
   const requestQueue = Private(RequestQueueProvider);

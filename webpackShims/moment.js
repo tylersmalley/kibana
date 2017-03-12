@@ -1,1 +1,1 @@
-module.exports = require('../node_modules/moment/min/moment.min.js');
+module.exports = require('moment/min/moment.min.js');

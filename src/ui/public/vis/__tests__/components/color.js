@@ -4,7 +4,7 @@ import ngMock from 'ng_mock';
 import _ from 'lodash';
 import d3 from 'd3';
 import VislibComponentsColorSeedColorsProvider from 'ui/vis/components/color/seed_colors';
-import VislibComponentsColorColorProvider from 'ui/vis/components/color/color';
+import VislibComponentsColorColorProvider from 'ui/vis/components/color';
 import VislibComponentsColorMappedColorsProvider from 'ui/vis/components/color/mapped_colors';
 import VislibComponentsColorColorPaletteProvider from 'ui/vis/components/color/color_palette';
 

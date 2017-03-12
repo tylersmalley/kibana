@@ -1,4 +1,4 @@
-import AbstractRequestProvider from './request';
+import AbstractRequestProvider from '.';
 
 export default function DocRequestProvider(Private) {
 

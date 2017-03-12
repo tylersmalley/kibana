@@ -6,7 +6,7 @@ import Binder from 'ui/binder';
 import VislibLibLayoutLayoutProvider from './layout/layout';
 import VislibLibChartTitleProvider from './chart_title';
 import VislibLibAlertsProvider from './alerts';
-import VislibAxisProvider from './axis/axis';
+import VislibAxisProvider from './axis';
 import VislibGridProvider from './chart_grid';
 import VislibVisualizationsVisTypesProvider from '../visualizations/vis_types';
 

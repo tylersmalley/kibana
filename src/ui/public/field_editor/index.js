@@ -8,7 +8,7 @@ import uiModules from 'ui/modules';
 import fieldEditorTemplate from 'ui/field_editor/field_editor.html';
 import chrome from 'ui/chrome';
 import IndexPatternsCastMappingTypeProvider from 'ui/index_patterns/_cast_mapping_type';
-import { scriptedFields as docLinks } from '../documentation_links/documentation_links';
+import { scriptedFields as docLinks } from '../documentation_links';
 import './field_editor.less';
 import { GetEnabledScriptingLanguagesProvider, getSupportedScriptingLanguages } from '../scripting_languages';
 

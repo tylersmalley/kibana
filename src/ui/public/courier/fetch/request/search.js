@@ -1,5 +1,5 @@
 import SearchStrategyProvider from '../strategy/search';
-import AbstractRequestProvider from './request';
+import AbstractRequestProvider from '.';
 
 export default function SearchReqProvider(Private) {
 
