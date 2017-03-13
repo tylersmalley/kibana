@@ -9,6 +9,7 @@ export default grunt => ({
       'tasks',
       'test',
       'utilities',
+      'webpack.config.js'
     ],
   },
 
