@@ -3,7 +3,7 @@ import 'plugins/table_vis/table_vis_controller';
 import 'plugins/table_vis/table_vis_params';
 import 'ui/agg_table';
 import 'ui/agg_table/agg_table_group';
-import TemplateVisTypeTemplateVisTypeProvider from 'ui/template_vis_type/template_vis_type';
+import TemplateVisTypeTemplateVisTypeProvider from 'ui/template_vis_type';
 import VisSchemasProvider from 'ui/vis/schemas';
 import tableVisTemplate from 'plugins/table_vis/table_vis.html';
 import visTypesRegistry from 'ui/registry/vis_types';

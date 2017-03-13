@@ -1,4 +1,4 @@
-import VislibVisTypeVislibVisTypeProvider from 'ui/vislib_vis_type/vislib_vis_type';
+import VislibVisTypeVislibVisTypeProvider from 'ui/vislib_vis_type';
 import VisSchemasProvider from 'ui/vis/schemas';
 import pieTemplate from 'plugins/kbn_vislib_vis_types/editors/pie.html';
 

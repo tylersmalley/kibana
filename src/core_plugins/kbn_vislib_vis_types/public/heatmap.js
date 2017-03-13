@@ -1,4 +1,4 @@
-import VislibVisTypeVislibVisTypeProvider from 'ui/vislib_vis_type/vislib_vis_type';
+import VislibVisTypeVislibVisTypeProvider from 'ui/vislib_vis_type';
 import VisSchemasProvider from 'ui/vis/schemas';
 import heatmapTemplate from 'plugins/kbn_vislib_vis_types/editors/heatmap.html';
 import heatmapColors from 'ui/vislib/components/color/colormaps';

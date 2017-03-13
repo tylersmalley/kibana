@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const $ = require('jquery');
-const grammar = require('raw!../chain.peg');
+const grammar = require('raw-loader!../chain.peg');
 const PEG = require('pegjs');
 const Parser = PEG.buildParser(grammar);
 const template =  require('./partials/suggestion.html');

@@ -3,7 +3,11 @@ const webpack = require('webpack');
 const DirectoryNameAsMain = require('@elastic/webpack-directory-name-as-main');
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const babelOptions = require('./src/optimize/babel/options');
-const babelExclude = [/[\/\\](webpackShims|node_modules|bower_components)[\/\\]/];
+const babelExclude = [/[\/\\](webpackShims|node_modules)[\/\\]/];
+
+/**
+ * TODO: uiExports into json, dynamic build of /src/vistypes.js (example)
+ */
 
 module.exports = {
   node: {
@@ -11,9 +15,9 @@ module.exports = {
   },
   context: __dirname,
   entry: {
-    kibana: path.resolve(__dirname, 'src/core_plugins/kibana/public/kibana'),
-    // timelion: path.resolve(__dirname, 'src/core_plugins/timelion'),
-    // status_page: path.resolve(__dirname, 'src/core_plugins/status_page/public/status_page')
+    kibana: path.resolve(__dirname, 'optimize/bundles/kibana.entry.js'),
+    status_page: path.resolve(__dirname, 'optimize/bundles/status_page.entry.js'),
+    timelion: path.resolve(__dirname, 'optimize/bundles/timelion.entry.js')
   },
   devtool: '#cheap-source-map',
   output: {

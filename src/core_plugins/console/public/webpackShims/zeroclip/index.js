@@ -1,7 +1,7 @@
 var ZeroClipboard = require('./zero_clipboard.js');
 
 ZeroClipboard.config({
-  swfPath: require('file!./zero_clipboard.swf'),
+  swfPath: require('file-loader!./zero_clipboard.swf'),
   debug: false
 });
 
