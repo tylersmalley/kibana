@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const DirectoryNameAsMain = require('@elastic/webpack-directory-name-as-main');
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const babelOptions = require('./src/optimize/babel/options');
 const babelExclude = [/[\/\\](webpackShims|node_modules)[\/\\]/];
@@ -32,7 +31,7 @@ module.exports = {
     new CommonsChunkPlugin({
       name: 'commons',
       filename: 'commons.bundle.js'
-    }),
+    })
   ],
   module: {
     rules: [{
