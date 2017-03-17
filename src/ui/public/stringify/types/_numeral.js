@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import 'ui/field_format_editor/numeral/numeral';
+import 'ui/field_format_editor/numeral';
 import IndexPatternsFieldFormatProvider from 'ui/index_patterns/_field_format/field_format';
 import BoundToConfigObjProvider from 'ui/bound_to_config_obj';
 export default function AbstractNumeralFormatProvider(Private) {

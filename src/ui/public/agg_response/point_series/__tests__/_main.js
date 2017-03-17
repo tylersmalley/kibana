@@ -6,7 +6,7 @@ import ngMock from 'ng_mock';
 import VisProvider from 'ui/vis';
 import AggResponseTabifyTableProvider from 'ui/agg_response/tabify/_table';
 import FixturesStubbedLogstashIndexPatternProvider from 'fixtures/stubbed_logstash_index_pattern';
-import AggResponsePointSeriesPointSeriesProvider from 'ui/agg_response/point_series/point_series';
+import AggResponsePointSeriesPointSeriesProvider from 'ui/agg_response/point_series';
 describe('pointSeriesChartDataFromTable', function () {
   this.slow(1000);
 

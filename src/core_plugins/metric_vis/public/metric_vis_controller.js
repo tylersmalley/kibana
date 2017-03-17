@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify/tabify';
+import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify';
 import uiModules from 'ui/modules';
 // get the kibana/metric_vis module, and make sure that it requires the "kibana" module if it
 // didn't already

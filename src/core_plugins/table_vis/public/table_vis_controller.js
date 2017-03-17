@@ -1,4 +1,4 @@
-import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify/tabify';
+import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify';
 import uiModules from 'ui/modules';
 import { assign } from 'lodash';
 
@@ -53,4 +53,3 @@ module.controller('KbnTableVisController', function ($scope, $element, Private) 
     }
   });
 });
-

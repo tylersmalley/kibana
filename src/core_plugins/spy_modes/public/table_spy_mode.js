@@ -1,7 +1,7 @@
 import { saveAs } from '@spalger/filesaver';
 import _ from 'lodash';
 import 'ui/agg_table';
-import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify/tabify';
+import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify';
 import tableSpyModeTemplate from 'plugins/spy_modes/table_spy_mode.html';
 import spyModesRegistry from 'ui/registry/spy_modes';
 

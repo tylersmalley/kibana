@@ -5,8 +5,8 @@ import ngMock from 'ng_mock';
 import VisProvider from 'ui/vis';
 import FixturesStubbedLogstashIndexPatternProvider from 'fixtures/stubbed_logstash_index_pattern';
 import FixturesAggRespGeohashGridProvider from 'fixtures/agg_resp/geohash_grid';
-import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify/tabify';
-import AggResponseGeoJsonGeoJsonProvider from 'ui/agg_response/geo_json/geo_json';
+import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify';
+import AggResponseGeoJsonGeoJsonProvider from 'ui/agg_response/geo_json';
 
 describe('GeoJson Agg Response Converter', function () {
   let vis;

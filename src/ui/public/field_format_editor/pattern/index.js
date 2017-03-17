@@ -1,4 +1,4 @@
-import 'ui/field_format_editor/samples/samples';
+import 'ui/field_format_editor/samples';
 import uiModules from 'ui/modules';
 import patternTemplate from 'ui/field_format_editor/pattern/pattern.html';
 

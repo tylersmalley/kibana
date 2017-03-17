@@ -1,7 +1,7 @@
 import AggResponseHierarchicalBuildHierarchicalDataProvider from 'ui/agg_response/hierarchical/build_hierarchical_data';
-import AggResponsePointSeriesPointSeriesProvider from 'ui/agg_response/point_series/point_series';
-import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify/tabify';
-import AggResponseGeoJsonGeoJsonProvider from 'ui/agg_response/geo_json/geo_json';
+import AggResponsePointSeriesPointSeriesProvider from 'ui/agg_response/point_series';
+import AggResponseTabifyTabifyProvider from 'ui/agg_response/tabify';
+import AggResponseGeoJsonGeoJsonProvider from 'ui/agg_response/geo_json';
 
 export default function NormalizeChartDataFactory(Private) {
   return {

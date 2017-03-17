@@ -41,7 +41,7 @@ import uiModules from 'ui/modules';
 import template from './kbn_top_nav.html';
 import KbnTopNavControllerProvider from './kbn_top_nav_controller';
 import RegistryNavbarExtensionsProvider from 'ui/registry/navbar_extensions';
-import './bread_crumbs/bread_crumbs';
+import './bread_crumbs';
 
 const module = uiModules.get('kibana');
 
