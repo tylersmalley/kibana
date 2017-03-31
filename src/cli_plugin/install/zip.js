@@ -1,98 +1,70 @@
-import _ from 'lodash';
-import DecompressZip from '@bigfunger/decompress-zip';
-
-const SYMBOLIC_LINK = 'SymbolicLink';
-
-/**
- * Creates a filter function to be consumed by extractFiles that filters by
- *  an array of files
- * @param {array} files - an array of full file paths to extract. Should match
- *   exactly a value from listFiles
- */
-function extractFilterFromFiles(files) {
-  const filterFiles = files.map((file) => file.replace(/\\/g, '/'));
-  return function filterByFiles(file) {
-    if (file.type === SYMBOLIC_LINK) return false;
-
-    const path = file.path.replace(/\\/g, '/');
-    return _.includes(filterFiles, path);
-  };
-}
-
-/**
- * Creates a filter function to be consumed by extractFiles that filters by
- *  an array of root paths
- * @param {array} paths - an array of root paths from the archive. All files and
- *   folders will be extracted recursively using these paths as roots.
- */
-function extractFilterFromPaths(paths) {
-  return function filterByRootPath(file) {
-    if (file.type === SYMBOLIC_LINK) return false;
-
-    return paths.some(path => {
-      const regex = new RegExp(`${path}($|/)`, 'i');
-      return file.parent.match(regex);
-    });
-  };
-}
-
-/**
- * Creates a filter function to be consumed by extractFiles
- * @param {object} filter - an object with either a files or paths property.
- */
-function extractFilter(filter) {
-  if (filter.files) return extractFilterFromFiles(filter.files);
-  if (filter.paths) return extractFilterFromPaths(filter.paths);
-  return _.noop;
-}
+import yauzl from 'yauzl';
+import fs from 'fs';
+import path from 'path';
+import mkdirp from 'mkdirp';
 
 /**
  * Extracts files from a zip archive to a file path using a filter function
- * @param {string} zipPath - file path to a zip archive
- * @param {string} targetPath - directory path to where the files should
+ * @param {string} zipFile - file path to a zip archive
+ * @param {string} targetDir - directory path to where the files should
  *  extracted
- * @param {integer} strip - Number of nested directories within the archive
- *  that should be ignored when determining the target path of an archived
- *  file.
- * @param {function} filter - A function that accepts a single parameter 'file'
- *  and returns true if the file should be extracted from the archive
  */
-export async function extractFiles(zipPath, targetPath, strip, filter) {
-  await new Promise((resolve, reject) => {
-    const unzipper = new DecompressZip(zipPath);
+export function unzip(zipFile, targetDir, filter) {
+  return new Promise((resolve, reject) => {
+    yauzl.open(zipFile, { lazyEntries: true }, function (err, zipfile) {
+      if (err) {
+        reject(err);
+      }
 
-    unzipper.on('error', reject);
+      zipfile.readEntry();
+      zipfile.on('close', resolve);
+      zipfile.on('entry', function (entry) {
+        let fileName = entry.fileName;
 
-    const options = {
-      path: targetPath,
-      strip: strip
-    };
-    if (filter) {
-      options.filter = extractFilter(filter);
-    }
+        if (filter) {
+          const match = fileName.match(filter);
 
-    unzipper.extract(options);
+          if (match) {
+            fileName = match[1];
+          } else {
+            return zipfile.readEntry();
+          }
+        }
 
-    unzipper.on('extract', resolve);
-  });
-}
+        if (targetDir) {
+          fileName = path.join(targetDir, fileName);
+        }
 
-/**
- * Returns all files within an archive
- * @param {string} zipPath - file path to a zip archive
- * @returns {array} all files within an archive with their relative paths
- */
-export async function listFiles(zipPath) {
-  return await new Promise((resolve, reject) => {
-    const unzipper = new DecompressZip(zipPath);
+        if (/\/$/.test(entry.fileName)) {
+          // directory file names end with '/'
+          mkdirp(entry.fileName, function (err) {
+            if (err) {
+              reject(err);
+            }
 
-    unzipper.on('error', reject);
+            zipfile.readEntry();
+          });
+        } else {
+          // file entry
+          zipfile.openReadStream(entry, function (err, readStream) {
+            if (err) {
+              reject(err);
+            }
 
-    unzipper.on('list', (files) => {
-      files = files.map((file) => file.replace(/\\/g, '/'));
-      resolve(files);
+            // ensure parent directory exists
+            mkdirp(path.dirname(fileName), function (err) {
+              if (err) {
+                reject(err);
+              }
+
+              readStream.pipe(fs.createWriteStream(fileName));
+              readStream.on('end', function () {
+                zipfile.readEntry();
+              });
+            });
+          });
+        }
+      });
     });
-
-    unzipper.list();
   });
 }

@@ -33,7 +33,7 @@ export function parse(command, options, kbnPackage) {
   };
 
   settings.urls = generateUrls(settings);
-  settings.workingPath = resolve(settings.pluginDir, '.plugin.installing');
+  settings.workingPath = resolve(settings.pluginDir, '.installing');
   settings.tempArchiveFile = resolve(settings.workingPath, 'archive.part');
   settings.tempPackageFile = resolve(settings.workingPath, 'package.json');
   settings.setPlugin = function (plugin) {

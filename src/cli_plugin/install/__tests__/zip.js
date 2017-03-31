@@ -6,7 +6,7 @@ import mkdirp from 'mkdirp';
 import Logger from '../../lib/logger';
 import { _downloadSingle }  from '../download';
 import { join } from 'path';
-import { listFiles, extractFiles } from '../zip';
+import { extractFiles } from '../zip';
 
 describe('kibana cli', function () {
 
@@ -49,34 +49,6 @@ describe('kibana cli', function () {
 
       return _downloadSingle(settings, logger, sourceUrl);
     }
-
-    describe('listFiles', function () {
-
-      it('lists the files in the zip', function () {
-        return copyReplyFile('test_plugin.zip')
-        .then(() => {
-          return listFiles(settings.tempArchiveFile);
-        })
-        .then((actual) => {
-          const expected = [
-            'elasticsearch/',
-            'kibana/',
-            'kibana/test-plugin/',
-            'kibana/test-plugin/.gitignore',
-            'kibana/test-plugin/extra file only in zip.txt',
-            'kibana/test-plugin/index.js',
-            'kibana/test-plugin/package.json',
-            'kibana/test-plugin/public/',
-            'kibana/test-plugin/public/app.js',
-            'kibana/test-plugin/README.md',
-            'logstash/'
-          ];
-
-          expect(actual).to.eql(expected);
-        });
-      });
-
-    });
 
     describe('extractFiles', function () {
 

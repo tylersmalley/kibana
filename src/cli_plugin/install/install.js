@@ -11,24 +11,46 @@ const mkdir = Promise.promisify(mkdirp);
 
 export default async function install(settings, logger) {
   try {
+    // remove any pre-existing plugins/.installing directory
     await cleanPrevious(settings, logger);
 
+    // creates plugins/.installing directory
     await mkdir(settings.workingPath);
 
+    // downloads/copy zip to temporary location
     await download(settings, logger);
 
-    await getPackData(settings, logger);
+    // extracts plugin meta data from  package.json files within the zip
+    const plugins = await getPackData(settings.tempArchiveFile, logger);
 
-    await extract(settings, logger);
+    // extracts plugins into plugins/.installing directory
+    await Promise.all(plugins.map(plugin => {
+      return extract(plugin, settings.workingPath, logger);
+    }));
 
+    // deletes temporary zip file
     rimrafSync(settings.tempArchiveFile);
 
-    existingInstall(settings, logger);
+    // preform plugin checks
+    await Promise.all(plugins.map(plugin => {
+      return Promise.all([
+        // fail if plugin is already installed
+        existingInstall(settings.pluginDir, plugin, logger),
 
-    assertVersion(settings);
+        // fail if plugin version does not match Kibana's
+        assertVersion(plugin)
+      ]);
+    })).catch(reason => {
+      throw new Error(reason);
+    });
 
-    await renamePlugin(settings.workingPath, settings.plugins[0].path);
+    await Promise.all(plugins.map(plugin => {
+      return renamePlugin(plugin, settings.workingPath, settings.pluginDir);
+    })).catch(reason => {
+      throw new Error(reason);
+    });
 
+    // runs optimize
     await rebuildCache(settings, logger);
 
     logger.log('Plugin installation complete');

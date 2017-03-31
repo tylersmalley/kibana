@@ -94,6 +94,8 @@ describe('kibana cli', function () {
       it('populate settings.plugins', function () {
         return copyReplyFile('test_plugin.zip')
         .then(() => {
+          console.log('settings >', settings);
+
           return getPackData(settings, logger);
         })
         .then(() => {

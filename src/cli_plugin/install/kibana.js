@@ -1,15 +1,16 @@
-import _ from 'lodash';
+import { merge } from 'lodash';
 import { fromRoot } from '../../utils';
 import KbnServer from '../../server/kbn_server';
 import readYamlConfig from '../../cli/serve/read_yaml_config';
 import { versionSatisfies, cleanVersion } from '../../utils/version';
 import { statSync } from 'fs';
+import path from 'path';
 
-export function existingInstall(settings, logger) {
+export function existingInstall(pluginDir, plugin, logger) {
   try {
-    statSync(settings.plugins[0].path);
+    statSync(path.join(pluginDir, plugin.name));
 
-    logger.error(`Plugin ${settings.plugins[0].name} already exists, please remove before installing a new version`);
+    logger.error(`Plugin ${plugin.name} already exists, please remove before installing a new version`);
     process.exit(70); // eslint-disable-line no-process-exit
   } catch (e) {
     if (e.code !== 'ENOENT') throw e;
@@ -18,7 +19,7 @@ export function existingInstall(settings, logger) {
 
 export async function rebuildCache(settings, logger) {
   logger.log('Optimizing and caching browser bundles...');
-  const serverConfig = _.merge(
+  const serverConfig = merge(
     readYamlConfig(settings.config),
     {
       env: 'production',
@@ -48,15 +49,19 @@ export async function rebuildCache(settings, logger) {
   await kbnServer.close();
 }
 
-export function assertVersion(settings) {
-  if (!settings.plugins[0].kibanaVersion) {
-    throw new Error (`Plugin package.json is missing both a version property (required) and a kibana.version property (optional).`);
-  }
+export function assertVersion(plugin) {
+  return new Promise((resolve, reject) => {
+    if (!plugin.kibanaVersion) {
+      reject(`Plugin package.json is missing both a version property (required) and a kibana.version property (optional).`);
+    }
 
-  const actual = cleanVersion(settings.plugins[0].kibanaVersion);
-  const expected = cleanVersion(settings.version);
-  if (!versionSatisfies(actual, expected)) {
-    throw new Error (`Incorrect Kibana version in plugin [${settings.plugins[0].name}]. ` +
-      `Expected [${expected}]; found [${actual}]`);
-  }
+    const actual = cleanVersion(plugin.kibanaVersion);
+    const expected = cleanVersion(plugin.version);
+
+    if (!versionSatisfies(actual, expected)) {
+      reject(`Incorrect Kibana version in plugin [${plugin.name}]. Expected [${expected}]; found [${actual}]`);
+    }
+
+    resolve();
+  });
 }
