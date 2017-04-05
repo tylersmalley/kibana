@@ -5,13 +5,13 @@ import mkdirp from 'mkdirp';
 
 /**
  * Extracts files from a zip archive to a file path using a filter function
- * @param {string} zipFile - file path to a zip archive
+ * @param {string} archive - file path to a zip archive
  * @param {string} targetDir - directory path to where the files should
  *  extracted
  */
-export function unzip(zipFile, targetDir, filter) {
+export function unzip(archive, targetDir, filter) {
   return new Promise((resolve, reject) => {
-    yauzl.open(zipFile, { lazyEntries: true }, function (err, zipfile) {
+    yauzl.open(archive, { lazyEntries: true }, function (err, zipfile) {
       if (err) {
         reject(err);
       }

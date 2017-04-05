@@ -34,7 +34,7 @@ export function parse(command, options, kbnPackage) {
 
   settings.urls = generateUrls(settings);
   settings.workingPath = resolve(settings.pluginDir, '.installing');
-  settings.tempArchiveFile = resolve(settings.workingPath, 'archive.part');
+  settings.tempArchiveFile = resolve(settings.workingPath, 'archive.zip');
   settings.tempPackageFile = resolve(settings.workingPath, 'package.json');
   settings.setPlugin = function (plugin) {
     settings.plugin = plugin;

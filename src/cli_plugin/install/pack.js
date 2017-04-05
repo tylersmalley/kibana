@@ -1,113 +1,112 @@
-import { get } from 'lodash';
 import yauzl from 'yauzl';
-import { unzip } from './zip';
 import path from 'path';
-import validatePackageName from 'validate-npm-package-name';
+import rimraf from 'rimraf';
+import fs from 'fs';
+import mkdirp from 'mkdirp';
+import Plugin from '../lib/plugin';
 
-/**
- * Returns an array of package objects. There will be one for each of
- *  package.json files in the archive
- *
- * @param {string} zipFile - path to zip file
- */
-function readPackages(zipFile) {
-  const plugins = [];
-  const regExp = new RegExp('(kibana/([^/]+))/package.json', 'i');
+const TEMP_DIR = '.installing';
+const TEMP_ARCHIVE = path.join(TEMP_DIR, 'archive.zip');
 
-  return new Promise ((resolve, reject) => {
-    yauzl.open(zipFile, { lazyEntries: true }, function (err, zipfile) {
-      if (err) {
-        reject(err);
-      }
+export class Pack {
+  constructor(settings) {
+    this.pluginDir = settings.pluginDir;
+  }
 
-      zipfile.readEntry();
-      zipfile.on('entry', function (entry) {
-        const match = entry.fileName.match(regExp);
+  tempDir() {
+    return path.join(this.pluginDir, TEMP_DIR);
+  }
 
-        if (match) {
-          zipfile.openReadStream(entry, function (err, readable) {
-            const chunks = [];
+  tempArchive() {
+    return path.join(this.pluginDir, TEMP_ARCHIVE);
+  }
 
-            if (err) {
-              reject(`unable to read ${entry.fileName} within zip`);
-            }
+  /**
+   * Returns an array of package objects. There will be one for each of
+   *  package.json files in the archive
+   *
+   * @param {string} pluginArchive - path to plugin archive zip file
+   */
 
-            readable.on('data', chunk => chunks.push(chunk));
+  analyzeArchive(pluginArchive) {
+    const plugins = [];
+    const regExp = new RegExp('(kibana/([^/]+))/package.json', 'i');
 
-            readable.on('end', function () {
-              const contents = Buffer.concat(chunks).toString();
-              const plugin = parsePluginPackage(JSON.parse(contents));
-
-              plugins.push(Object.assign(plugin, { path: match[1], zipFile }));
-              zipfile.readEntry();
-            });
-          });
-        } else {
-          zipfile.readEntry();
+    return new Promise ((resolve, reject) => {
+      yauzl.open(pluginArchive, { lazyEntries: true }, function (err, zipfile) {
+        if (err) {
+          reject(err);
         }
-      });
 
-      zipfile.on('close', () => {
-        resolve(plugins);
+        zipfile.readEntry();
+        zipfile.on('entry', function (entry) {
+          const match = entry.fileName.match(regExp);
+
+          if (match) {
+            zipfile.openReadStream(entry, function (err, readable) {
+              const chunks = [];
+
+              if (err) {
+                reject(`unable to read ${entry.fileName} within zip`);
+              }
+
+              readable.on('data', chunk => chunks.push(chunk));
+
+              readable.on('end', function () {
+                const pkg = Buffer.concat(chunks).toString();
+                const plugin = new Plugin(JSON.parse(pkg));
+
+                plugin.pathWithinArchive = match[1];
+
+                plugins.push(plugin);
+                zipfile.readEntry();
+              });
+            });
+          } else {
+            zipfile.readEntry();
+          }
+        });
+
+        zipfile.on('close', () => {
+          resolve(plugins);
+        });
       });
     });
-  });
-}
-
-function parsePluginPackage(data) {
-  const version = get(data, 'version');
-
-  return {
-    version,
-    name: get(data, 'name'),
-    kibanaVersion: get(data, 'kibana.version', version)
-  };
-}
-
-/**
- * Checks the plugin name. Will throw an exception if it does not meet
- *  npm package naming conventions
- *
- * @param {object} plugin
- */
-function assertValidPackageName(plugin) {
-  const validation = validatePackageName(plugin.name);
-
-  if (!validation.validForNewPackages) {
-    throw new Error(`Invalid plugin name [${plugin.name}] in package.json`);
-  }
-}
-
-/**
- * Returns the detailed information about each kibana plugin in the pack.
- *  TODO: If there are platform specific folders, determine which one to use.
- * @param {object} settings - a plugin installer settings object
- * @param {object} logger - a plugin installer logger object
- */
-export async function getPackData(tempArchiveFile, logger) {
-  let packages;
-
-  try {
-    logger.log('Retrieving metadata from plugin archive');
-    packages = await readPackages(tempArchiveFile);
-  } catch (err) {
-    logger.error(err);
-    throw new Error('Error retrieving metadata from plugin archive');
   }
 
-  if (packages.length === 0) {
-    throw new Error('No kibana plugins found in archive');
+  clean() {
+    return new Promise((resolve, reject) => {
+      rimraf(this.tempDir(), err => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve();
+      });
+    });
   }
 
-  packages.forEach(assertValidPackageName);
+  hasTempDir() {
+    return new Promise(resolve => {
+      fs.stat(this.tempDir(), err => {
+        if (err) {
+          return resolve(false);
+        }
 
-  return packages;
-}
+        resolve(true);
+      });
+    });
+  }
 
-export async function extract(plugin, targetDir, logger) {
-  logger.log(`Extracting ${plugin.name} archive`);
+  mkdir() {
+    return new Promise((resolve, reject) => {
+      mkdirp(this.tempDir(), (err, made) => {
+        if (err) {
+          return reject(err);
+        }
 
-  return unzip(plugin.zipFile, path.join(targetDir, plugin.name), `${plugin.path}/(.*)`).then(() => {
-    logger.log(`Extraction of ${plugin.name} complete`);
-  });
+        resolve(made);
+      });
+    });
+  }
 }

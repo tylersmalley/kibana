@@ -1,62 +1,75 @@
 import { download } from './download';
-import Promise from 'bluebird';
-import { cleanPrevious, cleanArtifacts } from './cleanup';
-import { extract, getPackData } from './pack';
-import { renamePlugin } from './rename';
-import { sync as rimrafSync } from 'rimraf';
-import { existingInstall, rebuildCache, assertVersion } from './kibana';
-import mkdirp from 'mkdirp';
-
-const mkdir = Promise.promisify(mkdirp);
+import { Pack } from './pack';
+import { rebuildCache } from './kibana';
 
 export default async function install(settings, logger) {
+  const pack = new Pack(settings);
+
   try {
-    // remove any pre-existing plugins/.installing directory
-    await cleanPrevious(settings, logger);
+
+    if (await pack.hasTempDir()) {
+      logger.log('Found previous install attempt. Deleting...');
+      await pack.clean();
+    }
 
     // creates plugins/.installing directory
-    await mkdir(settings.workingPath);
+    await pack.mkdir();
 
     // downloads/copy zip to temporary location
     await download(settings, logger);
 
     // extracts plugin meta data from  package.json files within the zip
-    const plugins = await getPackData(settings.tempArchiveFile, logger);
+    logger.log('Retrieving metadata from plugin archive');
+    const plugins = await pack.analyzeArchive(settings.tempArchiveFile);
 
     // extracts plugins into plugins/.installing directory
     await Promise.all(plugins.map(plugin => {
-      return extract(plugin, settings.workingPath, logger);
+      logger.log(`Extracting ${plugin.name()} archive`);
+
+      return plugin.extract(settings.pluginDir)
+        .then(() => {
+          logger.log(`Extraction of ${plugin.name()} complete`);
+        })
+        .catch((err) => {
+          logger.error(err);
+          throw new Error(`Extraction of ${plugin.name()} failed!`);
+        });
     }));
 
-    // deletes temporary zip file
-    rimrafSync(settings.tempArchiveFile);
-
-    // preform plugin checks
+    // // preform plugin checks
     await Promise.all(plugins.map(plugin => {
       return Promise.all([
+        // fail if the plugin name is invalid according to package.json
+        plugin.isValidName(),
+
         // fail if plugin is already installed
-        existingInstall(settings.pluginDir, plugin, logger),
+        plugin.checkVersion(),
 
         // fail if plugin version does not match Kibana's
-        assertVersion(plugin)
+        plugin.checkVersion()
       ]);
     })).catch(reason => {
       throw new Error(reason);
     });
 
     await Promise.all(plugins.map(plugin => {
-      return renamePlugin(plugin, settings.workingPath, settings.pluginDir);
-    })).catch(reason => {
-      throw new Error(reason);
+      return plugin.rename(settings.pluginDir);
+    })).catch(err => {
+      console.log('fail', err);
+      throw new Error(err);
     });
 
     // runs optimize
     await rebuildCache(settings, logger);
 
+    await pack.clean();
+
     logger.log('Plugin installation complete');
+
   } catch (err) {
     logger.error(`Plugin installation was unsuccessful due to error "${err.message}"`);
-    cleanArtifacts(settings);
+    pack.clean();
+
     process.exit(70); // eslint-disable-line no-process-exit
   }
 }
