@@ -6,6 +6,15 @@ import { fromRoot } from '../../utils';
 import { getConfig } from '../../server/path';
 import readYamlConfig from './read_yaml_config';
 
+import 'newrelic';
+import OpBeat from 'opbeat';
+
+OpBeat.start({
+  appId: '32d009d5f2',
+  organizationId: '03fa5da6d7be4513b185ec61c2588e22',
+  secretToken: 'cfaff8573114db0b4d44480a8d661d4f421168f5'
+});
+
 import { DEV_SSL_CERT_PATH, DEV_SSL_KEY_PATH } from '../dev_ssl';
 
 let canCluster;

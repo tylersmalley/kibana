@@ -11,6 +11,7 @@ import 'ui/storage';
 import 'ui/directives/kbn_src';
 import 'ui/watch_multi';
 import './services';
+import '../analytics';
 
 import angularApi from './api/angular';
 import appsApi from './api/apps';
