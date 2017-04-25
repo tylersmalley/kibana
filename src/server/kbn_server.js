@@ -19,6 +19,7 @@ import uiMixin from '../ui';
 import uiSettingsMixin from '../ui/settings';
 import optimizeMixin from '../optimize';
 import pluginsInitializeMixin from './plugins/initialize';
+import { savedObjectsMixin } from './saved_objects';
 
 const rootDir = fromRoot('.');
 
@@ -51,8 +52,12 @@ module.exports = class KbnServer {
 
       // tell the config we are done loading plugins
       configCompleteMixin,
+
       // setup this.uiExports and this.bundles
       uiMixin,
+
+      // setup saved object routes
+      savedObjectsMixin,
 
       // setup server.uiSettings
       uiSettingsMixin,
@@ -60,6 +65,7 @@ module.exports = class KbnServer {
       // ensure that all bundles are built, or that the
       // lazy bundle server is running
       optimizeMixin,
+
       // finally, initialize the plugins
       pluginsInitializeMixin,
       () => {

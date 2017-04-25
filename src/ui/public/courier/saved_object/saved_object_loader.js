@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { Scanner } from 'ui/utils/scanner';
 import { StringUtils } from 'ui/utils/string_utils';
+// import { SavedObjectsClient } from 'ui/saved_objects';
 
 export class SavedObjectLoader {
   constructor(SavedObjectClass, kbnIndex, esAdmin, kbnUrl) {
@@ -91,6 +92,10 @@ export class SavedObjectLoader {
     } else {
       body = { query: { match_all: {} } };
     }
+    //
+    // SavedObjectsClient.find({ type: this.lowercaseType }).then(r => {
+    //   console.log(r);
+    // });
 
     return this.esAdmin.search({
       index: this.kbnIndex,
