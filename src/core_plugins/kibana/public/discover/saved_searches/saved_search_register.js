@@ -1,3 +1,6 @@
 export function savedSearchProvider(savedSearches) {
-  return savedSearches;
+  return {
+    name: 'searches',
+    savedObjects: savedSearches
+  };
 }

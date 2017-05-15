@@ -1,3 +1,6 @@
 export function savedVisualizationProvider(savedVisualizations) {
-  return savedVisualizations;
+  return {
+    name: 'visualizations',
+    savedObjects: savedVisualizations
+  };
 }

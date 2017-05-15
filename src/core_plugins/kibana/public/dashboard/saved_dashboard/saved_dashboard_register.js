@@ -1,3 +1,6 @@
 export function savedDashboardRegister(savedDashboards) {
-  return savedDashboards;
+  return {
+    name: 'dashboards',
+    savedObjects: savedDashboards
+  };
 }

@@ -9,17 +9,18 @@ const module = uiModules.get('kibana');
 
 module.directive('savedObjectFinder', function ($location, $injector, kbnUrl, Private, config) {
 
-  const services = Private(SavedObjectRegistryProvider).byLoaderPropertiesName;
+  const services = Private(SavedObjectRegistryProvider).byName;
 
   return {
     restrict: 'E',
     scope: {
       type: '@',
-      title: '@?',
+      title: '@',
+      noun: '@',
+      nouns: '@',
+
       // optional make-url attr, sets the userMakeUrl in our scope
       userMakeUrl: '=?makeUrl',
-      // optional on-choose attr, sets the userOnChoose in our scope
-      userOnChoose: '=?onChoose',
       // optional useLocalManagement attr,  removes link to management section
       useLocalManagement: '=?useLocalManagement',
       /**
@@ -36,6 +37,7 @@ module.directive('savedObjectFinder', function ($location, $injector, kbnUrl, Pr
       // the text input element
       const $input = $element.find('input[ng-model=filter]');
 
+
       // The number of items to show in the list
       $scope.perPage = config.get('savedObjects:perPage');
 
@@ -49,10 +51,9 @@ module.directive('savedObjectFinder', function ($location, $injector, kbnUrl, Pr
       let prevSearch;
 
       // the list of hits, used to render display
-      self.hits = [];
+      self.hits = window.hits = [];
 
-      self.service = services[$scope.type];
-      self.properties = self.service.loaderProperties;
+      self.service = services[$scope.type].savedObjects;
 
       filterResults();
 
@@ -83,11 +84,6 @@ module.directive('savedObjectFinder', function ($location, $injector, kbnUrl, Pr
           return $scope.userMakeUrl(hit);
         }
 
-        if (!$scope.userOnChoose) {
-          return hit.url;
-        }
-
-        return '#';
       };
 
       self.preventClick = function ($event) {
@@ -99,10 +95,6 @@ module.directive('savedObjectFinder', function ($location, $injector, kbnUrl, Pr
        * url behavior if necessary.
        */
       self.onChoose = function (hit, $event) {
-        if ($scope.userOnChoose) {
-          $scope.userOnChoose(hit, $event);
-        }
-
         const url = self.makeUrl(hit);
         if (!url || url === '#' || url.charAt(0) !== '#') return;
 
@@ -239,7 +231,7 @@ module.directive('savedObjectFinder', function ($location, $injector, kbnUrl, Pr
       };
 
       self.hitCountNoun = function () {
-        return ((self.hitCount === 1) ? self.properties.noun : self.properties.nouns).toLowerCase();
+        return ((self.hitCount === 1) ? $scope.noun : $scope.nouns).toLowerCase();
       };
 
       function selectTopHit() {
@@ -250,24 +242,27 @@ module.directive('savedObjectFinder', function ($location, $injector, kbnUrl, Pr
       }
 
       function filterResults() {
-        if (!self.service) return;
-        if (!self.properties) return;
+        if (!self.service) {
+          return;
+        }
 
         // track the filter that we use for this search,
         // but ensure that we don't search for the same
         // thing twice. This is called from multiple places
         // and needs to be smart about when it actually searches
         const filter = currentFilter;
-        if (prevSearch === filter) return;
+
+        if (prevSearch === filter) {
+          return;
+        }
 
         prevSearch = filter;
-        self.service.find(filter)
-        .then(function (hits) {
+        self.service.find({ filter, size: 1000, fields: ['title', 'description', 'icon'] }).then(response => {
           // ensure that we don't display old results
           // as we can't really cancel requests
           if (currentFilter === filter) {
-            self.hitCount = hits.total;
-            self.hits = _.sortBy(hits.hits, 'title');
+            self.hitCount = response.total;
+            self.hits = response.data;
           }
         });
       }

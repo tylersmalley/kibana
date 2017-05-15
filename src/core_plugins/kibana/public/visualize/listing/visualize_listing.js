@@ -16,8 +16,8 @@ export function VisualizeListingController($injector) {
 
   const limitTo = $filter('limitTo');
   // TODO: Extract this into an external service.
-  const services = Private(SavedObjectRegistryProvider).byLoaderPropertiesName;
-  const visualizationService = services.visualizations;
+  const services = Private(SavedObjectRegistryProvider).byName;
+  const { savedObjects: visualizationService } = services.visualizations;
   const notify = new Notifier({ location: 'Visualize' });
 
   let selectedItems = [];

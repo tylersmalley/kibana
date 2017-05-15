@@ -1,7 +1,9 @@
 import 'plugins/kibana/dashboard/saved_dashboard/saved_dashboard';
+import { set } from 'lodash';
 import { uiModules } from 'ui/modules';
-import { SavedObjectLoader } from 'ui/courier/saved_object/saved_object_loader';
 import { savedObjectManagementRegistry } from 'plugins/kibana/management/saved_object_registry';
+import { SavedObjectsClient } from 'ui/saved_objects';
+import chrome from 'ui/chrome';
 
 const module = uiModules.get('app/dashboard');
 
@@ -12,7 +14,57 @@ savedObjectManagementRegistry.register({
   title: 'dashboards'
 });
 
-// This is the only thing that gets injected into controllers
-module.service('savedDashboards', function (SavedDashboard, kbnIndex, esAdmin, kbnUrl) {
-  return new SavedObjectLoader(SavedDashboard, kbnIndex, esAdmin, kbnUrl);
+module.service('savedDashboards', function ($http) {
+  class SavedDashboards extends SavedObjectsClient {
+    get(id) {
+      return super.get('dashboard', id);
+    }
+
+    find(options = {}) {
+      set(options, 'type', 'dashboard');
+      return super.find(options);
+    }
+
+    get type() {
+      return 'dashboard';
+    }
+
+    get loaderProperties() {
+      return {
+        name: 'dashboards',
+        noun: 'Saved Dashboard',
+        nouns: 'saved dashboards'
+      };
+    }
+
+    get mapping() {
+      return {
+        title: 'text',
+        hits: 'integer',
+        description: 'text',
+        panelsJSON: 'text',
+        optionsJSON: 'text',
+        uiStateJSON: 'text',
+        version: 'integer',
+        timeRestore: 'boolean',
+        timeTo: 'keyword',
+        timeFrom: 'keyword',
+        refreshInterval: {
+          type: 'object',
+          properties: {
+            display: { type: 'keyword' },
+            pause: { type: 'boolean' },
+            section: { type: 'integer' },
+            value: { type: 'integer' }
+          }
+        }
+      };
+    }
+
+    get fieldOrder() {
+      return ['title', 'description'];
+    }
+  }
+
+  return new SavedDashboards($http, chrome.getBasePath());
 });

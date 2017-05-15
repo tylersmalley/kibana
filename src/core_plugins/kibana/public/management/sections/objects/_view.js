@@ -16,7 +16,7 @@ uiModules.get('apps/management')
 .directive('kbnManagementObjectsView', function (kbnIndex, Notifier, confirmModal) {
   return {
     restrict: 'E',
-    controller: function ($scope, $injector, $routeParams, $location, $window, $rootScope, esAdmin, Private) {
+    controller: function ($scope, $injector, $routeParams, $location, $window, $rootScope, Private) {
       const notify = new Notifier({ location: 'SavedObject view' });
       const castMappingType = Private(IndexPatternsCastMappingTypeProvider);
       const serviceObj = savedObjectManagementRegistry.get($routeParams.service);
@@ -104,27 +104,23 @@ uiModules.get('apps/management')
 
       $scope.title = service.type;
 
-      esAdmin.get({
-        index: kbnIndex,
-        type: service.type,
-        id: $routeParams.id
-      })
-      .then(function (obj) {
-        $scope.obj = obj;
-        $scope.link = service.urlFor(obj._id);
+      service.get($routeParams.id).then(function (obj) {
+        $scope.obj = obj.attributes;
+        // $scope.link = service.urlFor(obj.id);
 
-        const fields =  _.reduce(obj._source, createField, []);
-        if (service.Class) readObjectClass(fields, service.Class);
+        const fields =  _.reduce(obj.attributes, createField, []);
+        if (obj) readObjectClass(fields, obj);
 
         // sorts twice since we want numerical sort to prioritize over name,
         // and sortBy will do string comparison if trying to match against strings
         const nameSortedFields = _.sortBy(fields, 'name');
         $scope.fields = _.sortBy(nameSortedFields, (field) => {
-          const orderIndex = service.Class.fieldOrder ? service.Class.fieldOrder.indexOf(field.name) : -1;
+          const orderIndex = obj.fieldOrder ? obj.fieldOrder.indexOf(field.name) : -1;
           return (orderIndex > -1) ? orderIndex : Infinity;
         });
       })
       .catch(notify.fatal);
+
 
       // This handles the validation of the Ace Editor. Since we don't have any
       // other hooks into the editors to tell us if the content is valid or not
@@ -171,15 +167,11 @@ uiModules.get('apps/management')
        */
       $scope.delete = function () {
         function doDelete() {
-          esAdmin.delete({
-            index: kbnIndex,
-            type: service.type,
-            id: $routeParams.id
+          service.delete($routeParams.id)
+          .then(function () {
+            return redirectHandler('deleted');
           })
-            .then(function () {
-              return redirectHandler('deleted');
-            })
-            .catch(notify.fatal);
+          .catch(notify.fatal);
         }
         const confirmModalOptions = {
           onConfirm: doDelete,
@@ -208,12 +200,7 @@ uiModules.get('apps/management')
           _.set(source, field.name, value);
         });
 
-        esAdmin.index({
-          index: kbnIndex,
-          type: service.type,
-          id: $routeParams.id,
-          body: source
-        })
+        service.create(Object.assign({ id: $routeParams.id }, source))
         .then(function () {
           return redirectHandler('updated');
         })
@@ -221,19 +208,14 @@ uiModules.get('apps/management')
       };
 
       function redirectHandler(action) {
-        return esAdmin.indices.refresh({
-          index: kbnIndex
-        })
-        .then(function () {
-          const msg = 'You successfully ' + action + ' the "' + $scope.obj._source.title + '" ' + $scope.title.toLowerCase() + ' object';
+        const msg = 'You successfully ' + action + ' the "' + $scope.obj.title + '" ' + $scope.title.toLowerCase() + ' object';
 
-          $location.path('/management/kibana/objects').search({
-            _a: rison.encode({
-              tab: serviceObj.title
-            })
-          });
-          notify.info(msg);
+        $location.path('/management/kibana/objects').search({
+          _a: rison.encode({
+            tab: serviceObj.title
+          })
         });
+        notify.info(msg);
       }
     }
   };

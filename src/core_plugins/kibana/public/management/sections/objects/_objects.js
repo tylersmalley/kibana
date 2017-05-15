@@ -40,14 +40,14 @@ uiModules.get('apps/management')
       const getData = function (filter) {
         const services = savedObjectManagementRegistry.all().map(function (obj) {
           const service = $injector.get(obj.service);
-          return service.find(filter).then(function (data) {
+          return service.find(filter).then(function (response) {
             return {
               service: service,
               serviceName: obj.service,
               title: obj.title,
               type: service.type,
-              data: data.hits,
-              total: data.total
+              data: response.data,
+              total: response.total
             };
           });
         });
@@ -123,8 +123,8 @@ uiModules.get('apps/management')
 
       // TODO: Migrate all scope methods to the controller.
       $scope.bulkExport = function () {
-        const objs = $scope.selectedItems.map(partialRight(extend, { type: $scope.currentTab.type }));
-        retrieveAndExportDocs(objs);
+        // const objs = $scope.selectedItems.map(partialRight(extend, { type: $scope.currentTab.type }));
+        // retrieveAndExportDocs(objs);
       };
 
       // TODO: Migrate all scope methods to the controller.
@@ -235,17 +235,11 @@ uiModules.get('apps/management')
 
             return Promise.map(docTypes.searches, importDocument)
               .then(() => Promise.map(docTypes.other, importDocument))
-              .then(refreshIndex)
               .then(refreshData)
               .catch(notify.error);
           });
       };
 
-      function refreshIndex() {
-        return esAdmin.indices.refresh({
-          index: kbnIndex
-        });
-      }
 
       // TODO: Migrate all scope methods to the controller.
       $scope.changeTab = function (tab) {

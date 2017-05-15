@@ -27,6 +27,7 @@ import uiRoutes from 'ui/routes';
 import { uiModules } from 'ui/modules';
 import indexTemplate from 'plugins/kibana/discover/index.html';
 import { StateProvider } from 'ui/state_management/state';
+import { RedirectWhenMissingProvider } from 'ui/saved_objects';
 
 const app = uiModules.get('apps/discover', [
   'kibana/notify',
@@ -70,9 +71,15 @@ uiRoutes
         });
       });
     },
-    savedSearch: function (courier, savedSearches, $route) {
+    savedSearch: function (Private, savedSearches, $route) {
+      const redirectWhenMissing = Private(RedirectWhenMissingProvider);
+
+      if (!$route.current.params.id) {
+        return savedSearches.defaults;
+      }
+
       return savedSearches.get($route.current.params.id)
-      .catch(courier.redirectWhenMissing({
+      .catch(redirectWhenMissing({
         'search': '/discover',
         'index-pattern': '/management/kibana/objects/savedSearches/' + $route.current.params.id
       }));
@@ -135,9 +142,10 @@ function discoverController($scope, config, courier, $route, $window, Notifier,
 
   // the saved savedSearch
   const savedSearch = $route.current.locals.savedSearch;
-  $scope.$on('$destroy', savedSearch.destroy);
+  // $scope.$on('$destroy', savedSearch.destroy);
 
   // the actual courier.SearchSource
+
   $scope.searchSource = savedSearch.searchSource;
   $scope.indexPattern = resolveIndexPatternLoading();
   $scope.searchSource

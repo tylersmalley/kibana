@@ -10,7 +10,7 @@
           class="kuiSearchInput__input"
           input-focus
           ng-model="filter"
-          ng-attr-placeholder="{{ finder.properties.nouns | label }} Filter..."
+          ng-attr-placeholder="{{ title | label }} Filter..."
           ng-keydown="finder.filterKeyDown($event)"
           name="filter"
           type="text"
@@ -31,15 +31,15 @@
           ng-click="onAddNew()"
           data-test-subj="addNewSavedObjectLink"
         >
-          Add new {{ finder.properties.noun }}
+          Add new {{ noun }}
         </button>
 
         <button
           class="kuiButton kuiButton--basic"
           ng-if="!useLocalManagement"
-          ng-click="finder.manageObjects(finder.properties.name)"
+          ng-click="finder.manageObjects(type)"
         >
-          Manage {{ finder.properties.nouns }}
+          Manage {{ nouns }}
         </button>
       </div>
     </div>
@@ -71,15 +71,15 @@
       <a ng-href="{{finder.makeUrl(hit)}}"
           ng-blur="finder.hitBlur($event)"
           ng-click="finder.preventClick($event)">
-          <span aria-hidden="true" class="finder-type fa" ng-if="hit.icon" ng-class="hit.icon"></span>
-          <span>{{hit.title}}</span>
-          <p ng-if="hit.description" ng-bind="hit.description"></p>
+          <span aria-hidden="true" class="finder-type fa" ng-if="hit.get('icon')" ng-class="hit.get('icon')"></span>
+          <span>{{hit.get('title')}}</span>
+          <p ng-if="hit.get('description')" ng-bind="hit.get('description')"></p>
       </a>
     </li>
     <li
       class="list-group-item list-group-no-results"
       ng-if="finder.hits.length === 0">
-      <p ng-bind="'No matching ' + finder.properties.nouns + ' found.'"></p>
+      <p ng-bind="'No matching ' + title + ' found.'"></p>
     </li>
   </ul>
 </paginate>
