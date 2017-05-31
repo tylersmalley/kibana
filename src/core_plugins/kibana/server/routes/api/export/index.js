@@ -16,7 +16,10 @@ export default function exportApi(server) {
             .header('Content-Type', 'application/json')
             .header('Content-Length', json.length);
         })
-        .catch(err => reply(Boom.wrap(err, 400)));
+        .catch(err => {
+          console.log(err);
+          return reply(Boom.wrap(err, 400));
+        });
     }
   });
 }
