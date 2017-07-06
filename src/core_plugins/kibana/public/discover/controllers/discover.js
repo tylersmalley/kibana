@@ -28,6 +28,7 @@ import { uiModules } from 'ui/modules';
 import indexTemplate from 'plugins/kibana/discover/index.html';
 import { StateProvider } from 'ui/state_management/state';
 import { documentationLinks } from 'ui/documentation_links/documentation_links';
+import { SavedObjectsClientProvider } from 'ui/saved_objects';
 
 const app = uiModules.get('apps/discover', [
   'kibana/notify',
@@ -45,8 +46,14 @@ uiRoutes
   resolve: {
     ip: function (Promise, courier, config, $location, Private) {
       const State = Private(StateProvider);
-      return courier.indexPatterns.getIds()
-      .then(function (list) {
+      const savedObjectsClient = Private(SavedObjectsClientProvider);
+
+      return savedObjectsClient.find({
+        type: 'index-pattern',
+        fields: ['title'],
+        perPage: 10000
+      })
+      .then(({ savedObjects }) => {
         /**
          *  In making the indexPattern modifiable it was placed in appState. Unfortunately,
          *  the load order of AppState conflicts with the load order of many other things
@@ -59,12 +66,12 @@ uiRoutes
         const state = new State('_a', {});
 
         const specified = !!state.index;
-        const exists = _.contains(list, state.index);
+        const exists = _.findIndex(savedObjects, o => o.id === state.index) > -1;
         const id = exists ? state.index : config.get('defaultIndex');
         state.destroy();
 
         return Promise.props({
-          list: list,
+          list: savedObjects,
           loaded: courier.indexPatterns.get(id),
           stateVal: state.index,
           stateValFound: specified && exists
