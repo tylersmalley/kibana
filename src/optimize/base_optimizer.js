@@ -4,9 +4,7 @@ import { writeFile } from 'fs';
 import Boom from 'boom';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import webpack from 'webpack';
-import CommonsChunkPlugin from 'webpack/lib/optimize/CommonsChunkPlugin';
 import DefinePlugin from 'webpack/lib/DefinePlugin';
-import UglifyJsPlugin from 'webpack/lib/optimize/UglifyJsPlugin';
 import NoEmitOnErrorsPlugin from 'webpack/lib/NoEmitOnErrorsPlugin';
 import Stats from 'webpack/lib/Stats';
 import webpackMerge from 'webpack-merge';
@@ -122,11 +120,6 @@ export default class BaseOptimizer {
           allChunks: true
         }),
 
-        new CommonsChunkPlugin({
-          name: 'commons',
-          filename: 'commons.bundle.js'
-        }),
-
         new NoEmitOnErrorsPlugin(),
       ],
 
@@ -229,13 +222,6 @@ export default class BaseOptimizer {
           'process.env': {
             'NODE_ENV': '"production"'
           }
-        }),
-        new UglifyJsPlugin({
-          compress: {
-            warnings: false
-          },
-          sourceMap: false,
-          mangle: false
         }),
       ]
     });
