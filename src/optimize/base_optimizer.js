@@ -1,4 +1,3 @@
-import { resolve } from 'path';
 import { writeFile } from 'fs';
 
 import Boom from 'boom';
@@ -128,13 +127,7 @@ export default class BaseOptimizer {
           {
             test: /\.less$/,
             use: getStyleLoaders(
-              ['less-loader'],
-              [{
-                loader: 'cache-loader',
-                options: {
-                  cacheDirectory: resolve(cacheDirectory, 'less'),
-                }
-              }]
+              ['less-loader']
             ),
           },
           {
@@ -163,18 +156,13 @@ export default class BaseOptimizer {
             exclude: BABEL_EXCLUDE_RE.concat(this.uiBundles.getWebpackNoParseRules()),
             use: [
               {
-                loader: 'cache-loader',
-                options: {
-                  cacheDirectory: resolve(cacheDirectory, 'babel'),
-                }
-              },
-              {
                 loader: 'babel-loader',
                 options: {
                   babelrc: false,
                   presets: [
                     BABEL_PRESET_PATH,
                   ],
+                  cacheDirectory: cacheDirectory
                 },
               },
             ],

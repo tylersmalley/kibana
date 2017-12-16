@@ -106,7 +106,6 @@
     "boom": "5.2.0",
     "brace": "0.10.0",
     "bunyan": "1.7.1",
-    "cache-loader": "1.0.3",
     "check-hash": "1.0.1",
     "color": "1.0.3",
     "commander": "2.8.1",
