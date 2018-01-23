@@ -9,7 +9,7 @@ import { startsWith } from 'lodash';
 export default grunt => {
   grunt.registerTask('rejectRejFiles', 'Reject any git-apply .rej files', () => {
     const ignoredTopLevelDirs = [
-      'esvm',
+      'es',
       'plugins',
       'node_modules',
       'optimize'

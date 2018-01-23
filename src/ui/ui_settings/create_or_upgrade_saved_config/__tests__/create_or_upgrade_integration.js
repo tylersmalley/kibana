@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import expect from 'expect.js';
 
-import { createEsTestCluster } from '../../../../test_utils/es';
+import { createEsTestContainer } from '../../../../test_utils/es';
 import { createServerWithCorePlugins } from '../../../../test_utils/kbn_server';
 import { createToolingLog } from '../../../../dev';
 import { createOrUpgradeSavedConfig } from '../create_or_upgrade_saved_config';
@@ -16,7 +16,7 @@ describe('createOrUpgradeSavedConfig()', () => {
     log.pipe(process.stdout);
     log.indent(6);
 
-    const es = createEsTestCluster({
+    const es = createEsTestContainer({
       log: msg => log.debug(msg),
       name: 'savedObjects/healthCheck/integration',
     });

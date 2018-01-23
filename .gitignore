@@ -17,7 +17,6 @@ target
 /test/*/screenshots/session
 /test/*/screenshots/visual_regression_gallery.html
 /html_docs
-/esvm
 .htpasswd
 .eslintcache
 /plugins/

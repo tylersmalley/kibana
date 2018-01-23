@@ -1,9 +1,9 @@
-import { createEsTestCluster } from '../../../../../test_utils/es';
+import { createEsTestContainer } from '../../../../../test_utils/es';
 import * as kbnTestServer from '../../../../../test_utils/kbn_server';
 
 let kbnServer;
 let services;
-const es = createEsTestCluster({
+const es = createEsTestContainer({
   name: 'ui_settings/routes'
 });
 

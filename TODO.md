@@ -1,0 +1,1 @@
+- handle CTRL+C in tests

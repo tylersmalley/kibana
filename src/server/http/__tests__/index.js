@@ -1,16 +1,16 @@
 import expect from 'expect.js';
 import * as kbnTestServer from '../../../test_utils/kbn_server';
-import { createEsTestCluster } from '../../../test_utils/es';
+import { createEsTestContainer, startTimeout } from '../../../test_utils/es';
 
 describe('routes', () => {
   let kbnServer;
-  const es = createEsTestCluster({
-    name: 'server/http',
-  });
+  let es;
 
   before(async function () {
-    this.timeout(es.getStartTimeout());
+    this.timeout(startTimeout);
+    es = await createEsTestContainer();
     await es.start();
+
     kbnServer = kbnTestServer.createServerWithCorePlugins();
     await kbnServer.ready();
     await kbnServer.server.plugins.elasticsearch.waitUntilReady();

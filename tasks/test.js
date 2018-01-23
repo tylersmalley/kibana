@@ -1,6 +1,10 @@
 import _, { keys } from 'lodash';
 
 import { run } from '../utilities/visual_regression';
+import { esTestConfig } from '../src/test_utils/es';
+
+const EsStartTestContainer = `elasticsearch:port=${esTestConfig.getPort()}`;
+const EsStopTestContainer = `elasticsearch:stop:port=${esTestConfig.getPort()}`;
 
 module.exports = function (grunt) {
   grunt.registerTask(
@@ -54,38 +58,38 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test:ui', [
     'checkPlugins',
-    'esvm:ui',
+    EsStartTestContainer,
     'run:testUIServer',
     'functional_test_runner:functional',
-    'esvm_shutdown:ui',
+    EsStopTestContainer,
     'stop:testUIServer'
   ]);
 
   grunt.registerTask('test:uiRelease', [
     'checkPlugins',
-    'esvm:ui',
+    EsStartTestContainer,
     'run:testUIReleaseServer',
     'functional_test_runner:functional',
-    'esvm_shutdown:ui',
+    EsStopTestContainer,
     'stop:testUIReleaseServer'
   ]);
 
   grunt.registerTask('test:ui:server', [
     'checkPlugins',
-    'esvm:ui',
+    EsStartTestContainer,
     'run:testUIDevServer:keepalive'
   ]);
 
   grunt.registerTask('test:api', [
-    'esvm:ui',
+    EsStartTestContainer,
     'run:apiTestServer',
     'functional_test_runner:apiIntegration',
-    'esvm_shutdown:ui',
+    EsStopTestContainer,
     'stop:apiTestServer'
   ]);
 
   grunt.registerTask('test:api:server', [
-    'esvm:ui',
+    EsStartTestContainer,
     'run:devApiTestServer:keepalive'
   ]);
 
