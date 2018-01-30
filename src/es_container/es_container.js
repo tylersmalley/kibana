@@ -19,9 +19,10 @@ class EsContainer {
    */
 
   constructor(container, options = {}) {
-    this.log = options.log || console.log;
     this.container = container;
     this.options = options;
+    this.logs = new stream.PassThrough();
+
   }
 
   getClient() {
@@ -55,25 +56,21 @@ class EsContainer {
 
   async start() {
     return await new Promise((resolve, reject) => {
-      const logStream = new stream.PassThrough();
-
-      logStream.on('data', (chunk) => {
-        const line = chunk.toString('utf8');
-
-        if (line.match(/started/)) {
-          resolve();
-        }
-
-        this.log(`EsContainer: ${line}`);
-      });
-
       this.container.start().then(container => {
         container.logs({ follow: true, stdout: true, stderr: true }, (err, stream) => {
           if (err) {
             return reject(err.message);
           }
 
-          container.modem.demuxStream(stream, logStream, logStream);
+          stream.on('data', (chunk) => {
+            const line = chunk.toString('utf8');
+
+            if (line.match(/started/)) {
+              resolve();
+            }
+          });
+
+          container.modem.demuxStream(stream, this.logs, this.logs);
         });
       }).catch(reject);
     });
@@ -131,13 +128,12 @@ export async function findEsContainer(options = {}) {
 
 export async function createEsContainer(options = {}) {
   const { port = 9200 } = options;
-  console.log('options', options);
-
   const image = `docker.elastic.co/elasticsearch/elasticsearch-oss:${version}-SNAPSHOT`;
   const config = {
     Image: image,
     Labels: {
-      'kibana.environment': 'test'
+      'elasticsearch-version': version,
+      'foo': 'bar'
     },
     ExposedPorts: {
       '9200/tcp': {},
@@ -153,4 +149,11 @@ export async function createEsContainer(options = {}) {
 
   const container = await docker.createContainer(config);
   return new EsContainer(container, options);
+}
+
+export async function listEsContainer() {
+  const containers = await docker.listContainers();
+  return containers.filter(container => {
+    return container.Labels['elasticsearch-version'] !== undefined;
+  });
 }
