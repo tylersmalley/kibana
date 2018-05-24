@@ -1,4 +1,4 @@
-import { exec } from '../lib';
+import { exec } from '../../../utils';
 
 export const BootstrapTask = {
   global: true,

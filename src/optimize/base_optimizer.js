@@ -149,7 +149,10 @@ export default class BaseOptimizer {
           name: 'vendors',
           filename: 'vendors.bundle.js',
           // only combine node_modules from Kibana
-          minChunks: module => module.context && module.context.indexOf(nodeModulesPath) !== -1
+          minChunks: module => {
+            console.log('module', module);
+            return module.context && module.context.indexOf(nodeModulesPath) !== -1;
+          }
         }),
 
         new webpack.NoEmitOnErrorsPlugin(),

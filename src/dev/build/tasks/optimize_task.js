@@ -1,6 +1,7 @@
 import del from 'del';
 
-import { copyAll, exec } from '../lib';
+import { copyAll } from '../lib';
+import { exec } from '../../../utils';
 import { getNodeDownloadInfo } from './nodejs';
 
 export const OptimizeBuildTask = {

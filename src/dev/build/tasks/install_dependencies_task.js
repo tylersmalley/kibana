@@ -1,4 +1,4 @@
-import { exec } from '../lib';
+import { exec } from '../../../utils';
 
 export const InstallDependenciesTask = {
   description: 'Installing node_modules, including production builds of packages',

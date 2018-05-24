@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-import { exec } from '../../lib';
+import { exec } from '../../../../utils';
 
 export async function runFpm(config, log, build, type, pkgSpecificFlags) {
   const linux = config.getLinuxPlatform();

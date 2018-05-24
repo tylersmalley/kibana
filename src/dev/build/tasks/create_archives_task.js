@@ -1,6 +1,7 @@
 import { dirname, extname, basename } from 'path';
 
-import { mkdirp, exec } from '../lib';
+import { mkdirp } from '../lib';
+import { exec } from '../../../utils';
 
 export const CreateArchivesTask = {
   description: 'Creating the archives for each platform',
