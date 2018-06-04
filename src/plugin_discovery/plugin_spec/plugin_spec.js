@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { resolve, basename, isAbsolute as isAbsolutePath } from 'path';
+import { resolve, basename, isAbsolute as isAbsolutePath, parse as parsePath } from 'path';
 
 import toPath from 'lodash/internal/toPath';
 import { get } from 'lodash';
@@ -48,6 +48,12 @@ export class PluginSpec {
    * directory for this plugin. The final directory must have the name "public",
    * though it can be located somewhere besides the root of the plugin. Set
    * this to false to disable exposure of a public directory
+   * @param {String|False} [opts.styleSheet] path to the stylesheet within
+   * the publicDir. When provided, this will be used to when the plugin is active.
+   * Providing false diables loading of any stylesheets for the plugin.
+   * @param {String} [opts.scss] path to an SCSS file within the plugins root directory.
+   * When in development, this will generate a CSS file to be specified in conjuntion
+   * with the styleSheet option.
    */
   constructor(pack, options) {
     const {
@@ -63,6 +69,8 @@ export class PluginSpec {
       preInit,
       init,
       isEnabled,
+      styleSheet,
+      scss,
     } = options;
 
     this._id = id;
@@ -72,6 +80,8 @@ export class PluginSpec {
     this._require = require;
 
     this._publicDir = publicDir;
+    this._styleSheet = styleSheet;
+    this._scss = scss;
     this._uiExports = uiExports;
 
     this._configPrefix = configPrefix;
@@ -162,6 +172,17 @@ export class PluginSpec {
     }
 
     return this._publicDir;
+  }
+
+  getStyleSheet() {
+    if (!this._styleSheet && this.getScss()) {
+      return `${parsePath(this.getScss()).name}.css`;
+    }
+    return this._styleSheet;
+  }
+
+  getScss() {
+    return this._scss;
   }
 
   getExportSpecs() {

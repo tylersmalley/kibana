@@ -1,17 +1,18 @@
 window.onload = function () {
-  function bundleFile(filename) {
+  function createAnchor(href) {
     var anchor = document.createElement('a');
-    anchor.setAttribute('href', '{{bundlePath}}/' + filename);
+    anchor.setAttribute('href', href);
     return anchor.href;
   }
-  var files = [
-    bundleFile('vendors.style.css'),
-    bundleFile('commons.style.css'),
-    bundleFile('{{appId}}.style.css'),
 
-    bundleFile('vendors.bundle.js'),
-    bundleFile('commons.bundle.js'),
-    bundleFile('{{appId}}.bundle.js')
+  var files = [
+    createAnchor('{{bundlePath}}/vendors.style.css'),
+    createAnchor('{{bundlePath}}/commons.style.css'),
+    createAnchor('{{styleSheetPath}}'),
+
+    createAnchor('{{bundlePath}}/vendors.bundle.js'),
+    createAnchor('{{bundlePath}}/commons.bundle.js'),
+    createAnchor('{{bundlePath}}/{{appId}}.bundle.js')
   ];
 
   (function next() {

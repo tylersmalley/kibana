@@ -33,6 +33,7 @@ export class UiApp {
       linkToLastSubUrl,
       listed,
       url = `/app/${id}`,
+      styleSheet,
     } = spec;
 
     if (!id) {
@@ -51,6 +52,7 @@ export class UiApp {
     this._url = url;
     this._pluginId = pluginId;
     this._kbnServer = kbnServer;
+    this._styleSheet = styleSheet;
 
     if (this._pluginId && !this._getPlugin()) {
       throw new Error(`Unknown plugin id "${this._pluginId}"`);
@@ -102,6 +104,18 @@ export class UiApp {
     return this._main ? [this._main] : [];
   }
 
+  getStyleSheetPath() {
+    if (this._styleSheet === false) {
+      return;
+    }
+
+    if (this._styleSheet) {
+      return `plugins/${this.getId()}/${this._styleSheet}`;
+    } else {
+      return `bundles/${this.getId()}.style.css`;
+    }
+  }
+
   _getPlugin() {
     const pluginId = this._pluginId;
     const { plugins } = this._kbnServer;
@@ -119,7 +133,8 @@ export class UiApp {
       icon: this._icon,
       main: this._main,
       navLink: this._navLink,
-      linkToLastSubUrl: this._linkToLastSubUrl
+      linkToLastSubUrl: this._linkToLastSubUrl,
+      styleSheet: this._styleSheet,
     };
   }
 }

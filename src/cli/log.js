@@ -30,5 +30,8 @@ export default class Log {
     this.good = quiet || silent ? _.noop : _.partial(log, green);
     this.warn = quiet || silent ? _.noop : _.partial(log, yellow);
     this.bad = silent ? _.noop : _.partial(log, red);
+
+    this.info = quiet || silent ? _.noop : log;
+    this.error = this.bad;
   }
 }

@@ -104,6 +104,7 @@ export function findPluginSpecs(settings, configToMutate) {
     return await defaultConfig(settings);
   }).shareReplay();
 
+
   // find plugin packs in configured paths/dirs
   const packageJson$ = config$.mergeMap(config => {
     return Observable.merge(

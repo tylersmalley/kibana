@@ -26,6 +26,7 @@ export default function (kibana) {
         id: 'stateSessionStorageRedirect',
         main: 'plugins/state_session_storage_redirect',
         hidden: true,
+        styleSheet: false,
       }
     }
   });

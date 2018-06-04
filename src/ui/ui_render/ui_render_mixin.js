@@ -65,7 +65,8 @@ export function uiRenderMixin(kbnServer, server, config) {
         const bootstrap = new AppBootstrap({
           templateData: {
             appId: app.getId(),
-            bundlePath: `${config.get('server.basePath')}/bundles`
+            bundlePath: `${config.get('server.basePath')}/bundles`,
+            styleSheetPath: `${config.get('server.basePath')}/${app.getStyleSheetPath()}`,
           },
           translations: await request.getUiTranslations()
         });

@@ -24,6 +24,7 @@ export function dashboardMode(kibana) {
     id: 'dashboard_mode',
     publicDir: resolve(__dirname, 'public'),
     require: ['kibana', 'elasticsearch', 'xpack_main'],
+    styleSheet: false,
     uiExports: {
       uiSettingDefaults: {
         [CONFIG_DASHBOARD_ONLY_MODE_ROLES]: {
