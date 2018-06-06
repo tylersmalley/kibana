@@ -18,7 +18,6 @@
  */
 
 import path from 'path';
-import { FSWatcher } from 'chokidar';
 import { SassBuilder } from '../../../cli/cluster/sass_builder';
 import { findPluginSpecs } from '../../../plugin_discovery/find_plugin_specs';
 
@@ -27,7 +26,6 @@ export const TranspileScssTask = {
 
   async run(config, log, build) {
     const scanDirs = [ build.resolvePath('src/core_plugins') ];
-    const watcher = new FSWatcher({ ignoreInitial: true });
     const { spec$ } = findPluginSpecs({ plugins: { scanDirs, paths: [] } });
 
     const enabledPlugins = await spec$.toArray().toPromise();
@@ -37,7 +35,7 @@ export const TranspileScssTask = {
         const sassPath = path.join(plugin.getPath(), plugin.getScss());
         const styleSheetPath = path.join(plugin.getPublicDir(), plugin.getStyleSheet());
 
-        const builder = new SassBuilder(sassPath, styleSheetPath, { watcher, log });
+        const builder = new SassBuilder(sassPath, styleSheetPath, { log });
         await builder.build();
       }
     }));
