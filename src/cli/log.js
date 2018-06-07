@@ -21,9 +21,9 @@ import { format } from 'util';
 import { includes } from 'lodash';
 
 export default class Log {
-  constructor(quiet, silent) {
+  constructor({ quiet, silent, useUTC }) {
     const KbnLoggerStringFormat = require('../server/logging/log_format_string');
-    const logger = new KbnLoggerStringFormat();
+    const logger = new KbnLoggerStringFormat({ useUTC });
 
     this.format = (data = {}) => {
       if (silent) {

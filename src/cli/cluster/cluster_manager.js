@@ -39,7 +39,9 @@ export default class ClusterManager {
   }
 
   constructor(opts, config) {
-    this.log = new Log(opts.quiet, opts.silent);
+    const useUTC = config.get('logging.useUTC');
+
+    this.log = new Log({ quiet: opts.quiet, silent: opts.silent, useUTC });
     this.addedCount = 0;
     this.inReplMode = !!opts.repl;
 
