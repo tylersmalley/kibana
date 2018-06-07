@@ -120,37 +120,35 @@ export default class ClusterManager {
     }
   }
 
-  setupScssWatching(pluginPaths, scanDirs) {
+  async setupScssWatching(pluginPaths, scanDirs) {
     const { FSWatcher } = require('chokidar');
     const watcher = new FSWatcher({ ignoreInitial: true });
     const { spec$ } = findPluginSpecs({ plugins: { paths: pluginPaths, scanDirs } });
 
-    spec$.toArray().toPromise().then(enabledPlugins => {
-      const scssBundles = enabledPlugins.reduce((acc, plugin) => {
-        if (plugin.getScss() && plugin.getStyleSheet()) {
-          const sassPath = join(plugin.getPath(), plugin.getScss());
-          const styleSheetPath = join(plugin.getPublicDir(), plugin.getStyleSheet());
+    const enabledPlugins = await spec$.toArray().toPromise();
+    const scssBundles = enabledPlugins.reduce((acc, plugin) => {
+      if (plugin.getScss() && plugin.getStyleSheet()) {
+        const sassPath = join(plugin.getPath(), plugin.getScss());
+        const styleSheetPath = join(plugin.getPublicDir(), plugin.getStyleSheet());
 
-          const builder = new SassBuilder(sassPath, styleSheetPath, { watcher, log: this.log });
-          builder.build();
-          builder.addToWatcher();
+        const builder = new SassBuilder(sassPath, styleSheetPath, { watcher, log: this.log });
+        builder.build();
+        builder.addToWatcher();
 
-          return [ ...acc, builder ];
-        } else {
-          return acc;
-        }
-
+        return [ ...acc, builder ];
+      } else {
         return acc;
-      }, []);
+      }
 
+      return acc;
+    }, []);
 
-      watcher.on('all', async (event, path) => {
-        for (let i = 0; i < scssBundles.length; i++) {
-          if (await scssBundles[i].buildIfInPath(path)) {
-            return;
-          }
+    watcher.on('all', async (event, path) => {
+      for (let i = 0; i < scssBundles.length; i++) {
+        if (await scssBundles[i].buildIfInPath(path)) {
+          return;
         }
-      });
+      }
     });
   }
 
@@ -199,7 +197,7 @@ export default class ClusterManager {
         this.watcher.removeListener('add', this.onWatcherAdd);
         this.watcher.on('all', this.onWatcherChange);
 
-        this.log.good('watching for changes', `(${this.addedCount} files)`);
+        this.log.info('watching for changes', `(${this.addedCount} files)`);
         this.startCluster();
       })
     );
@@ -251,7 +249,7 @@ export default class ClusterManager {
   }
 
   onWatcherError(err) {
-    this.log.bad('failed to watch files!\n', err.stack);
+    this.log.error('failed to watch files!\n', err.stack);
     process.exit(1); // eslint-disable-line no-process-exit
   }
 }

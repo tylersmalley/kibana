@@ -18,6 +18,7 @@
  */
 
 import path from 'path';
+import { format } from 'util';
 import fs from 'fs';
 import sass from 'node-sass';
 import { FSWatcher } from 'chokidar';
@@ -55,12 +56,13 @@ export class SassBuilder {
     return path.join(path.dirname(this.input), '**', '*.s{a,c}ss');
   }
 
-  log(level, ...message) {
+  log(type, ...data) {
     if (!this.logger) {
       return;
     }
 
-    this.logger[level](...message);
+    const message = data instanceof Error ? data : format(...data);
+    this.logger[type](message);
   }
 
   async buildIfInPath(path) {
@@ -84,9 +86,12 @@ export class SassBuilder {
       });
 
       fs.writeFileSync(this.output, rendered.css);
-      this.log('info', 'Compiled SASS into CSS ', this.output);
-    } catch(e) {
-      this.log('error', 'Compiling SCSS failed', e);
+
+      this.log('info', 'Compiled CSS:', this.output);
+    } catch(error) {
+      this.log('warning', 'Compiling CSS failed:', this.output);
+
+      throw error;
     }
   }
 }
