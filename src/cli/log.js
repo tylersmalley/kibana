@@ -18,7 +18,6 @@
  */
 
 import { format } from 'util';
-import { includes } from 'lodash';
 
 export default class Log {
   constructor({ quiet, silent, useUTC }) {
@@ -30,7 +29,8 @@ export default class Log {
         return;
       }
 
-      if (quiet && includes(['info', 'warning'], data.type)) {
+      // only surface errors when running with quiet
+      if (quiet && data.type === 'error') {
         return;
       }
 
