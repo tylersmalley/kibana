@@ -124,6 +124,28 @@ export default class ClusterManager {
     const { FSWatcher } = require('chokidar');
     const watcher = new FSWatcher({ ignoreInitial: true });
     const { spec$ } = findPluginSpecs({ plugins: { paths: pluginPaths, scanDirs } });
+    const log = this.log;
+
+    function onSuccess(builder) {
+      log.format({
+        type: 'info',
+        message: `Compiled CSS: ${builder.input}`,
+        tags: ['scss']
+      });
+    }
+
+    function onError(builder, error) {
+      log.format({
+        type: 'error',
+        message: `Compiling CSS failed: ${builder.input}`,
+        tags: ['scss']
+      });
+      log.format({
+        error,
+        type: 'error',
+        tags: ['scss']
+      });
+    }
 
     const enabledPlugins = await spec$.toArray().toPromise();
     const scssBundles = enabledPlugins.reduce((acc, plugin) => {
@@ -131,8 +153,8 @@ export default class ClusterManager {
         const sassPath = join(plugin.getPath(), plugin.getScss());
         const styleSheetPath = join(plugin.getPublicDir(), plugin.getStyleSheet());
 
-        const builder = new SassBuilder(sassPath, styleSheetPath, { watcher, log: this.log });
-        builder.build();
+        const builder = new SassBuilder(sassPath, styleSheetPath, { watcher });
+        builder.build().then(onSuccess.bind(this, builder)).catch(onError.bind(this, builder));
         builder.addToWatcher();
 
         return [ ...acc, builder ];
@@ -145,8 +167,13 @@ export default class ClusterManager {
 
     watcher.on('all', async (event, path) => {
       for (let i = 0; i < scssBundles.length; i++) {
-        if (await scssBundles[i].buildIfInPath(path)) {
-          return;
+        try {
+          if (await scssBundles[i].buildIfInPath(path)) {
+            onSuccess(scssBundles[i]);
+            return;
+          }
+        } catch(e) {
+          onError(scssBundles[i], e);
         }
       }
     });

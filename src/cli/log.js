@@ -25,7 +25,7 @@ export default class Log {
     const KbnLoggerStringFormat = require('../server/logging/log_format_string');
     const logger = new KbnLoggerStringFormat();
 
-    this.log = (data = {}) => {
+    this.format = (data = {}) => {
       if (silent) {
         return;
       }
@@ -38,11 +38,11 @@ export default class Log {
     };
 
     this.info = (...msg) =>
-      this.log({ type: 'info', message: format(...msg) });
+      this.format({ type: 'info', message: format(...msg) });
 
     this.warning = (...msg) =>
-      this.log({ type: 'warning', message: format(...msg) });
+      this.format({ type: 'warning', message: format(...msg) });
 
-    this.error = error => this.log({ type: 'error', error });
+    this.error = error => this.format({ type: 'error', error });
   }
 }

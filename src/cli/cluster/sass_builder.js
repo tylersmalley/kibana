@@ -18,7 +18,6 @@
  */
 
 import path from 'path';
-import { format } from 'util';
 import fs from 'fs';
 import sass from 'node-sass';
 import { FSWatcher } from 'chokidar';
@@ -30,14 +29,12 @@ export class SassBuilder {
    * @param {String} output - Full path to CSS to write to
    * @param {Object|null} options
    * @property {FSWatcher|null} options.watcher - Instance of Chokidar to use
-   * @property {Log|null} options.log - Instance of logger
    */
 
   constructor(input, output, options = {}) {
     this.input = input;
     this.output = output;
     this.watcher = options.watcher || new FSWatcher({});
-    this.logger = options.log;
   }
 
   /**
@@ -56,15 +53,6 @@ export class SassBuilder {
     return path.join(path.dirname(this.input), '**', '*.s{a,c}ss');
   }
 
-  log(type, ...data) {
-    if (!this.logger) {
-      return;
-    }
-
-    const message = data instanceof Error ? data : format(...data);
-    this.logger[type](message);
-  }
-
   async buildIfInPath(path) {
     if (anymatch(this.getGlob(), path)) {
       await this.build();
@@ -79,19 +67,11 @@ export class SassBuilder {
    */
 
   async build() {
-    try {
-      const rendered = await sass.renderSync({
-        file: this.input,
-        outfile: this.output
-      });
+    const rendered = await sass.renderSync({
+      file: this.input,
+      outfile: this.output
+    });
 
-      fs.writeFileSync(this.output, rendered.css);
-
-      this.log('info', 'Compiled CSS:', this.output);
-    } catch(error) {
-      this.log('warning', 'Compiling CSS failed:', this.output);
-
-      throw error;
-    }
+    fs.writeFileSync(this.output, rendered.css);
   }
 }

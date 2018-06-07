@@ -35,8 +35,15 @@ export const TranspileScssTask = {
         const sassPath = path.join(plugin.getPath(), plugin.getScss());
         const styleSheetPath = path.join(plugin.getPublicDir(), plugin.getStyleSheet());
 
-        const builder = new SassBuilder(sassPath, styleSheetPath, { log });
-        await builder.build();
+        const builder = new SassBuilder(sassPath, styleSheetPath);
+
+        try {
+          await builder.build();
+          log.info(`Compiled SCSS: ${sassPath}`);
+        } catch(e) {
+          log.error(`Compiling SCSS failed: ${sassPath}`);
+          throw e;
+        }
       }
     }));
   }
