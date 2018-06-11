@@ -25,6 +25,7 @@ const createBuild = require('./create_build');
 const createPackage = require('./create_package');
 
 module.exports = function(plugin, run, options) {
+  console.log('plugin', plugin);
   options = options || {};
   let buildVersion = plugin.version;
   let kibanaVersion =

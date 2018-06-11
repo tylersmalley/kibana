@@ -104,5 +104,6 @@ export default function (kibana) {
       }
     },
     init: require('./init.js'),
+    scss: 'styles/timelion.scss',
   });
 }
