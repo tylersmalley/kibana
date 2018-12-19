@@ -7,7 +7,10 @@
 import _ from 'lodash';
 
 import { Request } from 'hapi';
+import { alias } from 'io-ts';
 import { DeprecationAPIResponse, DeprecationInfo } from 'src/legacy/core_plugins/elasticsearch';
+
+import { EcsAliases } from './ecs_aliases';
 
 export interface EnrichedDeprecationInfo extends DeprecationInfo {
   index?: string;
@@ -21,23 +24,30 @@ export interface EnrichedDeprecationInfo extends DeprecationInfo {
 export interface UpgradeAssistantStatus {
   cluster: EnrichedDeprecationInfo[];
   indices: EnrichedDeprecationInfo[];
-
+  ecs_aliases: any;
   [checkupType: string]: EnrichedDeprecationInfo[];
 }
 
 export async function getUpgradeAssistantStatus(
-  callWithRequest: any,
-  req: Request,
-  basePath: string
+  boundCallWithRequest: any,
+  basePath: string,
+  ecsAliaseRegistrations: any
 ): Promise<UpgradeAssistantStatus> {
-  const deprecations = (await callWithRequest(req, 'transport.request', {
-    path: '/_xpack/migration/deprecations',
-    method: 'GET',
-  })) as DeprecationAPIResponse;
+  const ecsAliases = new EcsAliases(boundCallWithRequest, ecsAliaseRegistrations);
+
+  // ) as DeprecationAPIResponse?
+  const [deprecations, aliases] = await Promise.all([
+    boundCallWithRequest('transport.request', {
+      path: '/_xpack/migration/deprecations',
+      method: 'GET',
+    }),
+    ecsAliases.fetch(),
+  ]);
 
   return {
     cluster: deprecations.cluster_settings.concat(deprecations.node_settings),
     indices: getCombinedIndexInfos(deprecations, basePath),
+    ecs_aliases: aliases,
   };
 }
 

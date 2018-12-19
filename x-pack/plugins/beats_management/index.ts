@@ -4,6 +4,7 @@
  * you may not use this file except in compliance with the Elastic License.
  */
 import Joi from 'joi';
+import _ from 'lodash';
 import { resolve } from 'path';
 import { PLUGIN } from './common/constants';
 import { CONFIG_PREFIX } from './common/constants/plugin';
@@ -28,7 +29,7 @@ export const config = Joi.object({
 export function beats(kibana: any) {
   return new kibana.Plugin({
     id: PLUGIN.ID,
-    require: ['kibana', 'elasticsearch', 'xpack_main'],
+    require: ['kibana', 'elasticsearch', 'xpack_main', 'upgrade_assistant'],
     publicDir: resolve(__dirname, 'public'),
     uiExports: {
       managementSections: ['plugins/beats_management'],
@@ -37,6 +38,13 @@ export function beats(kibana: any) {
     configPrefix: CONFIG_PREFIX,
     async init(server: KibanaLegacyServer) {
       await initServerWithKibana(server);
+
+      server.plugins.upgrade_assistant.aliases.register(() => {
+        return {
+          'beat.hostname': 'agent.hostname',
+          'beat.name': 'agent.name',
+        };
+      });
     },
   });
 }

@@ -15,6 +15,7 @@ import chrome from 'ui/chrome';
 
 import { UpgradeAssistantStatus } from '../../server/lib/es_migration_apis';
 import { LatestMinorBanner } from './latest_minor_banner';
+import { AliasesTab } from './tabs/aliases';
 import { CheckupTab } from './tabs/checkup';
 import { OverviewTab } from './tabs/overview';
 import { LoadingState, UpgradeAssistantTabProps } from './types';
@@ -133,6 +134,21 @@ export class UpgradeAssistantTabsUI extends React.Component<
               id: 'xpack.upgradeAssistant.checkupTab.indexLabel',
               defaultMessage: 'index',
             })}
+            showBackupWarning
+            {...commonProps}
+          />
+        ),
+      },
+      {
+        id: 'aliases',
+        name: intl.formatMessage({
+          id: 'xpack.upgradeAssistant.checkupTab.aliasesTabLabel',
+          defaultMessage: 'ECS Aliases',
+        }),
+        content: (
+          <AliasesTab
+            key="indices"
+            deprecations={checkupData ? checkupData.ecs_aliases : undefined}
             showBackupWarning
             {...commonProps}
           />

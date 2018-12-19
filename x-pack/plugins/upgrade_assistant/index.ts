@@ -8,6 +8,13 @@ import Joi from 'joi';
 import { resolve } from 'path';
 import { initServer } from './server';
 
+class AliasRegistration {
+  public registrations = [];
+  public register(convert) {
+    this.registrations.push(convert);
+  }
+}
+
 export function upgradeAssistant(kibana: any) {
   return new kibana.Plugin({
     id: 'upgrade_assistant',
@@ -25,7 +32,8 @@ export function upgradeAssistant(kibana: any) {
     },
 
     init(server: Server) {
-      // Add server routes and initialize the plugin here
+      server.expose('aliases', new AliasRegistration());
+
       initServer(server);
     },
   });

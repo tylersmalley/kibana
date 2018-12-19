@@ -7,8 +7,10 @@
 import { Legacy } from 'kibana';
 import { registerClusterCheckupRoutes } from './routes/cluster_checkup';
 import { registerDeprecationLoggingRoutes } from './routes/deprecation_logging';
+import { registerEcsAliasRoutes } from './routes/ecs_aliases';
 
 export function initServer(server: Legacy.Server) {
   registerClusterCheckupRoutes(server);
   registerDeprecationLoggingRoutes(server);
+  registerEcsAliasRoutes(server);
 }

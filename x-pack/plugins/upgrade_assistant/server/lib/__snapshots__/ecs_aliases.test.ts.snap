@@ -1,0 +1,468 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EcsAliases fetch loads indices 1`] = `
+Object {
+  "nextOffset": 13,
+  "suggestions": Array [
+    Object {
+      "fields": Object {
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-001",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+      },
+      "index": "beat-002",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-003",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-004",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+      },
+      "index": "beat-005",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-006",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-007",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+      },
+      "index": "beat-008",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-009",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-012",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+  ],
+}
+`;
+
+exports[`EcsAliases fetch loads partial page at offset 1`] = `
+Object {
+  "nextOffset": undefined,
+  "suggestions": Array [
+    Object {
+      "fields": Object {
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-013",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+      },
+      "index": "beat-014",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-015",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-016",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+      },
+      "index": "beat-017",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-018",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-019",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+      },
+      "index": "beat-020",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+    Object {
+      "fields": Object {
+        "old.bar": "new.newBar",
+        "old.baz": "new.newBaz",
+        "old.foo": "new.newFoo",
+      },
+      "index": "beat-021",
+      "mapping": Object {
+        "properties": Object {
+          "new": Object {
+            "properties": Object {
+              "newBar": Object {
+                "path": "old.bar",
+                "type": "alias",
+              },
+              "newBaz": Object {
+                "path": "old.baz",
+                "type": "alias",
+              },
+              "newFoo": Object {
+                "path": "old.foo",
+                "type": "alias",
+              },
+            },
+          },
+        },
+      },
+      "type": "_doc",
+    },
+  ],
+}
+`;

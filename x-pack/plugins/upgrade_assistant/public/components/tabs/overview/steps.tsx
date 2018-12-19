@@ -264,6 +264,50 @@ export const StepsUI: StatelessComponent<
             </Fragment>
           ),
         },
+        {
+          title: checkupData.ecs_aliases.suggestions
+            ? intl.formatMessage({
+                id: 'xpack.upgradeAssistant.overviewTab.steps.indicesStep.issuesRemainingStepTitle',
+                defaultMessage: 'Support for legacy Beats data',
+              })
+            : intl.formatMessage({
+                id:
+                  'xpack.upgradeAssistant.overviewTab.steps.indicesStep.noIssuesRemainingStepTitle',
+                defaultMessage: 'Your legacy Beats indices are ready',
+              }),
+          status: checkupData.ecs_aliases.suggestions ? 'warning' : 'complete',
+          children: (
+            <EuiText>
+              {checkupData.ecs_aliases.suggestions ? (
+                <Fragment>
+                  <p>
+                    <FormattedMessage
+                      id="xpack.upgradeAssistant.overviewTab.steps.clusterStep.todo.todoDetail"
+                      defaultMessage="Go to the {ecsAliasesTabButton} to add aliases to legacy Beats indices."
+                      values={{
+                        ecsAliasesTabButton: (
+                          <EuiLink onClick={() => setSelectedTabIndex(3)}>
+                            <FormattedMessage
+                              id="xpack.upgradeAssistant.overviewTab.steps.clusterStep.todo.ecsAliasesTabButton"
+                              defaultMessage="ECS aliases tab"
+                            />
+                          </EuiLink>
+                        ),
+                      }}
+                    />
+                  </p>
+                </Fragment>
+              ) : (
+                <p>
+                  <FormattedMessage
+                    id="xpack.upgradeAssistant.overviewTab.steps.clusterStep.noRemainingIssuesLabel"
+                    defaultMessage="No remaining deprecated settings."
+                  />
+                </p>
+              )}
+            </EuiText>
+          ),
+        },
 
         // Swap in START_UPGRADE_STEP on the last minor release.
         WAIT_FOR_RELEASE_STEP,

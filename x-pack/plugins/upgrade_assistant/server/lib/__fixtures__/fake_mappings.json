@@ -1,0 +1,323 @@
+{
+  "beat-001" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-002" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-003" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" },
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-004" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-005" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-006" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" },
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  ".example" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "@timestamp": { "type": "date" }
+        }
+      }
+    }
+  },
+  "beat-007" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" }
+
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-008" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-009" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" },
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-010" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" }
+            }
+          },
+          "new" : {
+            "properties" : {
+              "newFoo": { "type": "alias", "path": "old.foo" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-011" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          },
+          "new" : {
+            "properties" : {
+              "newBar": { "type": "alias", "path": "old.bar" },
+              "newBaz": { "type": "alias", "path": "old.baz" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-012" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" },
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          },
+          "new" : {
+            "properties" : {
+              "newBar": { "type": "alias", "path": "old.bar" },
+              "newBaz": { "type": "alias", "path": "old.baz" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-013" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-014" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-015" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" },
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-016" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-017" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-018" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" },
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-019" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-020" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "beat-021" : {
+    "mappings" : {
+      "_doc" : {
+        "properties" : {
+          "old" : {
+            "properties" : {
+              "foo": { "type": "text" },
+              "bar": { "type": "text" },
+              "baz": { "type": "text" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
