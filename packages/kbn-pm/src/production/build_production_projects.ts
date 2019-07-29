@@ -51,7 +51,7 @@ export async function buildProductionProjects({
 
   for (const batch of batchedProjects) {
     for (const project of batch) {
-      await deleteTarget(project);
+      // await deleteTarget(project);
       await buildProject(project);
       await copyToBuild(project, kibanaRoot, buildRoot);
     }
@@ -101,8 +101,8 @@ async function deleteTarget(project: Project) {
 }
 
 async function buildProject(project: Project) {
-  if (project.hasScript('build')) {
-    await project.runScript('build');
+  if (project.hasScript('kbn:build')) {
+    await project.runScript('kbn:build');
   }
 }
 

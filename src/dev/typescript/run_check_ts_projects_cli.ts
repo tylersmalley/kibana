@@ -52,9 +52,11 @@ export async function runCheckTsProjectsCli() {
         log.verbose('Checking %s', file.getAbsolutePath());
 
         const projects = PROJECTS.filter(p => p.isAbsolutePathSelected(file.getAbsolutePath()));
+
         if (projects.length === 0) {
           isNotInTsProject.push(file);
         }
+
         if (projects.length > 1 && !file.isTypescriptAmbient()) {
           isInMultipleTsProjects.push(file);
         }
