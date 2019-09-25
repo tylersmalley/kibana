@@ -17,15 +17,12 @@
  * under the License.
  */
 
-const execa = require('execa');
 const path = require('path');
 const os = require('os');
-const readline = require('readline');
+const { withProcRunner } = require('@kbn/dev-utils')
 const { createCliError } = require('../errors');
 const { findMostRecentlyChanged } = require('../utils');
 const { GRADLE_BIN } = require('../paths');
-
-const onceEvent = (emitter, event) => new Promise(resolve => emitter.once(event, resolve));
 
 /**
  * Creates archive from source
@@ -51,32 +48,24 @@ exports.buildSnapshot = async ({ license, sourcePath, log, platform = os.platfor
   log.info('%s %s', GRADLE_BIN, buildArgs.join(' '));
   log.debug('cwd:', sourcePath);
 
-  const build = execa(GRADLE_BIN, buildArgs, {
-    cwd: sourcePath,
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-
-  const stdout = readline.createInterface({ input: build.stdout });
-  const stderr = readline.createInterface({ input: build.stderr });
-
-  stdout.on('line', line => log.debug(line));
-  stderr.on('line', line => log.error(line));
-
-  const [exitCode] = await Promise.all([
-    Promise.race([
-      onceEvent(build, 'exit'),
-      onceEvent(build, 'error').then(error => {
-        throw createCliError(`Error spawning gradle: ${error.message}`);
-      }),
-    ]),
-    onceEvent(stdout, 'close'),
-    onceEvent(stderr, 'close'),
-  ]);
-
-  if (exitCode > 0) {
+  try {
+    await withProcRunner(log, async proc => {
+      await Promise.all([
+        proc.run('es', {
+          cmd: GRADLE_BIN,
+          args: buildArgs,
+          wait: true,
+          cwd: sourcePath
+        }),
+      ]);
+  
+      log.success('Complete');
+    });
+  } catch (e) {
+    log.error(e);
     throw createCliError('unable to build ES');
   }
-
+  
   const archivePattern = `distribution/archives/${task}/build/distributions/elasticsearch-*.${ext}`;
   const esArchivePath = findMostRecentlyChanged(path.resolve(sourcePath, archivePattern));
 

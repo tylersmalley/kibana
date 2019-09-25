@@ -23,6 +23,7 @@ export {
   ToolingLogTextWriter,
   pickLevelFromFlags,
   ToolingLogCollectingWriter,
+  defaultLog,
 } from './tooling_log';
 export { createAbsolutePathSerializer } from './serializers';
 export { CA_CERT_PATH, ES_KEY_PATH, ES_CERT_PATH } from './certs';

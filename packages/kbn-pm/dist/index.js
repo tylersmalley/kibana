@@ -216,7 +216,10 @@ async function run(argv) {
       h: 'help',
       i: 'include'
     },
-    boolean: ['prefer-offline', 'frozen-lockfile']
+    boolean: ['prefer-offline', 'frozen-lockfile', 'cache'],
+    default: {
+      cache: true
+    }
   });
   const args = options._;
 
@@ -2611,7 +2614,10 @@ const BootstrapCommand = {
     _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].write(chalk__WEBPACK_IMPORTED_MODULE_0___default.a.bold('\nLinking executables completed, running `kbn:bootstrap` scripts\n'));
     await Object(_utils_parallelize__WEBPACK_IMPORTED_MODULE_3__["parallelizeBatches"])(batchedProjects, async pkg => {
       if (pkg.hasScript('kbn:bootstrap')) {
-        await pkg.runScriptStreaming('kbn:bootstrap');
+        if (options['cache']) {// check if cache exists, return if so
+        }
+
+        await pkg.runScriptStreaming('kbn:bootstrap'); // cache asset
       }
     });
     _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].write(chalk__WEBPACK_IMPORTED_MODULE_0___default.a.green.bold('\nBootstrapping completed!\n'));

@@ -21,8 +21,9 @@
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "typescript": "3.5.3",
     "@kbn/expect": "1.0.0",
-    "chance": "1.0.18"
+    "@types/mkdirp": "^0.5.2",
+    "chance": "1.0.18",
+    "typescript": "3.5.3"
   }
 }

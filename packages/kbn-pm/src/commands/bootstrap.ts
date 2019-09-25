@@ -67,7 +67,13 @@ export const BootstrapCommand: ICommand = {
     log.write(chalk.bold('\nLinking executables completed, running `kbn:bootstrap` scripts\n'));
     await parallelizeBatches(batchedProjects, async pkg => {
       if (pkg.hasScript('kbn:bootstrap')) {
+        if (options['cache']) {
+          // check if cache exists, return if so
+        }
+
         await pkg.runScriptStreaming('kbn:bootstrap');
+
+        // cache asset
       }
     });
 
