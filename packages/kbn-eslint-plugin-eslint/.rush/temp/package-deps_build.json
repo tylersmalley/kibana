@@ -1,0 +1,22 @@
+{
+  "files": {
+    "packages/kbn-eslint-plugin-eslint/README.md": "6b6d0a0059a1f94f7588c31f18f01ea8828d4229",
+    "packages/kbn-eslint-plugin-eslint/index.js": "870b1cccd5c613cc89125f3e0ec0a60343b04672",
+    "packages/kbn-eslint-plugin-eslint/lib.js": "56684746c479f4632d2eb5f8c3c8361920d6264b",
+    "packages/kbn-eslint-plugin-eslint/package.json": "899ab75a3f4b41c8605d08f797594cf476e01bb3",
+    "packages/kbn-eslint-plugin-eslint/rules/__tests__/disallow_license_headers.js": "0bf71d717bad62cbec37faa90147ee4b9581bfed",
+    "packages/kbn-eslint-plugin-eslint/rules/__tests__/files/no_restricted_paths/client/a.js": "d15de7d98a9e0ca4e86f7a47edbb0441246246c9",
+    "packages/kbn-eslint-plugin-eslint/rules/__tests__/files/no_restricted_paths/server/b.js": "d15de7d98a9e0ca4e86f7a47edbb0441246246c9",
+    "packages/kbn-eslint-plugin-eslint/rules/__tests__/files/no_restricted_paths/server/c.js": "d15de7d98a9e0ca4e86f7a47edbb0441246246c9",
+    "packages/kbn-eslint-plugin-eslint/rules/__tests__/files/no_restricted_paths/server/deep/d.js": "d15de7d98a9e0ca4e86f7a47edbb0441246246c9",
+    "packages/kbn-eslint-plugin-eslint/rules/__tests__/no_restricted_paths.js": "c821aafb09285d23787ed8b343805d8eedca43a4",
+    "packages/kbn-eslint-plugin-eslint/rules/__tests__/require_license_header.js": "984c090ceb06b1da8152855ccdecc6a70e711a4f",
+    "packages/kbn-eslint-plugin-eslint/rules/disallow_license_headers.js": "0567307d18968f040771b6521c0d6c6e677af3fc",
+    "packages/kbn-eslint-plugin-eslint/rules/module_migration.js": "8119d338ee53628dcbb77a1be518735a63ce6528",
+    "packages/kbn-eslint-plugin-eslint/rules/no_restricted_paths.js": "9074c35d27c7ee6f93772ba05953e00ebb6f3f03",
+    "packages/kbn-eslint-plugin-eslint/rules/require_license_header.js": "f3c9fcef1985eebb30210936b88854027bb28db7",
+    "packages/kbn-eslint-plugin-eslint/.rush/temp/package-deps_build.json": "8815f08b84208a97419c2a89b6ef53b5d99d8b07",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "# required for rush "
+}

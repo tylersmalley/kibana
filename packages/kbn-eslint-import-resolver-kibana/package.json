@@ -9,6 +9,9 @@
     "type": "git",
     "url": "https://github.com/elastic/kibana/tree/master/packages/kbn-eslint-import-resolver-kibana"
   },
+  "scripts": {
+    "build": "# required for rush"
+  },
   "dependencies": {
     "debug": "^2.6.9",
     "eslint-import-resolver-node": "0.3.2",

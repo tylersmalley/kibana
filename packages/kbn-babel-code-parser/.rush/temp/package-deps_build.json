@@ -1,0 +1,17 @@
+{
+  "files": {
+    "packages/kbn-babel-code-parser/.babelrc": "7da72d17791281ef8d74cc487c73fd31243e6240",
+    "packages/kbn-babel-code-parser/README.md": "f99d01541ee2233ed7b32672dbf9c98b43d0ccb0",
+    "packages/kbn-babel-code-parser/package.json": "a9d373d33ab38ee28120a5b130eec1bddfe9587d",
+    "packages/kbn-babel-code-parser/src/can_require.js": "4d85910abe6ed68e3d125d3ac0920afa1a757831",
+    "packages/kbn-babel-code-parser/src/code_parser.js": "0f53bd249bb5cc7f189f209db32da47fdb445e30",
+    "packages/kbn-babel-code-parser/src/index.js": "70e4eb18068b037852e5e2ee73c283541d0c9510",
+    "packages/kbn-babel-code-parser/src/strategies.js": "89621bc53bd534d14ef40cc29e32925a55a20214",
+    "packages/kbn-babel-code-parser/src/strategies.test.js": "d7caa8b95d4a227bfc70a7e6aa65aaea81a3a978",
+    "packages/kbn-babel-code-parser/src/visitors.js": "ad93570a46d7eda4b946eda471e4c0b6aad539ae",
+    "packages/kbn-babel-code-parser/src/visitors.test.js": "a8f865bda26e84785cd786934bc08afc58d096a3",
+    "packages/kbn-babel-code-parser/.rush/temp/package-deps_build.json": "a53279ad992fc126144758d162f47533f6f58ecb",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "babel src --out-dir target "
+}

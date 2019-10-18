@@ -14,6 +14,9 @@
     "url": "https://github.com/elastic/eslint-config-kibana/issues"
   },
   "homepage": "https://github.com/elastic/eslint-config-kibana#readme",
+  "scripts": {
+    "build": ""
+  },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "1.13.0",
     "@typescript-eslint/parser": "1.13.0",

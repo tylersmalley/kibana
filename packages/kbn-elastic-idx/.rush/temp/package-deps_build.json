@@ -1,0 +1,14 @@
+{
+  "files": {
+    "packages/kbn-elastic-idx/.npmignore": "ece13b72c93eaa5c2d3a71aeffa5fffbad3cece2",
+    "packages/kbn-elastic-idx/README.md": "81cd5d0f86e9bb594d940b34d094f131cdcbd426",
+    "packages/kbn-elastic-idx/babel/index.js": "a13547993ef932b0e00965237b12e4ac09307e5f",
+    "packages/kbn-elastic-idx/babel/index.test.js": "69b6939aefa6736f2966ab50b273ed81b6219112",
+    "packages/kbn-elastic-idx/package.json": "d25a7b185005ec8f591b0f1d915ac7c6da91f788",
+    "packages/kbn-elastic-idx/src/index.ts": "eeb0df2747a1435ef2b877eae52d25f8719a5e1a",
+    "packages/kbn-elastic-idx/tsconfig.json": "27833d7594031c388b1eb21a8c92fd74961078ce",
+    "packages/kbn-elastic-idx/.rush/temp/package-deps_build.json": "e02a8f8b0a8d2f96d9b79450181873e2629c12d0",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "tsc "
+}

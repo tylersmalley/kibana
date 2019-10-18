@@ -1,0 +1,20 @@
+{
+  "files": {
+    "packages/kbn-eslint-import-resolver-kibana/README.md": "b4d37c02c8092a7f3b04e8df3d6d0f5333fc1e11",
+    "packages/kbn-eslint-import-resolver-kibana/import_resolver_kibana.js": "5c409ade260b13e4a91ed7bec3c20df57cf0275b",
+    "packages/kbn-eslint-import-resolver-kibana/lib/debug.js": "40894a97c8fdad81505b694215f1a01642cee04d",
+    "packages/kbn-eslint-import-resolver-kibana/lib/get_is_path_request.js": "e26660f76a5502a1cce9bbb5c02fcce4ecd0900f",
+    "packages/kbn-eslint-import-resolver-kibana/lib/get_kibana_path.js": "93c0f907d628d349218e828c61cc7552b71f72eb",
+    "packages/kbn-eslint-import-resolver-kibana/lib/get_path_type.js": "3fb5b5dab777680b064bd1326feb2ac3cde5ae86",
+    "packages/kbn-eslint-import-resolver-kibana/lib/get_plugins.js": "319b959883a8abab2a7713122d95681343332d9d",
+    "packages/kbn-eslint-import-resolver-kibana/lib/get_project_root.js": "5c70d63bf147b8a63dbad698dbb56b6172e7fad7",
+    "packages/kbn-eslint-import-resolver-kibana/lib/get_webpack_config.js": "c51168ae2d91c3c2ecd827a50af680043105511c",
+    "packages/kbn-eslint-import-resolver-kibana/lib/index.js": "465ba2f740ac34de815ae0066935e45f4bfddc69",
+    "packages/kbn-eslint-import-resolver-kibana/lib/is_probably_webpack_shim.js": "2af7d1c2f53496e15c995ef6443a713cf2f49171",
+    "packages/kbn-eslint-import-resolver-kibana/lib/resolve_webpack_alias.js": "a7bb391f9b1c6be240436ea18a7bdc5625a908b5",
+    "packages/kbn-eslint-import-resolver-kibana/package.json": "6a79b60697b558e99d49fc8971a3556ad38bd36d",
+    "packages/kbn-eslint-import-resolver-kibana/.rush/temp/package-deps_build.json": "356e112fe3693caaaa3932c95489ef3d17cfb67b",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "# required for rush "
+}

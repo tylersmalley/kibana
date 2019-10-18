@@ -1,0 +1,21 @@
+{
+  "files": {
+    "packages/kbn-spec-to-console/README.md": "fc068b7ba65d6faec1ee8920592660c2f5c4dd86",
+    "packages/kbn-spec-to-console/bin/spec_to_console.js": "88f30be5e94fbc456927e45530db6c8ad9ddf662",
+    "packages/kbn-spec-to-console/index.js": "c32c05160fcc4c28f2fb23be776d4e41c709fb7c",
+    "packages/kbn-spec-to-console/lib/convert.js": "4c312818607671e99ba32d3bd586bfe953553a70",
+    "packages/kbn-spec-to-console/lib/convert.test.js": "cecb198b5e4f533a1248fd921befdc0265b81daa",
+    "packages/kbn-spec-to-console/lib/convert/methods.js": "a80ae860d26e077b364452311cb6d3eff1240e8c",
+    "packages/kbn-spec-to-console/lib/convert/params.js": "f195496f113012b9ef22fbcdba634af3476fcd38",
+    "packages/kbn-spec-to-console/lib/convert/parts.js": "040d04a0c1dc4ddba9fde6839e8816063b3e9577",
+    "packages/kbn-spec-to-console/lib/convert/paths.js": "6c65bf48b9b06306f9ddfe4199248d4698ff77b4",
+    "packages/kbn-spec-to-console/lib/replace_pattern.js": "29d16be3cc70f59818820c748c3aba74ca305b02",
+    "packages/kbn-spec-to-console/lib/static/map_interpolation.json": "b51ccb19f53c98c53f788dd9244b317f9abefef4",
+    "packages/kbn-spec-to-console/package.json": "ae554cd0cf82bcd4f75f36b9cdd8e838c47232cc",
+    "packages/kbn-spec-to-console/test/fixtures/cluster_health_autocomplete.json": "64ede603c0e0d011fd3322b20f79a5a0c5b2f2b1",
+    "packages/kbn-spec-to-console/test/fixtures/cluster_health_spec.json": "7911a8e24421836eafaabc04e1d17823a1670f29",
+    "packages/kbn-spec-to-console/.rush/temp/package-deps_build.json": "b01ada161be4b048195fff4b0bedc37499a8ce7d",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "# required for rush "
+}

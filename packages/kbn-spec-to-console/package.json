@@ -16,6 +16,9 @@
     "url": "https://github.com/jbudz/spec-to-console/issues"
   },
   "homepage": "https://github.com/jbudz/spec-to-console#readme",
+  "scripts": {
+    "build": "# required for rush"
+  },
   "devDependencies": {
     "jest": "^24.9.0",
     "prettier": "^1.18.2"

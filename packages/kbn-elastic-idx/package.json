@@ -16,13 +16,16 @@
     "kbn:watch": "yarn build --watch",
     "test": "jest"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/plugin-transform-async-to-generator": "^7.5.0",
+    "@types/jest": "~24.0.19",
+    "@types/node": "^10.12.27",
+    "@types/react": "^16.8.0",
     "jest": "^24.9.0",
     "typescript": "3.5.3"
-  },
-  "jest": {
-    "testEnvironment": "node"
   }
 }

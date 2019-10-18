@@ -1,0 +1,15 @@
+{
+  "files": {
+    "packages/elastic-datemath/.babelrc": "64daee413aeb36d0a94c0a92129f2f40106e8910",
+    "packages/elastic-datemath/.npmignore": "915a694e9066c9a8c3da30db9ab0658297191de2",
+    "packages/elastic-datemath/__tests__/index.js": "6afe09b01ef22b992d4d5ca59251830af304e497",
+    "packages/elastic-datemath/package.json": "53c8459821147af3fd008991888d5fd211215bff",
+    "packages/elastic-datemath/readme.md": "f7de9627e6d69f92cc0438e995090bf652f53ed1",
+    "packages/elastic-datemath/src/index.d.ts": "319c598e3e4ab0d90021c6e49e8706b49d89f6e9",
+    "packages/elastic-datemath/src/index.js": "afedad3ef6f72aba9783b7de3eed69e87fe88734",
+    "packages/elastic-datemath/tsconfig.json": "c23b6635a5c19e28d0e2167108949f45ee09e97b",
+    "packages/elastic-datemath/.rush/temp/package-deps_build.json": "56b90c35a7b5b43fd32a2333eec67b32ef20231e",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "babel src --out-dir target --copy-files "
+}

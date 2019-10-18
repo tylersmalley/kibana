@@ -1,0 +1,14 @@
+{
+  "files": {
+    "packages/kbn-babel-preset/README.md": "56ad7de60014716e9ade59b8dd8385a8930f72cd",
+    "packages/kbn-babel-preset/common_babel_parser_options.js": "3020b919bc3a652ce0ac6436f425761206863865",
+    "packages/kbn-babel-preset/common_preset.js": "8fc532bd572a946638599be255fc7ab2f8659342",
+    "packages/kbn-babel-preset/istanbul_preset.js": "033aadbaec553afb5e5e760dc556e076c51bc5fe",
+    "packages/kbn-babel-preset/node_preset.js": "5ef4219df59f750a9540a059fe3da652479202d0",
+    "packages/kbn-babel-preset/package.json": "2c0decd326090938c66f6325ddfeb3e31395568e",
+    "packages/kbn-babel-preset/webpack_preset.js": "def848f4154bbb7a2d1ec000add9bf6ffa4db4eb",
+    "packages/kbn-babel-preset/.rush/temp/package-deps_build.json": "e2de605605f6cecf409d6906e180729d505bbd77",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "# required for rush "
+}

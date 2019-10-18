@@ -1,0 +1,29 @@
+{
+  "files": {
+    "packages/kbn-plugin-generator/README.md": "86871978aedebd927018fdeceb99ff71bd5266f4",
+    "packages/kbn-plugin-generator/index.js": "90274288357b82ab26247f0bdadd6b7624f49b80",
+    "packages/kbn-plugin-generator/integration_tests/generate_plugin.test.js": "b43dcd80b44624cda5feda46edf4d5d51397b67f",
+    "packages/kbn-plugin-generator/package.json": "ad4c4feea40acb1213238ce0e6521170e0aba2b8",
+    "packages/kbn-plugin-generator/sao_template/sao.js": "3eb88f53190a18f17d18ade8e7ff83af73e1d0d6",
+    "packages/kbn-plugin-generator/sao_template/sao.test.js": "80149c008dad840c19e648d49dd247fbb2b6d9e3",
+    "packages/kbn-plugin-generator/sao_template/template/.i18nrc.json": "1a8aea88538768d4a45a3c62322339a29302dcc6",
+    "packages/kbn-plugin-generator/sao_template/template/.kibana-plugin-helpers.json": "383368c7f8ce1d0afe9629e1cde7535355b8bd04",
+    "packages/kbn-plugin-generator/sao_template/template/README.md": "59c3adf2713c8d1d438e5e3e228935911a278142",
+    "packages/kbn-plugin-generator/sao_template/template/eslintrc.js": "e1dfadc212b7e568d937b82c18a0757e8467d6f7",
+    "packages/kbn-plugin-generator/sao_template/template/gitignore": "db28fed19376d5beeb31200d8d56cf691642a620",
+    "packages/kbn-plugin-generator/sao_template/template/index.js": "0a3e16cf71e4907f13e85bb6a89a8eeb31ffaeda",
+    "packages/kbn-plugin-generator/sao_template/template/package_template.json": "4b6629fa90268528bc322157f071ced1a0ac140a",
+    "packages/kbn-plugin-generator/sao_template/template/public/__tests__/index.js": "9320bd7b028a867a544d2fcef417e6a8b333f2e0",
+    "packages/kbn-plugin-generator/sao_template/template/public/app.js": "031878d70f9f3e2cfe9c7a939bd8f7aac41e4095",
+    "packages/kbn-plugin-generator/sao_template/template/public/app.scss": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "packages/kbn-plugin-generator/sao_template/template/public/components/main/index.js": "68710baa1bee8e270b667aba4d359a3cc6d46354",
+    "packages/kbn-plugin-generator/sao_template/template/public/components/main/main.js": "59fd667c709aa256d60b98f43df80125900b0f8d",
+    "packages/kbn-plugin-generator/sao_template/template/public/hack.js": "775526c8e44a305b9bab6fb376763c2cd5bed5c9",
+    "packages/kbn-plugin-generator/sao_template/template/server/__tests__/index.js": "9320bd7b028a867a544d2fcef417e6a8b333f2e0",
+    "packages/kbn-plugin-generator/sao_template/template/server/routes/example.js": "5a612645f48fc3cfabfc655927e8efae2bc1a33f",
+    "packages/kbn-plugin-generator/sao_template/template/translations/zh-CN.json": "3447511c6739a175c447011c6b803435650c60ad",
+    "packages/kbn-plugin-generator/.rush/temp/package-deps_build.json": "6f2dbb2890a7b7e1b6452f8307ba4fa9fd74c2b9",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "# required for rush "
+}

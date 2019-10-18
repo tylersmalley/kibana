@@ -1,0 +1,16 @@
+{
+  "files": {
+    "packages/eslint-config-kibana/.eslintrc.js": "4412ce81368a1b77aa97a7f981b47d03d1a5ff0b",
+    "packages/eslint-config-kibana/.gitignore": "7c0c9807a8b7d93d2309f5679c03383882cbcda3",
+    "packages/eslint-config-kibana/.npmignore": "2ba159593147dae2b1a95a441d3c6eb83040e875",
+    "packages/eslint-config-kibana/README.md": "68c1639b834a5ef89ad1640ce53f6c62a7a501d3",
+    "packages/eslint-config-kibana/javascript.js": "f1ed905779fbc1bd26a305bb2c86c2ec5dd84863",
+    "packages/eslint-config-kibana/jest.js": "2aa9627404a6c2823f57fc4bc808d83b3c702b70",
+    "packages/eslint-config-kibana/package.json": "a45e8dd296ca98f733af514e61dfc6594672967d",
+    "packages/eslint-config-kibana/restricted_globals.js": "c14534d165bea15725c7ec4448621b3ba0dd33c4",
+    "packages/eslint-config-kibana/typescript.js": "90e688655ab7691c35d0c7d5f858e9c89fc075fc",
+    "packages/eslint-config-kibana/.rush/temp/package-deps_build.json": "9dc9fb5d9cf28d9cb9f6c413685fc0ce5320bcab",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": ""
+}

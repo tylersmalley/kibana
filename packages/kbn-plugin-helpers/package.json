@@ -9,6 +9,9 @@
   },
   "author": "Spencer Alger <email@spalger.com>",
   "license": "Apache-2.0",
+  "scripts": {
+    "build": "# required for rush"
+  },
   "peerDependencies": {
     "@kbn/babel-preset": "1.0.0"
   },

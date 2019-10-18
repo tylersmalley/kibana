@@ -1,0 +1,13 @@
+{
+  "files": {
+    "packages/kbn-expect/LICENSE.txt": "0f4acd44d76551c9eba4905b937b70c801de9cd9",
+    "packages/kbn-expect/README.md": "51cf5bcf2ee528d058235bede113968e014fa6df",
+    "packages/kbn-expect/expect.js": "8dc8af4cab8949425205b41508ee0c98a0a3e3d8",
+    "packages/kbn-expect/expect.js.d.ts": "2062dea686500f53ab52241bd2aeb98d04f8236e",
+    "packages/kbn-expect/package.json": "a36ebb8e6ae5eb72560cb6dfc568a8bec3479fe0",
+    "packages/kbn-expect/tsconfig.json": "a09ae2d7ae6415d82f7a41c806f9891331014383",
+    "packages/kbn-expect/.rush/temp/package-deps_build.json": "c475ec4318ad3ec2fa8079b0711d984fe6877812",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "# required for rush "
+}

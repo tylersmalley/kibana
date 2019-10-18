@@ -1,0 +1,13 @@
+{
+  "files": {
+    "packages/kbn-test-subj-selector/README.md": "463d6c808e298d12a1f7fe3ad2ce8980d735d471",
+    "packages/kbn-test-subj-selector/__tests__/index.js": "e18405b99ae52f0f582be4bb8cfce1bea80d20ed",
+    "packages/kbn-test-subj-selector/index.d.ts": "7a3a681e585e1c2a970f766df954dfc283ac4ca7",
+    "packages/kbn-test-subj-selector/index.js": "3984c15c00fefa1b11478ebc9fbeff4079e1bad9",
+    "packages/kbn-test-subj-selector/package.json": "126d7109daab2cc7721a40917997aebf3a50f313",
+    "packages/kbn-test-subj-selector/tsconfig.json": "3604f1004cf6c4f29e8ffb467f33b024296bb431",
+    "packages/kbn-test-subj-selector/.rush/temp/package-deps_build.json": "53f19cdf0c3c934ecbb35336badeea398af74e14",
+    "common/config/rush/yarn.lock": "f41b2a329707f9281a18b7b11e3371c9363be7df"
+  },
+  "arguments": "# required for rush "
+}
