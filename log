@@ -1,0 +1,2 @@
+Build options: --experimental_allow_incremental_repository_updates --worker_sandboxing --incompatible_strict_action_env --verbose_explanations --explain=log
+Executing action 'BazelWorkspaceStatusAction stable-status.txt': unconditional execution is requested.

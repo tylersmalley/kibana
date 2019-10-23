@@ -1,14 +1,14 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "./target/types",
     "outDir": "./target/out",
     "stripInternal": true,
     "declarationMap": true,
+    "esModuleInterop": true,
     "types": [
-      "jest",
-      "node"
+      "node",
+      "jest"
     ]
   },
   "include": [

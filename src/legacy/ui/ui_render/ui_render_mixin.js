@@ -55,7 +55,6 @@ export function uiRenderMixin(kbnServer, server, config) {
   server.setupViews(resolve(__dirname, 'views'));
 
   server.exposeStaticDir('/node_modules/@elastic/eui/dist/{path*}', fromRoot('node_modules/@elastic/eui/dist'));
-  server.exposeStaticDir('/node_modules/@kbn/ui-framework/dist/{path*}', fromRoot('node_modules/@kbn/ui-framework/dist'));
   server.exposeStaticDir('/node_modules/@elastic/charts/dist/{path*}', fromRoot('node_modules/@elastic/charts/dist'));
 
   const translationsCache = { translations: null, hash: null };
@@ -118,11 +117,9 @@ export function uiRenderMixin(kbnServer, server, config) {
             darkMode ?
               [
                 `${basePath}/node_modules/@elastic/eui/dist/eui_theme_dark.css`,
-                `${basePath}/node_modules/@kbn/ui-framework/dist/kui_dark.css`,
                 `${basePath}/node_modules/@elastic/charts/dist/theme_only_dark.css`,
               ] : [
                 `${basePath}/node_modules/@elastic/eui/dist/eui_theme_light.css`,
-                `${basePath}/node_modules/@kbn/ui-framework/dist/kui_light.css`,
                 `${basePath}/node_modules/@elastic/charts/dist/theme_only_light.css`,
               ]
           ),

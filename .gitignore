@@ -44,3 +44,13 @@ package-lock.json
 *.sublime-*
 npm-debug.log*
 .tern-project
+
+/bazel-bin
+/bazel-kibana
+/bazel-out
+/bazel-testlogs
+
+/dist/bin
+/dist/kibana
+/dist/out
+/dist/testlogs

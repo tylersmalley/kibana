@@ -39,7 +39,6 @@
     "@storybook/addon-actions": "^5.1.11",
     "@storybook/addon-console": "^1.2.1",
     "@storybook/addon-info": "^5.1.11",
-    "@storybook/addon-knobs": "^5.1.11",
     "@storybook/addon-options": "^5.1.11",
     "@storybook/addon-storyshots": "^5.1.11",
     "@storybook/react": "^5.1.11",
@@ -102,7 +101,6 @@
     "@types/sinon": "^7.0.13",
     "@types/storybook__addon-actions": "^3.4.3",
     "@types/storybook__addon-info": "^4.1.2",
-    "@types/storybook__addon-knobs": "^5.0.3",
     "@types/storybook__react": "^4.0.2",
     "@types/styled-components": "^3.0.2",
     "@types/supertest": "^2.0.5",
@@ -208,7 +206,6 @@
     "@kbn/es-query": "1.0.0",
     "@kbn/i18n": "1.0.0",
     "@kbn/interpreter": "1.0.0",
-    "@kbn/ui-framework": "1.0.0",
     "@mapbox/mapbox-gl-draw": "^1.1.1",
     "@samverschueren/stream-to-observable": "^0.3.0",
     "@scant/router": "^0.1.0",
@@ -383,13 +380,5 @@
   },
   "engines": {
     "yarn": "^1.10.1"
-  },
-  "workspaces": {
-    "nohoist": [
-      "**/mochawesome",
-      "**/mochawesome/**",
-      "**/mocha-multi-reporters",
-      "**/mocha-multi-reporters/**"
-    ]
   }
 }

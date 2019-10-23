@@ -8,7 +8,6 @@ export * from './api';
 import '../../../../../built_assets/css/plugins/kibana/index.light.css';
 import '../../../../../built_assets/css/plugins/canvas/style/index.light.css';
 import '@elastic/eui/dist/eui_theme_light.css';
-import '@kbn/ui-framework/dist/kui_light.css';
 
 const css = require.context(
   '../../../../../built_assets/css',
