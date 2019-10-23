@@ -19,6 +19,7 @@
 
 import { schema, TypeOf } from '@kbn/config-schema';
 import { Duration } from 'moment';
+import { IS_KIBANA_RELEASE } from '../../utils';
 
 const hostURISchema = schema.uri({ scheme: ['http', 'https'] });
 
@@ -50,6 +51,7 @@ export const config = {
     pingTimeout: schema.duration({ defaultValue: schema.siblingRef('requestTimeout') }),
     startupTimeout: schema.duration({ defaultValue: '5s' }),
     logQueries: schema.boolean({ defaultValue: false }),
+    ignoreEsVersion: schema.boolean({ defaultValue: false }),
     ssl: schema.object({
       verificationMode: schema.oneOf(
         [schema.literal('none'), schema.literal('certificate'), schema.literal('full')],
@@ -65,7 +67,15 @@ export const config = {
     }),
     apiVersion: schema.string({ defaultValue: DEFAULT_API_VERSION }),
     healthCheck: schema.object({ delay: schema.duration({ defaultValue: 2500 }) }),
-  }),
+    
+  },
+  {
+    validate: es => {
+      // if (es.ignoreEsVersion && IS_KIBANA_RELEASE) {
+      //   return 'elasticsearch.ignoreEsVersion is only available in development';
+      // }
+    }
+  })
 };
 
 export class ElasticsearchConfig {
@@ -84,6 +94,12 @@ export class ElasticsearchConfig {
    * method, query etc.).
    */
   public readonly logQueries: boolean;
+
+  /**
+   * Allows disabling of the Elasticsearch version compatibility check while
+   * in development.
+   */
+  public readonly ignoreEsVersion: boolean;
 
   /**
    * Hosts that the client will connect to. If sniffing is enabled, this list will
@@ -163,6 +179,7 @@ export class ElasticsearchConfig {
   constructor(rawConfig: ElasticsearchConfigType) {
     this.apiVersion = rawConfig.apiVersion;
     this.logQueries = rawConfig.logQueries;
+    this.ignoreEsVersion = rawConfig.ignoreEsVersion;
     this.hosts = Array.isArray(rawConfig.hosts) ? rawConfig.hosts : [rawConfig.hosts];
     this.requestHeadersWhitelist = Array.isArray(rawConfig.requestHeadersWhitelist)
       ? rawConfig.requestHeadersWhitelist

@@ -52,7 +52,9 @@
       "node",
       "jest",
       "react"
-    ]
+    ],
+    // allow for import JSON file
+    "resolveJsonModule": true
   },
   "include": [
     "kibana.d.ts",

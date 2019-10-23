@@ -53,6 +53,7 @@ export const config = (Joi) => {
     elasticsearch: Joi.object({
       customHeaders: Joi.object().default({}),
       logQueries: Joi.boolean().default(false),
+      ignoreEsVersion: Joi.boolean().default(false),
       requestHeadersWhitelist: Joi.array().items().single().default(DEFAULT_REQUEST_HEADERS),
       sniffOnStart: Joi.boolean().default(false),
       sniffInterval: Joi.number().allow(false).default(false),

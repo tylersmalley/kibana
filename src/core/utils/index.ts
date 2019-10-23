@@ -17,6 +17,7 @@
  * under the License.
  */
 
+export * from './artifact_type';
 export * from './assert_never';
 export * from './context';
 export * from './deep_freeze';

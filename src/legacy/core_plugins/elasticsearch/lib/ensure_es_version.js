@@ -104,6 +104,8 @@ export function ensureEsVersion(server, kibanaVersion) {
 
       if (incompatibleNodes.length) {
         const incompatibleNodeNames = getHumanizedNodeNames(incompatibleNodes);
+        console.log('>>>>>>>', server.config().get('elasticsearch.logQueries'));
+
         throw new Error(
           `This version of Kibana requires Elasticsearch v` +
         `${kibanaVersion} on all nodes. I found ` +
