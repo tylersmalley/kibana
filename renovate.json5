@@ -402,14 +402,6 @@
         ],
       },
       {
-        groupSlug: 'humps',
-        groupName: 'humps related packages',
-        packageNames: [
-          'humps',
-          '@types/humps',
-        ],
-      },
-      {
         groupSlug: 'jquery',
         groupName: 'jquery related packages',
         packageNames: [
@@ -730,27 +722,11 @@
         ],
       },
       {
-        groupSlug: 'nock',
-        groupName: 'nock related packages',
-        packageNames: [
-          'nock',
-          '@types/nock',
-        ],
-      },
-      {
         groupSlug: 'node-fetch',
         groupName: 'node-fetch related packages',
         packageNames: [
           'node-fetch',
           '@types/node-fetch',
-        ],
-      },
-      {
-        groupSlug: 'nodemailer',
-        groupName: 'nodemailer related packages',
-        packageNames: [
-          'nodemailer',
-          '@types/nodemailer',
         ],
       },
       {
