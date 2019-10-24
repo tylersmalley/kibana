@@ -1,0 +1,18 @@
+package(default_visibility = ["//visibility:public"])
+
+# exports_files([
+#     "expect.js",
+#     "expect.js.d.ts"
+# ], visibility = ["//:__subpackages__"])
+
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_package")
+
+filegroup(
+    name = "kbn-expect",
+    srcs = glob(["*.js", "*.ts"]),
+)
+
+# npm_package(
+#     name = "kbn-expect",
+#     srcs = glob(["*.js", "*.ts"]),
+# )

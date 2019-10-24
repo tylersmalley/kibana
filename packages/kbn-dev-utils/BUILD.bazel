@@ -1,0 +1,21 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+
+filegroup(
+    name = "certs",
+    srcs = glob(["certs/*"]),
+)
+
+ts_library(
+    name = "kbn-dev-utils",
+    srcs = glob(["src/**/*.ts"]),
+    module_name = "@kbn/dev-utils",
+    tsconfig = "tsconfig.json",
+    deps = [
+        "//packages/kbn-expect",
+        ":certs"
+
+    ]
+)
+
