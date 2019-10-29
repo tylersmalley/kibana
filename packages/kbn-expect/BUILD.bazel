@@ -9,10 +9,11 @@ load("@build_bazel_rules_nodejs//:index.bzl", "npm_package")
 
 filegroup(
     name = "kbn-expect",
-    srcs = glob(["*.js", "*.ts"]),
+    srcs = glob(["package.json", "*.js", "*.ts"]),
+    data = glob(["package.json", "*.js", "*.ts"]),
 )
 
 # npm_package(
 #     name = "kbn-expect",
-#     srcs = glob(["*.js", "*.ts"]),
+#     srcs = glob(["package.json", "*.js", "*.ts"]),
 # )
