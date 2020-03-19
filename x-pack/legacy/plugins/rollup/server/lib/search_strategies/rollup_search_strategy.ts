@@ -22,7 +22,7 @@ export const getRollupSearchStrategy = (
   RollupSearchRequest: any,
   RollupSearchCapabilities: any
 ) =>
-  class RollupSearchStrategy extends AbstractSearchStrategy {
+  (class RollupSearchStrategy extends AbstractSearchStrategy {
     name = 'rollup';
 
     constructor(elasticsearchService: ElasticsearchServiceSetup) {
@@ -75,4 +75,4 @@ export const getRollupSearchStrategy = (
 
       return mergeCapabilitiesWithFields(rollupIndexCapabilities, fieldsFromFieldCapsApi);
     }
-  };
+  });

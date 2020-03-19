@@ -13,7 +13,7 @@ interface Search {
 }
 
 export const getRollupSearchRequest = (AbstractSearchRequest: any) =>
-  class RollupSearchRequest extends AbstractSearchRequest {
+  (class RollupSearchRequest extends AbstractSearchRequest {
     async search(searches: Search[]) {
       const requests = searches.map(({ body, index }) =>
         this.callWithRequest(SEARCH_METHOD, {
@@ -25,4 +25,4 @@ export const getRollupSearchRequest = (AbstractSearchRequest: any) =>
 
       return await Promise.all(requests);
     }
-  };
+  });

@@ -22,7 +22,7 @@ import { VegaMapView } from './vega_view/vega_map_view';
 import { getNotifications, getData, getSavedObjects } from './services';
 
 export const createVegaVisualization = ({ serviceSettings }) =>
-  class VegaVisualization {
+  (class VegaVisualization {
     constructor(el, vis) {
       this._el = el;
       this._vis = vis;
@@ -130,4 +130,4 @@ export const createVegaVisualization = ({ serviceSettings }) =>
     destroy() {
       return this._vegaView && this._vegaView.destroy();
     }
-  };
+  });

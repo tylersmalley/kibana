@@ -85,7 +85,7 @@ export const getPartitionFieldsValuesFactory = (callWithRequest: callWithRequest
    * @param earliestMs
    * @param latestMs
    */
-  async function getPartitionFieldsValues(
+  (async function getPartitionFieldsValues(
     jobId: string,
     searchTerm: SearchTerm = {},
     criteriaFields: CriteriaField[],
@@ -154,4 +154,4 @@ export const getPartitionFieldsValuesFactory = (callWithRequest: callWithRequest
         ...getFieldObject(key, resp.aggregations),
       };
     }, {});
-  };
+  });

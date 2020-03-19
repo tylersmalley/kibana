@@ -8,7 +8,7 @@ import { KibanaRequest } from 'kibana/server';
 import { leastCommonInterval, isCalendarInterval } from './lib/interval_helper';
 
 export const getRollupSearchCapabilities = (DefaultSearchCapabilities: any) =>
-  class RollupSearchCapabilities extends DefaultSearchCapabilities {
+  (class RollupSearchCapabilities extends DefaultSearchCapabilities {
     constructor(
       req: KibanaRequest,
       fieldsCapabilities: { [key: string]: any },
@@ -112,4 +112,4 @@ export const getRollupSearchCapabilities = (DefaultSearchCapabilities: any) =>
 
       return `${value}${unit}`;
     }
-  };
+  });

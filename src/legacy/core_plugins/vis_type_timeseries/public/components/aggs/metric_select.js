@@ -46,12 +46,10 @@ export function filterRows(includeSiblings) {
     if (includeSiblings) {
       return !/^series/.test(row.type) && !/^percentile/.test(row.type) && row.type !== 'math';
     }
-    return (
-      !/_bucket$/.test(row.type) &&
-      !/^series/.test(row.type) &&
-      !/^percentile/.test(row.type) &&
-      row.type !== 'math'
-    );
+    return !/_bucket$/.test(row.type) &&
+    !/^series/.test(row.type) &&
+    !/^percentile/.test(row.type) &&
+    row.type !== 'math';
   };
 }
 

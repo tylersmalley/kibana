@@ -27,7 +27,7 @@ export const withEmbeddableSubscription = <
 >(
   WrappedComponent: React.ComponentType<{ input: I; output: O; embeddable: E }>
 ): React.ComponentType<{ embeddable: E }> =>
-  class WithEmbeddableSubscription extends React.Component<
+  (class WithEmbeddableSubscription extends React.Component<
     { embeddable: E },
     { input: I; output: O }
   > {
@@ -74,4 +74,4 @@ export const withEmbeddableSubscription = <
         />
       );
     }
-  };
+  });

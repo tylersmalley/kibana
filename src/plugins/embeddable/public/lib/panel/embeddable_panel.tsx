@@ -211,7 +211,7 @@ export class EmbeddablePanel extends React.Component<Props, State> {
     }
 
     const createGetUserData = (overlays: OverlayStart) =>
-      async function getUserData(context: { embeddable: IEmbeddable }) {
+      (async function getUserData(context: { embeddable: IEmbeddable }) {
         return new Promise<{ title: string | undefined }>(resolve => {
           const session = overlays.openModal(
             toMountPoint(
@@ -228,7 +228,7 @@ export class EmbeddablePanel extends React.Component<Props, State> {
             }
           );
         });
-      };
+      });
 
     // These actions are exposed on the context menu for every embeddable, they bypass the trigger
     // registry.
