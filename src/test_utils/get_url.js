@@ -44,7 +44,7 @@ export default function getUrl(config, app) {
 }
 
 getUrl.noAuth = function getUrlNoAuth(config, app) {
-  config = _.pick(config, function(val, param) {
+  config = _.pickBy(config, function(val) {
     return param !== 'auth';
   });
   return getUrl(config, app);

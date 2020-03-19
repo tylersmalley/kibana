@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { defaults, pluck, last, get } from 'lodash';
+import { defaults, map, last, get } from 'lodash';
 
 jest.mock('../../../../kibana_utils/public/history');
 import { IndexPattern } from './index_pattern';
@@ -174,7 +174,7 @@ describe('IndexPattern', () => {
       const scriptedNames = mockLogStashFields()
         .filter((item: Field) => item.scripted === true)
         .map((item: Field) => item.name);
-      const respNames = pluck(indexPattern.getScriptedFields(), 'name');
+      const respNames = map(indexPattern.getScriptedFields(), 'name');
 
       expect(respNames).toEqual(scriptedNames);
     });
@@ -218,7 +218,7 @@ describe('IndexPattern', () => {
       const notScriptedNames = mockLogStashFields()
         .filter((item: Field) => item.scripted === false)
         .map((item: Field) => item.name);
-      const respNames = pluck(indexPattern.getNonScriptedFields(), 'name');
+      const respNames = map(indexPattern.getNonScriptedFields(), 'name');
 
       expect(respNames).toEqual(notScriptedNames);
     });

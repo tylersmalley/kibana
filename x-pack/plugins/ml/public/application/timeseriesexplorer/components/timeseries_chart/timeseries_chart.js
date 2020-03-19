@@ -1328,7 +1328,7 @@ class TimeseriesChartIntl extends Component {
     if (swimlaneData !== undefined && swimlaneData.length > 0) {
       // Adjust the earliest back to the time of the first swimlane point
       // if this is before the time filter minimum.
-      earliest = Math.min(_.first(swimlaneData).date.getTime(), bounds.min.valueOf());
+      earliest = Math.min(_.head(swimlaneData).date.getTime(), bounds.min.valueOf());
     }
 
     const contextAggMs = contextAggregationInterval.asMilliseconds();

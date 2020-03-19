@@ -262,7 +262,7 @@ export class IndexPattern implements IIndexPattern {
 
   async addScriptedField(name: string, script: string, fieldType: string = 'string', lang: string) {
     const scriptedFields = this.getScriptedFields();
-    const names = _.pluck(scriptedFields, 'name');
+    const names = _.map(scriptedFields, 'name');
 
     if (_.contains(names, name)) {
       throw new DuplicateField(name);

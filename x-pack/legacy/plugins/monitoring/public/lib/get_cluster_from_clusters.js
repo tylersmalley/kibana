@@ -13,7 +13,7 @@ export function getClusterFromClusters(clusters, globalState) {
       return existingCurrent;
     }
 
-    const firstCluster = _.first(clusters);
+    const firstCluster = _.head(clusters);
     if (firstCluster && firstCluster.cluster_uuid) {
       return firstCluster;
     }

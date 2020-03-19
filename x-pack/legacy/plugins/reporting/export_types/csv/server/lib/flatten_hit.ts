@@ -49,7 +49,7 @@ export function createFlattenHit(
   const flattenFields = (flat: FlatHits, hitFields: string[]) => {
     _.forOwn(hitFields, (val, key) => {
       if (key) {
-        if (key[0] === '_' && !_.contains(metaFields, key)) return;
+        if (key[0] === '_' && !_.includes(metaFields, key)) return;
         flat[key] = _.isArray(val) && val.length === 1 ? val[0] : val;
       }
     });

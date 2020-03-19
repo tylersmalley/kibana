@@ -29,7 +29,7 @@ export function uniqLabels(arr) {
   }
 
   return _(arr)
-    .pluck('label')
-    .unique()
+    .map('label')
+    .uniq()
     .value();
 }

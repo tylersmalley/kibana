@@ -165,7 +165,7 @@ export function createFieldChooserDirective($location, config) {
           .commit();
 
         // include undefined so the user can clear the filter
-        $scope.fieldTypes = _.union(['any'], _.pluck(fields, 'type'));
+        $scope.fieldTypes = _.union(['any'], _.map(fields, 'type'));
       });
 
       $scope.increaseFieldCounter = function(fieldName) {

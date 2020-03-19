@@ -357,7 +357,7 @@ function getForecastRequestStats(job, forecastId) {
     })
       .then(resp => {
         if (resp.hits.total !== 0) {
-          obj.stats = _.first(resp.hits.hits)._source;
+          obj.stats = _.head(resp.hits.hits)._source;
         }
         resolve(obj);
       })

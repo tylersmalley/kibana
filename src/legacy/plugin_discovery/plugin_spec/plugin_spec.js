@@ -19,7 +19,7 @@
 
 import { resolve, basename, isAbsolute as isAbsolutePath } from 'path';
 
-import toPath from 'lodash/internal/toPath';
+import toPath from "lodash/toPath";
 import { get } from 'lodash';
 
 import { createInvalidPluginError } from '../errors';

@@ -106,7 +106,7 @@ uiModules
         };
 
         const readObjectClass = function(fields, Class) {
-          const fieldMap = _.indexBy(fields, 'name');
+          const fieldMap = _.keyBy(fields, 'name');
 
           _.forOwn(Class.mapping, function(esType, name) {
             if (fieldMap[name]) return;
@@ -190,7 +190,7 @@ uiModules
         $scope.aceInvalidEditors = [];
 
         $scope.aceLoaded = function(editor) {
-          if (_.contains(loadedEditors, editor)) return;
+          if (_.includes(loadedEditors, editor)) return;
           loadedEditors.push(editor);
 
           editor.$blockScrolling = Infinity;
@@ -203,7 +203,7 @@ uiModules
           session.on('changeAnnotation', function() {
             const annotations = session.getAnnotations();
             if (_.some(annotations, { type: 'error' })) {
-              if (!_.contains($scope.aceInvalidEditors, fieldName)) {
+              if (!_.includes($scope.aceInvalidEditors, fieldName)) {
                 $scope.aceInvalidEditors.push(fieldName);
               }
             } else {

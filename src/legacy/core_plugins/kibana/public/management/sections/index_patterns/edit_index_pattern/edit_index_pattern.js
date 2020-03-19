@@ -274,8 +274,8 @@ uiModules
         }
       });
 
-      $scope.indexedFieldTypes = _.unique(indexedFieldTypes);
-      $scope.scriptedFieldLanguages = _.unique(scriptedFieldLanguages);
+      $scope.indexedFieldTypes = _.uniq(indexedFieldTypes);
+      $scope.scriptedFieldLanguages = _.uniq(scriptedFieldLanguages);
     };
 
     $scope.changeFilter = function(filter, val) {

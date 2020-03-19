@@ -54,7 +54,7 @@ export function getSavedObjectFormat({
     state: {
       datasourceStates,
       datasourceMetaData: {
-        filterableIndexPatterns: _.uniq(filterableIndexPatterns, 'id'),
+        filterableIndexPatterns: _.uniqBy(filterableIndexPatterns, 'id'),
       },
       visualization: visualization.getPersistableState(state.visualization.state),
       query: framePublicAPI.query,

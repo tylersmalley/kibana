@@ -54,7 +54,7 @@ describe('Vislib Dispatch Class Test Suite', function() {
     });
 
     it('implements on, off, emit methods', function() {
-      const events = _.pluck(vis.handler.charts, 'events');
+      const events = _.map(vis.handler.charts, 'events');
       expect(events.length).to.be.above(0);
       events.forEach(function(dispatch) {
         expect(dispatch).to.have.property('on');
@@ -81,7 +81,7 @@ describe('Vislib Dispatch Class Test Suite', function() {
 
     describe('addEvent method', function() {
       it('returns a function that binds the passed event to a selection', function() {
-        const chart = _.first(vis.handler.charts);
+        const chart = _.head(vis.handler.charts);
         const apply = chart.events.addEvent('event', _.noop);
         expect(apply).to.be.a('function');
 
@@ -104,7 +104,7 @@ describe('Vislib Dispatch Class Test Suite', function() {
         });
 
         it('returns a function that binds ' + event + ' events to a selection', function() {
-          const chart = _.first(vis.handler.charts);
+          const chart = _.head(vis.handler.charts);
           const apply = chart.events[name](chart.series[0].chartEl);
           expect(apply).to.be.a('function');
 
@@ -136,7 +136,7 @@ describe('Vislib Dispatch Class Test Suite', function() {
         it('prepares data points', () => {
           const expectedResponse = [{ column: 0, row: 0, table: {}, value: 0 }];
           const d = { rawData: { column: 0, row: 0, table: {}, value: 0 } };
-          const chart = _.first(vis.handler.charts);
+          const chart = _.head(vis.handler.charts);
           const response = chart.events.clickEventResponse(d, { isSlices: true });
           expect(response.data).to.eql(expectedResponse);
         });
@@ -147,7 +147,7 @@ describe('Vislib Dispatch Class Test Suite', function() {
             rawData: { column: 0, row: 0, table: {}, value: 0 },
             yRaw: { table: {}, value: 0 },
           };
-          const chart = _.first(vis.handler.charts);
+          const chart = _.head(vis.handler.charts);
           const response = chart.events.clickEventResponse(d, { isSlices: true });
           expect(response.data).to.eql(expectedResponse);
         });
@@ -157,7 +157,7 @@ describe('Vislib Dispatch Class Test Suite', function() {
         it('prepares data points', () => {
           const expectedResponse = [{ column: 0, row: 0, table: {}, value: 0 }];
           const d = { xRaw: { column: 0, row: 0, table: {}, value: 0 } };
-          const chart = _.first(vis.handler.charts);
+          const chart = _.head(vis.handler.charts);
           const response = chart.events.clickEventResponse(d, { isSlices: false });
           expect(response.data).to.eql(expectedResponse);
         });
@@ -168,7 +168,7 @@ describe('Vislib Dispatch Class Test Suite', function() {
             xRaw: { column: 0, row: 0, table: {}, value: 0 },
             yRaw: { table: {}, value: 0 },
           };
-          const chart = _.first(vis.handler.charts);
+          const chart = _.head(vis.handler.charts);
           const response = chart.events.clickEventResponse(d, { isSlices: false });
           expect(response.data).to.eql(expectedResponse);
         });

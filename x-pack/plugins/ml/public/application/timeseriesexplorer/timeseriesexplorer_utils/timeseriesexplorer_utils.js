@@ -163,7 +163,7 @@ export function processDataForFocusAnomalies(
             chartPoint.numberOfCauses = causes.length;
             if (causes.length === 1) {
               // If only a single cause, copy actual and typical values to the top level.
-              const cause = _.first(record.causes);
+              const cause = _.head(record.causes);
               chartPoint.actual = cause.actual;
               chartPoint.typical = cause.typical;
             }
@@ -314,7 +314,7 @@ export function calculateDefaultFocusRange(
 
   const combinedData =
     isForecastData === false ? contextChartData : contextChartData.concat(contextForecastData);
-  const earliestDataDate = _.first(combinedData).date;
+  const earliestDataDate = _.head(combinedData).date;
   const latestDataDate = _.last(combinedData).date;
 
   let rangeEarliestMs;
@@ -323,7 +323,7 @@ export function calculateDefaultFocusRange(
   if (isForecastData === true) {
     // Return a range centred on the start of the forecast range, depending
     // on the time range of the forecast and data.
-    const earliestForecastDataDate = _.first(contextForecastData).date;
+    const earliestForecastDataDate = _.head(contextForecastData).date;
     const latestForecastDataDate = _.last(contextForecastData).date;
 
     rangeLatestMs = Math.min(

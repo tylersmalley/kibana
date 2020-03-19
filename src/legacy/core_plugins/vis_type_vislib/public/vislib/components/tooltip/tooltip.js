@@ -222,7 +222,7 @@ Tooltip.prototype.render = function() {
 
         const allHtml = _(allContents)
           .sortBy('order')
-          .pluck('html')
+          .map('html')
           .compact()
           .join('\n');
 

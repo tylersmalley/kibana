@@ -18,7 +18,7 @@
  */
 
 import _ from 'lodash';
-import toPath from 'lodash/internal/toPath';
+import toPath from "lodash/toPath";
 
 export function unset(object, rawPath) {
   if (!object) return;

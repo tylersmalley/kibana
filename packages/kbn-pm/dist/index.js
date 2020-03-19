@@ -58605,7 +58605,7 @@ const constants = exports.constants = typeof (_fs || _load_fs()).default.constan
   X_OK: (_fs || _load_fs()).default.X_OK
 };
 
-const lockQueue = exports.lockQueue = new (_blockingQueue || _load_blockingQueue()).default('fs lock');
+const lockQueue = exports.lockQueue = new ((_blockingQueue || _load_blockingQueue()).default)('fs lock');
 
 const readFileBuffer = exports.readFileBuffer = (0, (_promise2 || _load_promise2()).promisify)((_fs || _load_fs()).default.readFile);
 const open = exports.open = (0, (_promise2 || _load_promise2()).promisify)((_fs || _load_fs()).default.open);
@@ -59870,16 +59870,15 @@ class Hash {
       if (!(
         // The spec has very restricted productions for algorithms.
         // https://www.w3.org/TR/CSP2/#source-list-syntax
-        SPEC_ALGORITHMS.some(x => x === this.algorithm) &&
+        (SPEC_ALGORITHMS.some(x => x === this.algorithm) &&
         // Usually, if someone insists on using a "different" base64, we
         // leave it as-is, since there's multiple standards, and the
         // specified is not a URL-safe variant.
         // https://www.w3.org/TR/CSP2/#base64_value
-        this.digest.match(BASE64_REGEX) &&
-        // Option syntax is strictly visual chars.
+        this.digest.match(BASE64_REGEX) && // Option syntax is strictly visual chars.
         // https://w3c.github.io/webappsec-subresource-integrity/#grammardef-option-expression
         // https://tools.ietf.org/html/rfc5234#appendix-B.1
-        (this.options || []).every(opt => opt.match(VCHAR_REGEX))
+        (this.options || []).every(opt => opt.match(VCHAR_REGEX)))
       )) {
         return ''
       }
@@ -62348,7 +62347,7 @@ class Parser {
     if (versionMatch) {
       const version = +versionMatch[1];
       if (version > (_constants || _load_constants()).LOCKFILE_VERSION) {
-        throw new (_errors || _load_errors()).MessageError(`Can't install from a lockfile of version ${version} as you're on an old yarn version that only supports ` + `versions up to ${(_constants || _load_constants()).LOCKFILE_VERSION}. Run \`$ yarn self-update\` to upgrade to the latest version.`);
+        throw new ((_errors || _load_errors()).MessageError)(`Can't install from a lockfile of version ${version} as you're on an old yarn version that only supports ` + `versions up to ${(_constants || _load_constants()).LOCKFILE_VERSION}. Run \`$ yarn self-update\` to upgrade to the latest version.`);
       }
     }
 

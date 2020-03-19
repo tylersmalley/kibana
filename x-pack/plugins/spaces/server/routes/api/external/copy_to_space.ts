@@ -19,7 +19,7 @@ import { createLicensedRouteHandler } from '../../lib';
 type SavedObjectIdentifier = Pick<SavedObject, 'id' | 'type'>;
 
 const areObjectsUnique = (objects: SavedObjectIdentifier[]) =>
-  _.uniq(objects, (o: SavedObjectIdentifier) => `${o.type}:${o.id}`).length === objects.length;
+  _.uniqBy(objects, (o: SavedObjectIdentifier) => `${o.type}:${o.id}`).length === objects.length;
 
 export function initCopyToSpacesApi(deps: ExternalRouteDeps) {
   const { externalRouter, spacesService, getSavedObjects } = deps;

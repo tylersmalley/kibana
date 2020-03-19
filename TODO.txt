@@ -1,0 +1,2 @@
+WARNING: In file `src/legacy/core_plugins/kibana/public/discover/np_ready/components/field_chooser/field_chooser.js:163:38`, please check that the iteratee passed to `_.sortBy` only uses its first argument `value`.
+WARNING: In file `src/plugins/timelion/server/lib/reduce.js:45:22`, please check that the iteratee passed to `_.indexBy` only uses its first argument `value`.

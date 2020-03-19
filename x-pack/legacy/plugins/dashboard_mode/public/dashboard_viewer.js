@@ -63,5 +63,5 @@ function defaultUrl() {
 }
 
 function dashboardAppIdPrefix() {
-  return _.trimLeft(createDashboardEditUrl(''), '/');
+  return _.trimStart(createDashboardEditUrl(''), '/');
 }

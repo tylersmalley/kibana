@@ -53,7 +53,7 @@ export async function findListItems({
   }, {} as { [visType: string]: VisualizationsAppExtension });
   const searchOption = (field: string, ...defaults: string[]) =>
     _(extensions)
-      .pluck(field)
+      .map(field)
       .concat(defaults)
       .compact()
       .flatten()

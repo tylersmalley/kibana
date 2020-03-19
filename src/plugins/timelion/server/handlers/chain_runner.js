@@ -133,7 +133,7 @@ export default function chainRunner(tlConfig) {
     });
     return Bluebird.all(seriesList).then(function(args) {
       const list = _.chain(args)
-        .pluck('list')
+        .map('list')
         .flatten()
         .value();
       const seriesList = _.merge.apply(this, _.flatten([{}, args]));

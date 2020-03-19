@@ -29,7 +29,7 @@ import _ from 'lodash';
  * @param  {array} objs - the list to move the object within
  * @param  {number|any} obj - the object that should be moved, or the index that the object is currently at
  * @param  {number|boolean} below - the index to move the object to, or whether it should be moved up or down
- * @param  {function} qualifier - a lodash-y callback, object = _.where, string = _.pluck
+ * @param  {function} qualifier - a lodash-y callback, object = _.where, string = _.map
  * @return {array} - the objs argument
  */
 export function move(
@@ -50,7 +50,7 @@ export function move(
   }
 
   below = !!below;
-  qualifier = qualifier && _.callback(qualifier);
+  qualifier = qualifier && _.iteratee(qualifier);
 
   const above = !below;
   const finder = below ? _.findIndex : _.findLastIndex;

@@ -182,7 +182,7 @@ describe('fieldCalculator', function() {
       expect(extensions).to.be.an(Object);
       expect(extensions.buckets).to.be.an(Array);
       expect(extensions.buckets.length).to.be(3);
-      expect(_.pluck(extensions.buckets, 'value')).to.eql(['html', 'php', 'gif']);
+      expect(_.map(extensions.buckets, 'value')).to.eql(['html', 'php', 'gif']);
       expect(extensions.error).to.be(undefined);
     });
 
