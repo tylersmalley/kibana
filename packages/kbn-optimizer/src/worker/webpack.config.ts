@@ -115,6 +115,7 @@ export function getWebpackConfig(bundle: Bundle, worker: WorkerConfig) {
     },
 
     optimization: {
+      usedExports: true,
       noEmitOnErrors: true,
     },
 
@@ -322,6 +323,7 @@ export function getWebpackConfig(bundle: Bundle, worker: WorkerConfig) {
     ],
 
     optimization: {
+      usedExports: true,
       minimizer: [
         new TerserPlugin({
           cache: false,
@@ -329,7 +331,6 @@ export function getWebpackConfig(bundle: Bundle, worker: WorkerConfig) {
           extractComments: false,
           parallel: false,
           terserOptions: {
-            compress: false,
             mangle: false,
           },
         }),
