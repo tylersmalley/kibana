@@ -500,7 +500,9 @@
     "xmlbuilder": "13.0.2",
     "zlib": "^1.0.5"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "./webpackShims/*.js"
+  ],
   "engines": {
     "node": "10.19.0",
     "yarn": "^1.21.1"
