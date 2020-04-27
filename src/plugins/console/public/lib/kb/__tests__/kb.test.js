@@ -21,17 +21,17 @@ import _ from 'lodash';
 import { populateContext } from '../../autocomplete/engine';
 
 import '../../../application/models/sense_editor/sense_editor.test.mocks';
-const kb = require('../../kb');
-const mappings = require('../../mappings/mappings');
+import { setActiveApi, getTopLevelUrlCompleteComponents, _test } from '../../kb';
+import { clearMappings, loadMappings } from '../../mappings/mappings';
 
 describe('Knowledge base', () => {
   beforeEach(() => {
-    mappings.clear();
-    kb.setActiveApi(kb._test.loadApisFromJson({}));
+    clearMappings();
+    setActiveApi(_test.loadApisFromJson({}));
   });
   afterEach(() => {
-    mappings.clear();
-    kb.setActiveApi(kb._test.loadApisFromJson({}));
+    clearMappings();
+    setActiveApi(_test.loadApisFromJson({}));
   });
 
   const MAPPING = {
@@ -72,7 +72,7 @@ describe('Knowledge base', () => {
       context,
       null,
       expectedContext.autoCompleteSet,
-      kb.getTopLevelUrlCompleteComponents('GET')
+      getTopLevelUrlCompleteComponents('GET')
     );
 
     // override context to just check on id
@@ -113,7 +113,7 @@ describe('Knowledge base', () => {
   function indexTest(name, tokenPath, otherTokenValues, expectedContext) {
     test(name, function() {
       // eslint-disable-next-line new-cap
-      const testApi = new kb._test.loadApisFromJson(
+      const testApi = new _test.loadApisFromJson(
         {
           indexTest: {
             endpoints: {
@@ -128,12 +128,12 @@ describe('Knowledge base', () => {
             },
           },
         },
-        kb._test.globalUrlComponentFactories
+        _test.globalUrlComponentFactories
       );
 
-      kb.setActiveApi(testApi);
+      setActiveApi(testApi);
 
-      mappings.loadMappings(MAPPING);
+      loadMappings(MAPPING);
       testUrlContext(tokenPath, otherTokenValues, expectedContext);
     });
   }
@@ -162,7 +162,7 @@ describe('Knowledge base', () => {
 
   function typeTest(name, tokenPath, otherTokenValues, expectedContext) {
     test(name, function() {
-      const testApi = kb._test.loadApisFromJson(
+      const testApi = _test.loadApisFromJson(
         {
           typeTest: {
             endpoints: {
@@ -172,11 +172,11 @@ describe('Knowledge base', () => {
             },
           },
         },
-        kb._test.globalUrlComponentFactories
+        _test.globalUrlComponentFactories
       );
-      kb.setActiveApi(testApi);
+      setActiveApi(testApi);
 
-      mappings.loadMappings(MAPPING);
+      loadMappings(MAPPING);
 
       testUrlContext(tokenPath, otherTokenValues, expectedContext);
     });

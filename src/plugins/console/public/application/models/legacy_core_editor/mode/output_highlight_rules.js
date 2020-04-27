@@ -17,12 +17,8 @@
  * under the License.
  */
 
-const ace = require('brace');
 import 'brace/mode/json';
 import { addXJsonToRules } from '../../../../../../es_ui_shared/public';
-
-const oop = ace.acequire('ace/lib/oop');
-const JsonHighlightRules = ace.acequire('ace/mode/json_highlight_rules').JsonHighlightRules;
 
 export function OutputJsonHighlightRules() {
   this.$rules = {};
@@ -44,5 +40,3 @@ export function OutputJsonHighlightRules() {
     this.normalizeRules();
   }
 }
-
-oop.inherits(OutputJsonHighlightRules, JsonHighlightRules);

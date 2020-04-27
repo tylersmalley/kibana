@@ -19,10 +19,10 @@
 import '../sense_editor.test.mocks';
 import { create } from '../create';
 import _ from 'lodash';
-const $ = require('jquery');
+import $ from 'jquery';
 
-const kb = require('../../../../lib/kb/kb');
-const mappings = require('../../../../lib/mappings/mappings');
+import { _test, setActiveApi } from '../../../../lib/kb/kb';
+import { loadMappings, clearMappings } from '../../../../lib/mappings/mappings';
 
 describe('Integration', () => {
   let senseEditor;
@@ -55,11 +55,11 @@ describe('Integration', () => {
 
       testToRun.cursor.lineNumber += lineOffset;
 
-      mappings.clear();
-      mappings.loadMappings(mapping);
+      clearMappings();
+      loadMappings(mapping);
       const json = {};
       json[test.name] = kbSchemes || {};
-      const testApi = kb._test.loadApisFromJson(json);
+      const testApi = _test.loadApisFromJson(json);
       if (kbSchemes) {
         //  if (kbSchemes.globals) {
         //    $.each(kbSchemes.globals, function (parent, rules) {
@@ -72,7 +72,7 @@ describe('Integration', () => {
           });
         }
       }
-      kb.setActiveApi(testApi);
+      setActiveApi(testApi);
       const { cursor } = testToRun;
       await senseEditor.update(editorValue, true);
       senseEditor.getCoreEditor().moveCursorToPosition(cursor);

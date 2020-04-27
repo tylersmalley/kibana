@@ -20,7 +20,7 @@
 import { extractDeprecationMessages } from '../../../lib/utils';
 import { collapseLiteralStrings } from '../../../../../es_ui_shared/public';
 // @ts-ignore
-import * as es from '../../../lib/es/es';
+import { send } from '../../../lib/es/es';
 import { BaseResponseType } from '../../../types';
 
 export interface EsRequestArgs {
@@ -80,7 +80,7 @@ export function sendRequestToES(args: EsRequestArgs): Promise<ESRequestResult[]>
       } // append a new line for bulk requests.
 
       const startTime = Date.now();
-      es.send(esMethod, esPath, esData).always(
+      send(esMethod, esPath, esData).always(
         (dataOrjqXHR: any, textStatus: string, jqXhrORerrorThrown: any) => {
           if (reqId !== CURRENT_REQ_ID) {
             return;

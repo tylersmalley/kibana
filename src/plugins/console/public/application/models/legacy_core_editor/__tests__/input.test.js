@@ -17,7 +17,7 @@
  * under the License.
  */
 import '../legacy_core_editor.test.mocks';
-import RowParser from '../../../../lib/row_parser';
+import { RowParser } from '../../../../lib/row_parser';
 import { createTokenIterator } from '../../../factories';
 import $ from 'jquery';
 import { create } from '../create';

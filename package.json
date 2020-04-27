@@ -501,7 +501,8 @@
     "zlib": "^1.0.5"
   },
   "sideEffects": [
-    "./webpackShims/*.js"
+    "./webpackShims/*.js",
+    "src/plugins/console/public/application/models/legacy_core_editor/mode/*.js"
   ],
   "engines": {
     "node": "10.19.0",

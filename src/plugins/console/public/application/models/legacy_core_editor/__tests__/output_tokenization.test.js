@@ -17,8 +17,8 @@
  * under the License.
  */
 import '../legacy_core_editor.test.mocks';
-const $ = require('jquery');
-import RowParser from '../../../../lib/row_parser';
+import $ from 'jquery';
+import { RowParser } from '../../../../lib/row_parser';
 import ace from 'brace';
 import { createReadOnlyAceEditor } from '../create_readonly';
 let output;

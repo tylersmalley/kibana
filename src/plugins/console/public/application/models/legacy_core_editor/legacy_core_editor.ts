@@ -31,7 +31,7 @@ import {
 } from '../../../types';
 import { AceTokensProvider } from '../../../lib/ace_token_provider';
 import * as curl from '../sense_editor/curl';
-import smartResize from './smart_resize';
+import { smartResize } from './smart_resize';
 
 // @ts-ignore
 import * as InputMode from './mode/input';
