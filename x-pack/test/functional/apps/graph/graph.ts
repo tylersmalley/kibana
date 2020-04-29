@@ -127,6 +127,7 @@ export default function({ getService, getPageObjects }: FtrProviderContext) {
     });
 
     it('should show venn when clicking a line', async function() {
+      await PageObjects.graph.selectIndexPattern('secrepo*');
       await buildGraph();
       const { edges } = await PageObjects.graph.getGraphObjects();
 
