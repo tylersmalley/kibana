@@ -16,9 +16,7 @@
     "test:jest": "node scripts/jest",
     "test:mocha": "node scripts/mocha"
   },
-  "sideEffects": [
-    "./webpackShims/*.js"
-  ],
+  "sideEffects": false,
   "kibana": {
     "build": {
       "intermediateBuildDirectory": "build/plugin/kibana/x-pack",

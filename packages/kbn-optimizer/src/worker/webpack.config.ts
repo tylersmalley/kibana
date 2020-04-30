@@ -164,6 +164,7 @@ export function getWebpackConfig(bundle: Bundle, worker: WorkerConfig) {
               },
             },
           ],
+          sideEffects: true,
         },
         {
           test: /\.scss$/,
@@ -261,6 +262,7 @@ export function getWebpackConfig(bundle: Bundle, worker: WorkerConfig) {
               loader: require.resolve('./theme_loader'),
             },
           ],
+          sideEffects: true,
         },
         {
           test: /\.(woff|woff2|ttf|eot|svg|ico|png|jpg|gif|jpeg)(\?|$)/,
