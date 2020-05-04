@@ -502,7 +502,8 @@
   },
   "sideEffects": [
     "./webpackShims/*.js",
-    "./src/plugins/console/public/application/models/legacy_core_editor/mode/*.js"
+    "plugins/public/*/index.{js,ts}",
+    "./src/plugins/console/public/application/models/legacy_core_editor/mode/*.{js,ts}"
   ],
   "engines": {
     "node": "10.19.0",
