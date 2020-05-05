@@ -18,11 +18,11 @@
  */
 
 import ace from 'brace';
+
 import { OutputJsonHighlightRules } from './output_highlight_rules';
 
 const oop = ace.acequire('ace/lib/oop');
 const JSONMode = ace.acequire('ace/mode/json').Mode;
-const JsonHighlightRules = ace.acequire('ace/mode/json_highlight_rules').JsonHighlightRules;
 const MatchingBraceOutdent = ace.acequire('ace/mode/matching_brace_outdent').MatchingBraceOutdent;
 const CstyleBehaviour = ace.acequire('ace/mode/behaviour/cstyle').CstyleBehaviour;
 const CStyleFoldMode = ace.acequire('ace/mode/folding/cstyle').FoldMode;
@@ -35,9 +35,7 @@ export function Mode() {
   this.$behaviour = new CstyleBehaviour();
   this.foldingRules = new CStyleFoldMode();
 }
-
 oop.inherits(Mode, JSONMode);
-oop.inherits(OutputJsonHighlightRules, JsonHighlightRules);
 
 (function() {
   this.createWorker = function() {

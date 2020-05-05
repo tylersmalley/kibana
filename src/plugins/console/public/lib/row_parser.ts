@@ -28,7 +28,8 @@ export const MODE = {
   BETWEEN_REQUESTS: 32,
 };
 
-export class RowParser {
+// eslint-disable-next-line import/no-default-export
+export default class RowParser {
   constructor(private readonly editor: CoreEditor) {}
 
   MODE = MODE;

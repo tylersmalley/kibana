@@ -20,15 +20,17 @@
 import ace from 'brace';
 import { workerModule } from './worker';
 import { ScriptMode } from './script';
-import { InputHighlightRules } from './input_highlight_rules';
 
 const oop = ace.acequire('ace/lib/oop');
 const TextMode = ace.acequire('ace/mode/text').Mode;
+
 const MatchingBraceOutdent = ace.acequire('ace/mode/matching_brace_outdent').MatchingBraceOutdent;
 const CstyleBehaviour = ace.acequire('ace/mode/behaviour/cstyle').CstyleBehaviour;
 const CStyleFoldMode = ace.acequire('ace/mode/folding/cstyle').FoldMode;
 const WorkerClient = ace.acequire('ace/worker/worker_client').WorkerClient;
 const AceTokenizer = ace.acequire('ace/tokenizer').Tokenizer;
+
+import { InputHighlightRules } from './input_highlight_rules';
 
 export function Mode() {
   this.$tokenizer = new AceTokenizer(new InputHighlightRules().getRules());

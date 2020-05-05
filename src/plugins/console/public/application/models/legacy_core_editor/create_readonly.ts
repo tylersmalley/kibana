@@ -21,7 +21,7 @@ import _ from 'lodash';
 import ace from 'brace';
 // @ts-ignore
 import * as OutputMode from './mode/output';
-import { smartResize } from './smart_resize';
+import smartResize from './smart_resize';
 
 export interface CustomAceEditor extends ace.Editor {
   update: (text: string, mode?: any, cb?: () => void) => void;

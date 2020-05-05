@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { RowParser } from '../../../lib/row_parser';
+import RowParser from '../../../lib/row_parser';
 import { SenseEditor } from '../../models/sense_editor';
 /**
  * This function is considered legacy and should not be changed or updated before we have editor

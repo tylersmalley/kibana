@@ -18,7 +18,7 @@
  */
 import '../legacy_core_editor.test.mocks';
 import $ from 'jquery';
-import { RowParser } from '../../../../lib/row_parser';
+import RowParser from '../../../../lib/row_parser';
 import ace from 'brace';
 import { createReadOnlyAceEditor } from '../create_readonly';
 let output;
