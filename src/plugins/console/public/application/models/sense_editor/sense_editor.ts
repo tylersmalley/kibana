@@ -23,7 +23,7 @@ import { collapseLiteralStrings } from '../../../../../es_ui_shared/public';
 import * as utils from '../../../lib/utils';
 
 // @ts-ignore
-import { constructESUrl } from '../../../lib/es/es';
+import * as es from '../../../lib/es/es';
 
 import { CoreEditor, Position, Range } from '../../../types';
 import { createTokenIterator } from '../../factories';
@@ -478,7 +478,7 @@ export class SenseEditor {
       const esData = req.data;
 
       // this is the first url defined in elasticsearch.hosts
-      const url = constructESUrl(elasticsearchBaseUrl, esPath);
+      const url = es.constructESUrl(elasticsearchBaseUrl, esPath);
 
       let ret = 'curl -X' + esMethod + ' "' + url + '"';
       if (esData && esData.length) {
