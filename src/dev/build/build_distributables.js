@@ -40,7 +40,6 @@ import {
   CreatePackageJsonTask,
   CreateReadmeTask,
   CreateRpmPackageTask,
-  CreateStaticFsWithNodeModulesTask,
   DownloadNodeBuildsTask,
   ExtractNodeBuildsTask,
   InstallDependenciesTask,
@@ -115,55 +114,54 @@ export async function buildDistributables(options) {
   await run(BuildPackagesTask);
   await run(CreatePackageJsonTask);
   await run(InstallDependenciesTask);
-  await run(RemoveWorkspacesTask);
-  await run(CleanPackagesTask);
-  await run(CreateNoticeFileTask);
-  await run(UpdateLicenseFileTask);
-  await run(RemovePackageJsonDepsTask);
-  await run(TranspileScssTask);
-  await run(BuildKibanaPlatformPluginsTask);
-  await run(OptimizeBuildTask);
-  await run(CleanClientModulesOnDLLTask);
-  await run(CleanTypescriptTask);
-  await run(CleanExtraFilesFromModulesTask);
-  await run(CleanEmptyFoldersTask);
-  await run(CreateStaticFsWithNodeModulesTask);
+//   await run(RemoveWorkspacesTask);
+//   await run(CleanPackagesTask);
+//   await run(CreateNoticeFileTask);
+//   await run(UpdateLicenseFileTask);
+//   await run(RemovePackageJsonDepsTask);
+//   await run(TranspileScssTask);
+//   await run(BuildKibanaPlatformPluginsTask);
+//   // await run(OptimizeBuildTask);
+//   // await run(CleanClientModulesOnDLLTask);
+//   await run(CleanTypescriptTask);
+//   await run(CleanExtraFilesFromModulesTask);
+//   await run(CleanEmptyFoldersTask);
 
-  /**
-   * copy generic build outputs into platform-specific build
-   * directories and perform platform-specific steps
-   */
-  await run(CreateArchivesSourcesTask);
-  await run(CleanExtraBinScriptsTask);
-  await run(CleanExtraBrowsersTask);
-  await run(CleanNodeBuildsTask);
+//   /**
+//    * copy generic build outputs into platform-specific build
+//    * directories and perform platform-specific steps
+//    */
+//   await run(CreateArchivesSourcesTask);
+//   await run(CleanExtraBinScriptsTask);
+//   await run(CleanExtraBrowsersTask);
+//   await run(CleanNodeBuildsTask);
 
-  await run(PathLengthTask);
-  await run(UuidVerificationTask);
+//   await run(PathLengthTask);
+//   await run(UuidVerificationTask);
 
-  /**
-   * package platform-specific builds into archives
-   * or os-specific packages in the target directory
-   */
-  if (createArchives) {
-    // control w/ --skip-archives
-    await run(CreateArchivesTask);
-  }
-  if (createDebPackage) {
-    // control w/ --deb or --skip-os-packages
-    await run(CreateDebPackageTask);
-  }
-  if (createRpmPackage) {
-    // control w/ --rpm or --skip-os-packages
-    await run(CreateRpmPackageTask);
-  }
-  if (createDockerPackage) {
-    // control w/ --docker or --skip-os-packages
-    await run(CreateDockerPackageTask);
-  }
+//   /**
+//    * package platform-specific builds into archives
+//    * or os-specific packages in the target directory
+//    */
+//   if (createArchives) {
+//     // control w/ --skip-archives
+//     await run(CreateArchivesTask);
+//   }
+//   if (createDebPackage) {
+//     // control w/ --deb or --skip-os-packages
+//     await run(CreateDebPackageTask);
+//   }
+//   if (createRpmPackage) {
+//     // control w/ --rpm or --skip-os-packages
+//     await run(CreateRpmPackageTask);
+//   }
+//   if (createDockerPackage) {
+//     // control w/ --docker or --skip-os-packages
+//     await run(CreateDockerPackageTask);
+//   }
 
-  /**
-   * finalize artifacts by writing sha1sums of each into the target directory
-   */
-  await run(WriteShaSumsTask);
-}
+//   /**
+//    * finalize artifacts by writing sha1sums of each into the target directory
+//    */
+//   await run(WriteShaSumsTask);
+// }
