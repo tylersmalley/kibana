@@ -17,33 +17,34 @@
  * under the License.
  */
 
-import compactStringify from 'json-stringify-pretty-compact';
+import { schema } from '@kbn/config-schema';
+import { CoreSetup } from '../../../../../core/server';
+import { DataPluginStart } from '../../plugin';
+import { SearchUsage } from './usage';
 
-export class Utils {
-  /**
-   * If the 2nd array parameter in args exists, append it to the warning/error string value
-   */
-  static formatWarningToStr(value) {
-    if (arguments.length >= 2) {
-      try {
-        if (typeof arguments[1] === 'string') {
-          value += `\n${arguments[1]}`;
-        } else {
-          value += '\n' + compactStringify(arguments[1], { maxLength: 70 });
-        }
-      } catch (err) {
-        // ignore
-      }
-    }
-    return value;
-  }
+export function registerSearchUsageRoute(
+  core: CoreSetup<object, DataPluginStart>,
+  usage: SearchUsage
+): void {
+  const router = core.http.createRouter();
 
-  static formatErrorToStr(error) {
-    if (!error) {
-      error = 'ERR';
-    } else if (error instanceof Error) {
-      error = error.message;
+  router.post(
+    {
+      path: '/api/search/usage',
+      validate: {
+        body: schema.object({
+          eventType: schema.string(),
+          duration: schema.number(),
+        }),
+      },
+    },
+    async (context, request, res) => {
+      const { eventType, duration } = request.body;
+
+      if (eventType === 'success') usage.trackSuccess(duration);
+      if (eventType === 'error') usage.trackError(duration);
+
+      return res.ok();
     }
-    return Utils.formatWarningToStr(error, ...Array.from(arguments).slice(1));
-  }
+  );
 }
