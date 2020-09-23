@@ -165,25 +165,26 @@
 #CC# /src/plugins/region_map/ @elastic/kibana-gis
 
 # Operations
-/src/dev/ @elastic/kibana-operations
-/src/setup_node_env/ @elastic/kibana-operations
-/src/optimize/ @elastic/kibana-operations
-/packages/*eslint*/ @elastic/kibana-operations
+/.ci/es-snapshots/ @elastic/kibana-operations
+/jest.config.js elastic/kibana-operations
 /packages/*babel*/ @elastic/kibana-operations
+/packages/*eslint*/ @elastic/kibana-operations
 /packages/kbn-dev-utils*/ @elastic/kibana-operations
+/packages/kbn-es-archiver/ @elastic/kibana-operations
 /packages/kbn-es/ @elastic/kibana-operations
 /packages/kbn-optimizer/ @elastic/kibana-operations
 /packages/kbn-pm/ @elastic/kibana-operations
 /packages/kbn-test/ @elastic/kibana-operations
 /packages/kbn-ui-shared-deps/ @elastic/kibana-operations
-/packages/kbn-es-archiver/ @elastic/kibana-operations
 /packages/kbn-utils/ @elastic/kibana-operations
+/src/dev/ @elastic/kibana-operations
 /src/legacy/server/keystore/ @elastic/kibana-operations
 /src/legacy/server/pid/ @elastic/kibana-operations
 /src/legacy/server/sass/ @elastic/kibana-operations
 /src/legacy/server/utils/ @elastic/kibana-operations
 /src/legacy/server/warnings/ @elastic/kibana-operations
-/.ci/es-snapshots/ @elastic/kibana-operations
+/src/optimize/ @elastic/kibana-operations
+/src/setup_node_env/ @elastic/kibana-operations
 /vars/ @elastic/kibana-operations
 #CC# /packages/kbn-expect/ @elastic/kibana-operations
 

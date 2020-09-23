@@ -4,5 +4,7 @@
  * you may not use this file except in compliance with the Elastic License.
  */
 
+process.argv.push('--config', require('path').resolve(__dirname, '../jest.config.js'));
+
 require('../../src/setup_node_env');
-require('../dev-tools/jest').runJest();
+require('../../src/dev/jest/cli');

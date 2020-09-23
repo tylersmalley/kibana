@@ -17,6 +17,8 @@
  * under the License.
  */
 
+export * from './run_check_jest_configs_cli';
+
 export * from './junit_reporter';
 
 export * from './report_path';

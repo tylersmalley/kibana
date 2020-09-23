@@ -17,20 +17,13 @@
  * under the License.
  */
 
-// # Run Jest tests
-//
-// All args will be forwarded directly to Jest, e.g. to watch tests run:
-//
-//     node scripts/jest --watch
-//
-// or to build code coverage:
-//
-//     node scripts/jest --coverage
-//
-// See all cli options in https://facebook.github.io/jest/docs/cli.html
-
-var resolve = require('path').resolve;
-process.argv.push('--config', resolve(__dirname, '../jest.config.oss.js'));
-
-require('../src/setup_node_env');
-require('../src/dev/jest/cli');
+module.exports = {
+  rootDir: '.',
+  projects: [
+    '<rootDir>/packages/*/jest.config.js',
+    '<rootDir>/src/*/jest.config.js',
+    '<rootDir>/src/legacy/*/jest.config.js',
+    '<rootDir>/src/plugins/*/jest.config.js',
+    '<rootDir>/test/*/jest.config.js',
+  ],
+};
