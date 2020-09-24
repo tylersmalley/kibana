@@ -7,5 +7,5 @@
 module.exports = {
   preset: '@kbn/test',
   rootDir: '../../..',
-  roots: ['<rootDir>/x-pack/plugins/observability'],
+  roots: ['<rootDir>/x-pack/plugins/cross_cluster_replication'],
 };
