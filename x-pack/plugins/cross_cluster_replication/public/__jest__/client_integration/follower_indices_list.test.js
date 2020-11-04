@@ -10,7 +10,7 @@
       Could not load worker ReferenceError: Worker is not defined
           at createWorker (/<path-to-repo>/node_modules/brace/index.js:17992:5)
  */
-import * as stubWebWorker from '../../../../../test_utils/stub_web_worker'; // eslint-disable-line no-unused-vars
+import * as stubWebWorker from '@kbn/test/target/jest/utils/stub_web_worker'; // eslint-disable-line no-unused-vars
 
 import { getFollowerIndexMock } from './fixtures/follower_index';
 import './mocks';

@@ -11,7 +11,7 @@ import {
   TestBed,
   TestBedConfig,
   findTestSubject,
-} from '../../../../../test_utils';
+} from '@kbn/test/target/jest/utils';
 import { TemplateList } from '../../../public/application/sections/home/template_list';
 import { TemplateDeserialized } from '../../../common';
 import { WithAppDependencies, TestSubjects } from '../helpers';

@@ -13,7 +13,7 @@ import {
   TestBed,
   TestBedConfig,
   findTestSubject,
-} from '../../../../../test_utils';
+} from '@kbn/test/target/jest/utils';
 import { DataStream } from '../../../common';
 import { IndexManagementHome } from '../../../public/application/sections/home';
 import { indexManagementStore } from '../../../public/application/store';

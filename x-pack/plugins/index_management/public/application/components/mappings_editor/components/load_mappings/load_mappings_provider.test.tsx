@@ -32,7 +32,7 @@ jest.mock('lodash', () => {
   };
 });
 
-import { registerTestBed, TestBed } from '../../../../../../../../test_utils';
+import { registerTestBed, TestBed } from '@kbn/test/target/jest/utils';
 import { LoadMappingsProvider } from './load_mappings_provider';
 
 const ComponentToTest = ({ onJson }: { onJson: () => void }) => (

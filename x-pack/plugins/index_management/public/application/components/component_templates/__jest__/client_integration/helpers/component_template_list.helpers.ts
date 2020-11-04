@@ -6,14 +6,14 @@
 
 import { act } from 'react-dom/test-utils';
 
-import { BASE_PATH } from '../../../../../../../common';
 import {
   registerTestBed,
   TestBed,
   TestBedConfig,
   findTestSubject,
   nextTick,
-} from '../../../../../../../../../test_utils';
+} from '@kbn/test/target/jest/utils';
+import { BASE_PATH } from '../../../../../../../common';
 import { WithAppDependencies } from './setup_environment';
 import { ComponentTemplateList } from '../../../component_template_list/component_template_list';
 

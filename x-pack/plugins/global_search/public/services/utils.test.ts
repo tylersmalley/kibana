@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the Elastic License.
  */
 
-import { StubBrowserStorage } from '../../../../../src/test_utils/public/stub_browser_storage';
+import { StubBrowserStorage } from '@kbn/test/target/jest/utils/stub_browser_storage';
 import { getDefaultPreference } from './utils';
 
 describe('getDefaultPreference', () => {

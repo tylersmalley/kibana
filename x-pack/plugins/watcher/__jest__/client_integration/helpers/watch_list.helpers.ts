@@ -12,7 +12,7 @@ import {
   TestBed,
   TestBedConfig,
   nextTick,
-} from '../../../../../test_utils';
+} from '@kbn/test/target/jest/utils';
 import { WatchList } from '../../../public/application/sections/watch_list/components/watch_list';
 import { ROUTES, REFRESH_INTERVALS } from '../../../common/constants';
 import { withAppContext } from './app_context.mock';

@@ -12,7 +12,7 @@ import {
   TestBed,
   TestBedConfig,
   findTestSubject,
-} from '../../../../../test_utils';
+} from '@kbn/test/target/jest/utils';
 import { IndexManagementHome } from '../../../public/application/sections/home';
 import { indexManagementStore } from '../../../public/application/store';
 import { WithAppDependencies, services, TestSubjects } from '../helpers';

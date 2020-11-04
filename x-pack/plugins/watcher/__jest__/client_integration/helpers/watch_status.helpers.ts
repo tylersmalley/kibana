@@ -12,7 +12,7 @@ import {
   TestBed,
   TestBedConfig,
   nextTick,
-} from '../../../../../test_utils';
+} from '@kbn/test/target/jest/utils';
 import { WatchStatus } from '../../../public/application/sections/watch_status/components/watch_status';
 import { ROUTES } from '../../../common/constants';
 import { WATCH_ID } from './constants';

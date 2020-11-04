@@ -11,7 +11,7 @@ import {
   TestBed,
   TestBedConfig,
   findTestSubject,
-} from '../../../../../test_utils';
+} from '@kbn/test/target/jest/utils';
 import { PipelinesList } from '../../../public/application/sections/pipelines_list';
 import { WithAppDependencies } from './setup_environment';
 import { getListPath, ROUTES } from '../../../public/application/services/navigation';
