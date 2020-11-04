@@ -4,8 +4,8 @@
  * you may not use this file except in compliance with the Elastic License.
  */
 
-export function createJestConfig({ kibanaDirectory, rootDir, xPackKibanaDirectory }) {
-  const fileMockPath = `${kibanaDirectory}/src/dev/jest/mocks/file_mock.js`;
+export function createJestConfig({ kibanaDirectory, rootDir }) {
+  const fileMockPath = `${kibanaDirectory}/packages/kbn-test/target/jest/mocks/file_mock.js`;
   return {
     rootDir,
     roots: ['<rootDir>/plugins'],
@@ -18,13 +18,13 @@ export function createJestConfig({ kibanaDirectory, rootDir, xPackKibanaDirector
       '^src/legacy/(.*)': `${kibanaDirectory}/src/legacy/$1`,
       '^src/plugins/(.*)': `${kibanaDirectory}/src/plugins/$1`,
       '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': fileMockPath,
-      '\\.module.(css|scss)$': `${kibanaDirectory}/src/dev/jest/mocks/css_module_mock.js`,
-      '\\.(css|less|scss)$': `${kibanaDirectory}/src/dev/jest/mocks/style_mock.js`,
-      '\\.ace\\.worker.js$': `${kibanaDirectory}/src/dev/jest/mocks/worker_module_mock.js`,
-      '\\.editor\\.worker.js$': `${kibanaDirectory}/src/dev/jest/mocks/worker_module_mock.js`,
-      '^test_utils/enzyme_helpers': `${xPackKibanaDirectory}/test_utils/enzyme_helpers.tsx`,
-      '^test_utils/find_test_subject': `${xPackKibanaDirectory}/test_utils/find_test_subject.ts`,
-      '^test_utils/stub_web_worker': `${xPackKibanaDirectory}/test_utils/stub_web_worker.ts`,
+      '\\.module.(css|scss)$': `${kibanaDirectory}/packages/kbn-test/target/jest/mocks/css_module_mock.js`,
+      '\\.(css|less|scss)$': `${kibanaDirectory}/packages/kbn-test/target/jest/mocks/style_mock.js`,
+      '\\.ace\\.worker.js$': `${kibanaDirectory}/packages/kbn-test/target/jest/mocks/worker_module_mock.js`,
+      '\\.editor\\.worker.js$': `${kibanaDirectory}/packages/kbn-test/target/jest/mocks/worker_module_mock.js`,
+      '^test_utils/enzyme_helpers': `${kibanaDirectory}/packages/kbn-test/target/jest/utils/enzyme_helpers.tsx`,
+      '^test_utils/find_test_subject': `${kibanaDirectory}/packages/kbn-test/target/jest/utils/find_test_subject.ts`,
+      '^test_utils/stub_web_worker': `${kibanaDirectory}/packages/kbn-test/target/jest/utils/stub_web_worker.ts`,
       '^(!!)?file-loader!': fileMockPath,
     },
     collectCoverageFrom: [
@@ -44,20 +44,20 @@ export function createJestConfig({ kibanaDirectory, rootDir, xPackKibanaDirector
     coverageDirectory: `${kibanaDirectory}/target/kibana-coverage/jest`,
     coverageReporters: !!process.env.CODE_COVERAGE ? ['json'] : ['html'],
     setupFiles: [
-      `${kibanaDirectory}/src/dev/jest/setup/babel_polyfill.js`,
-      `${xPackKibanaDirectory}/dev-tools/jest/setup/polyfills.js`,
-      `${xPackKibanaDirectory}/dev-tools/jest/setup/enzyme.js`,
+      `${kibanaDirectory}/packages/kbn-test/target/jest/setup/babel_polyfill.js`,
+      `${kibanaDirectory}/packages/kbn-test/target/jest/setup/polyfills.js`,
+      `${kibanaDirectory}/packages/kbn-test/target/jest/setup/enzyme.js`,
     ],
     setupFilesAfterEnv: [
-      `${xPackKibanaDirectory}/dev-tools/jest/setup/setup_test.js`,
-      `${kibanaDirectory}/src/dev/jest/setup/mocks.js`,
-      `${kibanaDirectory}/src/dev/jest/setup/react_testing_library.js`,
+      `${kibanaDirectory}/packages/kbn-test/target/jest/setup/setup_test.js`,
+      `${kibanaDirectory}/packages/kbn-test/target/jest/setup/mocks.js`,
+      `${kibanaDirectory}/packages/kbn-test/target/jest/setup/react_testing_library.js`,
     ],
     testEnvironment: 'jest-environment-jsdom-thirteen',
     testMatch: ['**/*.test.{js,mjs,ts,tsx}'],
     testRunner: 'jest-circus/runner',
     transform: {
-      '^.+\\.(js|tsx?)$': `${kibanaDirectory}/src/dev/jest/babel_transform.js`,
+      '^.+\\.(js|tsx?)$': `${kibanaDirectory}/packages/kbn-test/target/jest/babel_transform.js`,
       '^.+\\.html?$': 'jest-raw-loader',
     },
     transformIgnorePatterns: [

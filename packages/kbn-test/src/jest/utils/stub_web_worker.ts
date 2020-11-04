@@ -17,14 +17,20 @@
  * under the License.
  */
 
-// bluebird < v3.3.5 does not work with MutationObserver polyfill
-// when MutationObserver exists, bluebird avoids using node's builtin async schedulers
-const bluebird = require('bluebird');
-bluebird.Promise.setScheduler(function (fn) {
-  global.setImmediate.call(global, fn);
-});
+function stubWebWorker() {
+  if (!window.Worker) {
+    // @ts-ignore we aren't honoring the real Worker spec here
+    window.Worker = function Worker() {
+      this.postMessage = jest.fn();
 
-const MutationObserver = require('mutation-observer');
-Object.defineProperty(window, 'MutationObserver', { value: MutationObserver });
+      // @ts-ignore TypeScript doesn't think this exists on the Worker interface
+      // https://developer.mozilla.org/en-US/docs/Web/API/Worker/terminate
+      this.terminate = jest.fn();
+    };
+  }
+}
 
-require('whatwg-fetch');
+stubWebWorker();
+
+// Add an export to avoid TS complaining "stub_web_worker.ts" is not a module.
+export { stubWebWorker };

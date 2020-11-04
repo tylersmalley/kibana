@@ -17,24 +17,22 @@
  * under the License.
  */
 
-import config from './config';
+// bluebird < v3.3.5 does not work with MutationObserver polyfill
+// when MutationObserver exists, bluebird avoids using node's builtin async schedulers
+const bluebird = require('bluebird');
+bluebird.Promise.setScheduler(function (fn) {
+  global.setImmediate.call(global, fn);
+});
 
-export default {
-  ...config,
-  testMatch: [
-    '**/integration_tests/**/*.test.js',
-    '**/integration_tests/**/*.test.ts',
-    '**/integration_tests/**/*.test.tsx',
-  ],
-  testPathIgnorePatterns: config.testPathIgnorePatterns.filter(
-    (pattern) => !pattern.includes('integration_tests')
-  ),
-  reporters: [
-    'default',
-    [
-      '<rootDir>/packages/kbn-test/target/jest/junit_reporter',
-      { reportName: 'Jest Integration Tests' },
-    ],
-  ],
-  setupFilesAfterEnv: ['<rootDir>/packages/kbn-test/target/jest/setup/after_env.integration.js'],
-};
+const MutationObserver = require('mutation-observer');
+Object.defineProperty(window, 'MutationObserver', { value: MutationObserver });
+
+require('whatwg-fetch');
+
+if (!global.URL.hasOwnProperty('createObjectURL')) {
+  Object.defineProperty(global.URL, 'createObjectURL', { value: () => '' });
+}
+
+// Will be replaced with a better solution in EUI
+// https://github.com/elastic/eui/issues/3713
+global._isJest = true;

@@ -17,24 +17,10 @@
  * under the License.
  */
 
-import config from './config';
+/*
+  Global import, so we don't need to remember to import the lib in each file
+  https://www.npmjs.com/package/jest-styled-components#global-installation
+*/
 
-export default {
-  ...config,
-  testMatch: [
-    '**/integration_tests/**/*.test.js',
-    '**/integration_tests/**/*.test.ts',
-    '**/integration_tests/**/*.test.tsx',
-  ],
-  testPathIgnorePatterns: config.testPathIgnorePatterns.filter(
-    (pattern) => !pattern.includes('integration_tests')
-  ),
-  reporters: [
-    'default',
-    [
-      '<rootDir>/packages/kbn-test/target/jest/junit_reporter',
-      { reportName: 'Jest Integration Tests' },
-    ],
-  ],
-  setupFilesAfterEnv: ['<rootDir>/packages/kbn-test/target/jest/setup/after_env.integration.js'],
-};
+import 'jest-styled-components';
+import '@testing-library/jest-dom';
