@@ -103,10 +103,6 @@ module.exports = {
     '^src/core/(.*)': '<rootDir>/src/core/$1',
     '^src/legacy/(.*)': '<rootDir>/src/legacy/$1',
     '^src/plugins/(.*)': '<rootDir>/src/plugins/$1',
-    '^test_utils/enzyme_helpers': '<rootDir>/x-pack/test_utils/enzyme_helpers.tsx',
-    '^test_utils/find_test_subject': '<rootDir>/x-pack/test_utils/find_test_subject.ts',
-    '^test_utils/stub_web_worker': '<rootDir>/x-pack/test_utils/stub_web_worker.ts',
-    '^test_utils/(.*)': '<rootDir>/src/test_utils/public/$1',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

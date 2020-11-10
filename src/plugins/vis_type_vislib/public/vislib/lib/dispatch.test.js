@@ -23,7 +23,7 @@ import {
   setHTMLElementClientSizes,
   setSVGElementGetBBox,
   setSVGElementGetComputedTextLength,
-} from '@kbn/test/target/jest/utils';
+} from '@kbn/test/jest';
 
 // Data
 import data from '../../fixtures/mock_data/date_histogram/_series';

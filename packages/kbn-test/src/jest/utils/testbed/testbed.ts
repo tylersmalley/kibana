@@ -44,7 +44,7 @@ const defaultConfig: TestBedConfig = {
  *
  * @example
   ```typescript
-  import { registerTestBed } from '@kbn/test/target/jest/testbed';
+  import { registerTestBed } from '@kbn/test/jest';
   import { RemoteClusterList } from '../../app/sections/remote_cluster_list';
   import { remoteClustersStore } from '../../app/store';
 

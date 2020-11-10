@@ -5,13 +5,7 @@
  */
 import { act } from 'react-dom/test-utils';
 
-import {
-  registerTestBed,
-  findTestSubject,
-  TestBed,
-  TestBedConfig,
-  nextTick,
-} from '@kbn/test/target/jest';
+import { registerTestBed, findTestSubject, TestBed, TestBedConfig, nextTick } from '@kbn/test/jest';
 import { SnapshotRestoreHome } from '../../../public/application/sections/home/home';
 import { BASE_PATH } from '../../../public/application/constants';
 import { WithAppDependencies } from './setup_environment';

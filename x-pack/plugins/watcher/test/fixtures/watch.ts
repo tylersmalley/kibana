@@ -5,7 +5,7 @@
  */
 
 import { Moment } from 'moment';
-import { getRandomString } from '@kbn/test/target/jest/utils';
+import { getRandomString } from '@kbn/test/jest';
 
 interface Watch {
   id: string;

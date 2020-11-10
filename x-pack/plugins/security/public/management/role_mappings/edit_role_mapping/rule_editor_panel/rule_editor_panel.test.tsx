@@ -5,11 +5,10 @@
  */
 
 import React from 'react';
-import { mountWithIntl } from 'test_utils/enzyme_helpers';
+import { mountWithIntl, findTestSubject } from '@kbn/test/jest';
 import { RuleEditorPanel } from '.';
 import { VisualRuleEditor } from './visual_rule_editor';
 import { JSONRuleEditor } from './json_rule_editor';
-import { findTestSubject } from 'test_utils/find_test_subject';
 
 // brace/ace uses the Worker class, which is not currently provided by JSDOM.
 // This is not required for the tests to pass, but it rather suppresses lengthy

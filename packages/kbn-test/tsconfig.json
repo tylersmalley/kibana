@@ -1,7 +1,16 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "../../build/tsbuildinfo/packages/kbn-test"
+    "tsBuildInfoFile": "../../build/tsbuildinfo/packages/kbn-test",
+    "declaration": true,
+    "declarationDir": "./target/types",
+    "outDir": "./target",
+    "stripInternal": true,
+    "declarationMap": true,
+    "types": [
+      "jest",
+      "node"
+    ]
   },
   "include": [
     "types/**/*",

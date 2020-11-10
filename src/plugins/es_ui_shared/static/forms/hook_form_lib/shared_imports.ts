@@ -17,6 +17,6 @@
  * under the License.
  */
 
-export { registerTestBed, TestBed } from '@kbn/test/target/jest/testbed';
+export { registerTestBed, TestBed } from '@kbn/test/jest';
 
-export { getRandomString } from '@kbn/test/target/jest/utils';
+export { getRandomString } from '@kbn/test/jest';

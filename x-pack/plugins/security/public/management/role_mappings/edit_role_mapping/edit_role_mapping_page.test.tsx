@@ -6,8 +6,8 @@
 
 import React from 'react';
 import type { PublicMethodsOf } from '@kbn/utility-types';
-import { mountWithIntl, nextTick } from 'test_utils/enzyme_helpers';
-import { findTestSubject } from 'test_utils/find_test_subject';
+import { mountWithIntl, nextTick } from '@kbn/test/jest';
+import { findTestSubject } from '@kbn/test/jest';
 
 // brace/ace uses the Worker class, which is not currently provided by JSDOM.
 // This is not required for the tests to pass, but it rather suppresses lengthy

@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "main": "./target/index.js",
   "scripts": {
-    "build": "../../node_modules/.bin/babel src --out-dir target --delete-dir-on-start --extensions .ts,.js,.tsx --ignore *.test.js,**/__tests__/** --source-maps=inline",
+    "build": "../../node_modules/.bin/tsc",
     "kbn:bootstrap": "yarn build",
     "kbn:watch": "yarn build --watch"
   },
@@ -15,6 +15,7 @@
   "devDependencies": {
     "@kbn/babel-preset": "link:../kbn-babel-preset",
     "@kbn/dev-utils": "link:../kbn-dev-utils",
+    "@kbn/i18n": "link:../kbn-i18n",
     "@kbn/utils": "link:../kbn-utils"
   }
 }

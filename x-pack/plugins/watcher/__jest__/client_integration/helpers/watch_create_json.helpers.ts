@@ -3,7 +3,7 @@
  * or more contributor license agreements. Licensed under the Elastic License;
  * you may not use this file except in compliance with the Elastic License.
  */
-import { registerTestBed, TestBed, TestBedConfig } from '@kbn/test/target/jest/utils';
+import { registerTestBed, TestBed, TestBedConfig } from '@kbn/test/jest';
 import { withAppContext } from './app_context.mock';
 import { WatchEdit } from '../../../public/application/sections/watch_edit/components/watch_edit';
 import { registerRouter } from '../../../public/application/lib/navigation';

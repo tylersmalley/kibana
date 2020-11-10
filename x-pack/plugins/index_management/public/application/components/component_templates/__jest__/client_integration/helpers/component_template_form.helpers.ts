@@ -5,7 +5,7 @@
  */
 import { act } from 'react-dom/test-utils';
 
-import { TestBed } from '@kbn/test/target/jest/utils';
+import { TestBed } from '@kbn/test/jest';
 
 interface MappingField {
   name: string;

@@ -14,7 +14,7 @@ import 'test_utils/stub_web_worker';
 
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { mountWithIntl } from 'test_utils/enzyme_helpers';
+import { mountWithIntl } from '@kbn/test/jest';
 import { JSONRuleEditor } from './json_rule_editor';
 import { EuiCodeEditor } from '@elastic/eui';
 import { AllRule, AnyRule, FieldRule, ExceptAnyRule, ExceptAllRule } from '../../model';

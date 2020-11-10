@@ -5,7 +5,7 @@
  */
 import { act } from 'react-dom/test-utils';
 
-import { registerTestBed, findTestSubject } from '@kbn/test/target/jest/utils';
+import { registerTestBed, findTestSubject } from '@kbn/test/jest';
 
 import { RemoteClusterList } from '../../../public/application/sections/remote_cluster_list';
 import { createRemoteClustersStore } from '../../../public/application/store';

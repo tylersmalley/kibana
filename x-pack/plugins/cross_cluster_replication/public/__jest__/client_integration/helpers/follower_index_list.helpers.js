@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the Elastic License.
  */
 
-import { registerTestBed, findTestSubject } from '@kbn/test/target/jest/utils';
+import { registerTestBed, findTestSubject } from '@kbn/test/jest';
 import { FollowerIndicesList } from '../../../app/sections/home/follower_indices_list';
 import { ccrStore } from '../../../app/store';
 import { routing } from '../../../app/services/routing';

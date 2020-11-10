@@ -10,7 +10,7 @@ import {
   getMappingsEditorDataFactory,
 } from './mappings_editor.helpers';
 
-export { nextTick, getRandomString, findTestSubject, TestBed } from '@kbn/test/target/jest/utils';
+export { nextTick, getRandomString, findTestSubject, TestBed } from '@kbn/test/jest';
 
 export const componentHelpers = {
   mappingsEditor: { setup: mappingsEditorSetup, getMappingsEditorDataFactory },

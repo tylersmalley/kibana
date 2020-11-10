@@ -7,7 +7,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { ReactWrapper } from 'enzyme';
 
-import { registerTestBed, TestBed } from '@kbn/test/target/jest/utils';
+import { registerTestBed, TestBed } from '@kbn/test/jest';
 import { GlobalFlyout } from '../../../../../../../../../../src/plugins/es_ui_shared/public';
 import { getChildFieldsName } from '../../../lib';
 import { MappingsEditor } from '../../../mappings_editor';

@@ -5,7 +5,7 @@
  */
 import { act } from 'react-dom/test-utils';
 
-import { TestBed } from '@kbn/test/target/jest/utils';
+import { TestBed } from '@kbn/test/jest';
 
 export const getFormActions = (testBed: TestBed) => {
   const { find, form, component } = testBed;
