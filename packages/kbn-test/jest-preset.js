@@ -90,12 +90,12 @@ module.exports = {
   moduleNameMapper: {
     '@elastic/eui/lib/(.*)?': '<rootDir>/node_modules/@elastic/eui/test-env/$1',
     '@elastic/eui$': '<rootDir>/node_modules/@elastic/eui/test-env',
+    '\\.module.(css|scss)$': '<rootDir>/packages/kbn-test/target/jest/mocks/css_module_mock.js',
     '\\.(css|less|scss)$': '<rootDir>/packages/kbn-test/target/jest/mocks/style_mock.js',
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       '<rootDir>/packages/kbn-test/target/jest/mocks/file_mock.js',
     '\\.ace\\.worker.js$': '<rootDir>/packages/kbn-test/target/jest/mocks/worker_module_mock.js',
     '\\.editor\\.worker.js$': '<rootDir>/packages/kbn-test/target/jest/mocks/worker_module_mock.js',
-    '\\.module.(css|scss)$': '<rootDir>/packages/kbn-test/target/jest/mocks/css_module_mock.js',
     '^(!!)?file-loader!': '<rootDir>/packages/kbn-test/target/jest/mocks/file_mock.js',
     '^fixtures/(.*)': '<rootDir>/src/fixtures/$1',
     '^src/core/(.*)': '<rootDir>/src/core/$1',

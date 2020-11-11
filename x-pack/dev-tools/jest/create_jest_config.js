@@ -9,19 +9,6 @@ export function createJestConfig({ kibanaDirectory, rootDir }) {
     preset: '@kbn/test',
     rootDir: kibanaDirectory,
     roots: [`${rootDir}/plugins`],
-    collectCoverageFrom: [
-      'plugins/**/*.{js,mjs,jsx,ts,tsx}',
-      '!**/{__test__,__snapshots__,__examples__,integration_tests,tests}/**',
-      '!**/*.test.{js,mjs,ts,tsx}',
-      '!**/flot-charts/**',
-      '!**/test/**',
-      '!**/build/**',
-      '!**/scripts/**',
-      '!**/mocks/**',
-      '!**/plugins/apm/e2e/**',
-      '!**/plugins/siem/cypress/**',
-      '!**/plugins/**/test_helpers/**',
-    ],
     reporters: [
       'default',
       [
