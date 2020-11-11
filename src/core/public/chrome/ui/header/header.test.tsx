@@ -25,7 +25,7 @@ import { httpServiceMock } from '../../../http/http_service.mock';
 import { applicationServiceMock } from '../../../mocks';
 import { Header } from './header';
 
-jest.mock('@elastic/eui/lib/services/accessibility/html_d_generator', () => ({
+jest.mock('@elastic/eui/lib/services/accessibility/html_id_generator', () => ({
   htmlIdGenerator: () => () => 'mockId',
 }));
 

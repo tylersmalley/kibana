@@ -20,6 +20,7 @@
 import { RESERVED_DIR_JEST_INTEGRATION_TESTS } from '../constants';
 
 export default {
+  // preset: '@kbn/test',
   rootDir: '../../..',
   roots: [
     '<rootDir>/src/plugins',
