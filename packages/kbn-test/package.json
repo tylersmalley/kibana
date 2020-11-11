@@ -5,9 +5,9 @@
   "license": "Apache-2.0",
   "main": "./target/index.js",
   "scripts": {
-    "build": "../../node_modules/.bin/tsc",
-    "kbn:bootstrap": "yarn build",
-    "kbn:watch": "yarn build --watch"
+    "build": "node scripts/build",
+    "kbn:bootstrap": "node scripts/build --source-maps",
+    "kbn:watch": "node scripts/build --watch --source-maps"
   },
   "kibana": {
     "devOnly": true

@@ -18,7 +18,7 @@
  */
 
 import React from 'react';
-import { mountWithIntl } from 'test_utils/enzyme_helpers';
+import { mountWithIntl } from '@kbn/jest/test';
 import { TypesStart, VisType, VisGroups } from '../../vis_types';
 import { GroupSelection } from './group_selection';
 import { DocLinksStart } from '../../../../../core/public';
