@@ -48,9 +48,7 @@ module.exports = {
   coverageDirectory: '<rootDir>/target/kibana-coverage/jest',
 
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  coveragePathIgnorePatterns: ['/node_modules/', '.*\\.d\\.ts'],
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: !!process.env.CODE_COVERAGE ? ['json'] : ['html', 'text'],
@@ -106,13 +104,7 @@ module.exports = {
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
-  modulePathIgnorePatterns: [
-    '__fixtures__/',
-    'target/',
-
-    // duplicate manual mock work-around https://github.com/facebook/jest/issues/2070
-    '<rootDir>/.*/__mocks__',
-  ],
+  modulePathIgnorePatterns: ['__fixtures__/', 'target/'],
 
   // Activates notifications for test results
   // notify: false,
@@ -156,15 +148,15 @@ module.exports = {
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: [
-    '<rootDir>/packages/kbn-test/target/jest/setup/setup.js',
+    '<rootDir>/packages/kbn-test/target/jest/setup/setup_test.js',
     '<rootDir>/packages/kbn-test/target/jest/setup/mocks.js',
     '<rootDir>/packages/kbn-test/target/jest/setup/react_testing_library.js',
   ],
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   snapshotSerializers: [
-    '<rootDir>/node_modules/enzyme-to-json/serializer',
     '<rootDir>/src/plugins/kibana_react/public/util/test_helpers/react_mount_serializer.ts',
+    '<rootDir>/node_modules/enzyme-to-json/serializer',
   ],
 
   // The test environment that will be used for testing
