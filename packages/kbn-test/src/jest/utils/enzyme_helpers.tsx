@@ -205,8 +205,6 @@ export const mountHook = <Args extends {}, HookValue extends any>(
   };
 };
 
-export const nextTick = () => new Promise((res) => process.nextTick(res));
-
 export function shallowWithI18nProvider<T>(child: ReactElement<T>) {
   const wrapped = shallow(<I18nProvider>{child}</I18nProvider>);
   const name = typeof child.type === 'string' ? child.type : child.type.name;

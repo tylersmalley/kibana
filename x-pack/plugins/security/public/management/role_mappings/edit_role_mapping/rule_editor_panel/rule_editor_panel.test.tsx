@@ -13,7 +13,8 @@ import { JSONRuleEditor } from './json_rule_editor';
 // brace/ace uses the Worker class, which is not currently provided by JSDOM.
 // This is not required for the tests to pass, but it rather suppresses lengthy
 // warnings in the console which adds unnecessary noise to the test output.
-import 'test_utils/stub_web_worker';
+import '@kbn/test/target/jest/utils/stub_web_worker';
+
 import { AllRule, FieldRule } from '../../model';
 import { EuiErrorBoundary } from '@elastic/eui';
 import { DocumentationLinksService } from '../../documentation_links';

@@ -6,6 +6,7 @@
     "index.d.ts"
   ],
   "compilerOptions": {
+    "tsBuildInfoFile": "../../build/tsbuildinfo/packages/kbn-test",
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "./target/types",

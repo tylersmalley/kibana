@@ -17,6 +17,7 @@
  * under the License.
  */
 
+import preset from '@kbn/test/jest-preset';
 import config from './config';
 
 export default {
@@ -26,7 +27,7 @@ export default {
     '**/integration_tests/**/*.test.ts',
     '**/integration_tests/**/*.test.tsx',
   ],
-  testPathIgnorePatterns: config.testPathIgnorePatterns.filter(
+  testPathIgnorePatterns: preset.testPathIgnorePatterns.filter(
     (pattern) => !pattern.includes('integration_tests')
   ),
   reporters: [

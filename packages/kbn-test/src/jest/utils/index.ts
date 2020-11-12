@@ -36,5 +36,3 @@ export * from './stub_web_worker';
 export * from './testbed';
 
 export const nextTick = () => new Promise((res) => process.nextTick(res));
-
-export const wait = (time = 0) => new Promise((resolve) => setTimeout(resolve, time));
