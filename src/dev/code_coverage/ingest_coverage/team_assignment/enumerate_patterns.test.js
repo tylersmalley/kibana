@@ -17,8 +17,7 @@
  * under the License.
  */
 
-import expect from '@kbn/expect';
-import { enumeratePatterns } from '../team_assignment/enumerate_patterns';
+import { enumeratePatterns } from './enumerate_patterns';
 import { ToolingLog, REPO_ROOT } from '@kbn/dev-utils';
 
 const log = new ToolingLog({
@@ -36,14 +35,14 @@ describe(`enumeratePatterns`, () => {
       actual[0].includes(
         'x-pack/plugins/reporting/server/browsers/extract/unzip.js kibana-reporting'
       )
-    ).to.be(true);
+    ).toBe(true);
   });
   it(`should resolve src/plugins/charts/public/static/color_maps/color_maps.ts to kibana-app`, () => {
     const actual = enumeratePatterns(REPO_ROOT)(log)(
       new Map([['src/plugins/charts/public/static/color_maps', ['kibana-app']]])
     );
 
-    expect(actual[0][0]).to.be(
+    expect(actual[0][0]).toBe(
       'src/plugins/charts/public/static/color_maps/color_maps.ts kibana-app'
     );
   });
@@ -55,6 +54,6 @@ describe(`enumeratePatterns`, () => {
       actual[0].includes(
         `${short}/public/common/components/exceptions/builder/translations.ts kibana-security`
       )
-    ).to.be(true);
+    ).toBe(true);
   });
 });

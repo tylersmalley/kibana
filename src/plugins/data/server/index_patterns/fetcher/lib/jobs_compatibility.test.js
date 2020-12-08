@@ -17,46 +17,137 @@
  * under the License.
  */
 
-import expect from '@kbn/expect';
-import { areJobsCompatible, mergeJobConfigurations } from '../jobs_compatibility';
-import { jobs } from './fixtures';
+import { areJobsCompatible, mergeJobConfigurations } from './jobs_compatibility';
+
+const jobs = [
+  {
+    job_id: 'foo1',
+    rollup_index: 'foo_rollup',
+    index_pattern: 'foo-*',
+    fields: {
+      node: [
+        {
+          agg: 'terms',
+        },
+      ],
+      temperature: [
+        {
+          agg: 'min',
+        },
+        {
+          agg: 'max',
+        },
+        {
+          agg: 'sum',
+        },
+      ],
+      timestamp: [
+        {
+          agg: 'date_histogram',
+          time_zone: 'UTC',
+          interval: '1h',
+          delay: '7d',
+        },
+      ],
+      voltage: [
+        {
+          agg: 'histogram',
+          interval: 5,
+        },
+        {
+          agg: 'sum',
+        },
+      ],
+    },
+  },
+  {
+    job_id: 'foo2',
+    rollup_index: 'foo_rollup',
+    index_pattern: 'foo-*',
+    fields: {
+      host: [
+        {
+          agg: 'terms',
+        },
+      ],
+      timestamp: [
+        {
+          agg: 'date_histogram',
+          time_zone: 'UTC',
+          interval: '1h',
+          delay: '7d',
+        },
+      ],
+      voltage: [
+        {
+          agg: 'histogram',
+          interval: 20,
+        },
+      ],
+    },
+  },
+  {
+    job_id: 'foo3',
+    rollup_index: 'foo_rollup',
+    index_pattern: 'foo-*',
+    fields: {
+      timestamp: [
+        {
+          agg: 'date_histogram',
+          time_zone: 'PST',
+          interval: '1h',
+          delay: '7d',
+        },
+      ],
+      voltage: [
+        {
+          agg: 'histogram',
+          interval: 5,
+        },
+        {
+          agg: 'sum',
+        },
+      ],
+    },
+  },
+];
 
 describe('areJobsCompatible', () => {
   it('should return false for invalid jobs arg', () => {
-    expect(areJobsCompatible(123)).to.eql(false);
-    expect(areJobsCompatible('foo')).to.eql(false);
+    expect(areJobsCompatible(123)).toEqual(false);
+    expect(areJobsCompatible('foo')).toEqual(false);
   });
 
   it('should return true for no jobs or one job', () => {
-    expect(areJobsCompatible()).to.eql(true);
-    expect(areJobsCompatible([])).to.eql(true);
-    expect(areJobsCompatible([jobs[1]])).to.eql(true);
+    expect(areJobsCompatible()).toEqual(true);
+    expect(areJobsCompatible([])).toEqual(true);
+    expect(areJobsCompatible([jobs[1]])).toEqual(true);
   });
 
   it('should return true for 2 or more compatible jobs', () => {
-    expect(areJobsCompatible([jobs[0], jobs[1]])).to.eql(true);
-    expect(areJobsCompatible([jobs[1], jobs[0], jobs[1]])).to.eql(true);
+    expect(areJobsCompatible([jobs[0], jobs[1]])).toEqual(true);
+    expect(areJobsCompatible([jobs[1], jobs[0], jobs[1]])).toEqual(true);
   });
 
   it('should return false for 2 or more incompatible jobs', () => {
-    expect(areJobsCompatible([jobs[1], jobs[2]])).to.eql(false);
-    expect(areJobsCompatible([jobs[2], jobs[1], jobs[0]])).to.eql(false);
+    expect(areJobsCompatible([jobs[1], jobs[2]])).toEqual(false);
+    expect(areJobsCompatible([jobs[2], jobs[1], jobs[0]])).toEqual(false);
   });
 });
 
 describe('mergeJobConfigurations', () => {
   it('should throw an error for null/invalid jobs', () => {
-    expect(mergeJobConfigurations).withArgs().to.throwException();
-    expect(mergeJobConfigurations).withArgs(null).to.throwException();
-    expect(mergeJobConfigurations).withArgs(undefined).to.throwException();
-    expect(mergeJobConfigurations).withArgs(true).to.throwException();
-    expect(mergeJobConfigurations).withArgs('foo').to.throwException();
-    expect(mergeJobConfigurations).withArgs(123).to.throwException();
-    expect(mergeJobConfigurations).withArgs([]).to.throwException();
+    expect(() => mergeJobConfigurations()).toThrow();
+    expect(() => mergeJobConfigurations(null)).toThrow();
+    expect(() => mergeJobConfigurations(undefined)).toThrow();
+    expect(() => mergeJobConfigurations(true)).toThrow();
+    expect(() => mergeJobConfigurations('foo')).toThrow();
+    expect(() => mergeJobConfigurations(123)).toThrow();
+    expect(() => mergeJobConfigurations([])).toThrow();
   });
 
   it('should return aggregations for one job', () => {
-    expect(mergeJobConfigurations([jobs[0]])).to.eql({
+    expect(mergeJobConfigurations([jobs[0]])).toEqual({
       aggs: {
         terms: {
           node: {
@@ -100,7 +191,7 @@ describe('mergeJobConfigurations', () => {
   });
 
   it('should return merged aggregations for 2 jobs', () => {
-    expect(mergeJobConfigurations([jobs[0], jobs[1]])).to.eql({
+    expect(mergeJobConfigurations([jobs[0], jobs[1]])).toEqual({
       aggs: {
         terms: {
           node: {
@@ -147,6 +238,6 @@ describe('mergeJobConfigurations', () => {
   });
 
   it('should throw an error if jobs are not compatible', () => {
-    expect(mergeJobConfigurations).withArgs([jobs[0], jobs[1], jobs[2]]).to.throwException();
+    expect(() => mergeJobConfigurations([jobs[0], jobs[1], jobs[2]])).toThrow();
   });
 });

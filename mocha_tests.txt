@@ -1,0 +1,303 @@
+$ node scripts/mocha
+
+
+  dateMath
+    errors
+      ✓ should return undefined if passed something falsy
+      ✓ should return undefined if I pass an operator besides [+-/]
+      ✓ should return undefined if I pass a unit besidess,m,h,d,w,M,y,ms
+      ✓ should return undefined if rounding unit is not 1
+      ✓ should not go into an infinite loop when missing a unit
+      forceNow
+        ✓ should throw an Error if passed a string
+        ✓ should throw an Error if passed a moment
+        ✓ should throw an Error if passed an invalid date
+    objects and strings
+      ✓ should return the same moment if passed a moment
+      ✓ should return a moment if passed a date
+      ✓ should return a moment if passed an ISO8601 string
+      ✓ should return the current time when parsing now
+      ✓ should use the forceNow parameter when parsing now
+    subtraction
+      ✓ should return 5s ago
+      ✓ should return 5s before 2014-01-01T06:06:06.666Z
+      ✓ should return 5s before forceNow
+      ✓ should return 5m ago
+      ✓ should return 5m before 2014-01-01T06:06:06.666Z
+      ✓ should return 5m before forceNow
+      ✓ should return 5h ago
+      ✓ should return 5h before 2014-01-01T06:06:06.666Z
+      ✓ should return 5h before forceNow
+      ✓ should return 5d ago
+      ✓ should return 5d before 2014-01-01T06:06:06.666Z
+      ✓ should return 5d before forceNow
+      ✓ should return 5w ago
+      ✓ should return 5w before 2014-01-01T06:06:06.666Z
+      ✓ should return 5w before forceNow
+      ✓ should return 5M ago
+      ✓ should return 5M before 2014-01-01T06:06:06.666Z
+      ✓ should return 5M before forceNow
+      ✓ should return 5y ago
+      ✓ should return 5y before 2014-01-01T06:06:06.666Z
+      ✓ should return 5y before forceNow
+      ✓ should return 5ms ago
+      ✓ should return 5ms before 2014-01-01T06:06:06.666Z
+      ✓ should return 5ms before forceNow
+      ✓ should return 12s ago
+      ✓ should return 12s before 2014-01-01T06:06:06.666Z
+      ✓ should return 12s before forceNow
+      ✓ should return 12m ago
+      ✓ should return 12m before 2014-01-01T06:06:06.666Z
+      ✓ should return 12m before forceNow
+      ✓ should return 12h ago
+      ✓ should return 12h before 2014-01-01T06:06:06.666Z
+      ✓ should return 12h before forceNow
+      ✓ should return 12d ago
+      ✓ should return 12d before 2014-01-01T06:06:06.666Z
+      ✓ should return 12d before forceNow
+      ✓ should return 12w ago
+      ✓ should return 12w before 2014-01-01T06:06:06.666Z
+      ✓ should return 12w before forceNow
+      ✓ should return 12M ago
+      ✓ should return 12M before 2014-01-01T06:06:06.666Z
+      ✓ should return 12M before forceNow
+      ✓ should return 12y ago
+      ✓ should return 12y before 2014-01-01T06:06:06.666Z
+      ✓ should return 12y before forceNow
+      ✓ should return 12ms ago
+      ✓ should return 12ms before 2014-01-01T06:06:06.666Z
+      ✓ should return 12ms before forceNow
+      ✓ should return 247s ago
+      ✓ should return 247s before 2014-01-01T06:06:06.666Z
+      ✓ should return 247s before forceNow
+      ✓ should return 247m ago
+      ✓ should return 247m before 2014-01-01T06:06:06.666Z
+      ✓ should return 247m before forceNow
+      ✓ should return 247h ago
+      ✓ should return 247h before 2014-01-01T06:06:06.666Z
+      ✓ should return 247h before forceNow
+      ✓ should return 247d ago
+      ✓ should return 247d before 2014-01-01T06:06:06.666Z
+      ✓ should return 247d before forceNow
+      ✓ should return 247w ago
+      ✓ should return 247w before 2014-01-01T06:06:06.666Z
+      ✓ should return 247w before forceNow
+      ✓ should return 247M ago
+      ✓ should return 247M before 2014-01-01T06:06:06.666Z
+      ✓ should return 247M before forceNow
+      ✓ should return 247y ago
+      ✓ should return 247y before 2014-01-01T06:06:06.666Z
+      ✓ should return 247y before forceNow
+      ✓ should return 247ms ago
+      ✓ should return 247ms before 2014-01-01T06:06:06.666Z
+      ✓ should return 247ms before forceNow
+    addition
+      ✓ should return 5s from now
+      ✓ should return 5s after 2014-01-01T06:06:06.666Z
+      ✓ should return 5s after forceNow
+      ✓ should return 5m from now
+      ✓ should return 5m after 2014-01-01T06:06:06.666Z
+      ✓ should return 5m after forceNow
+      ✓ should return 5h from now
+      ✓ should return 5h after 2014-01-01T06:06:06.666Z
+      ✓ should return 5h after forceNow
+      ✓ should return 5d from now
+      ✓ should return 5d after 2014-01-01T06:06:06.666Z
+      ✓ should return 5d after forceNow
+      ✓ should return 5w from now
+      ✓ should return 5w after 2014-01-01T06:06:06.666Z
+      ✓ should return 5w after forceNow
+      ✓ should return 5M from now
+      ✓ should return 5M after 2014-01-01T06:06:06.666Z
+      ✓ should return 5M after forceNow
+      ✓ should return 5y from now
+      ✓ should return 5y after 2014-01-01T06:06:06.666Z
+      ✓ should return 5y after forceNow
+      ✓ should return 5ms from now
+      ✓ should return 5ms after 2014-01-01T06:06:06.666Z
+      ✓ should return 5ms after forceNow
+      ✓ should return 12s from now
+      ✓ should return 12s after 2014-01-01T06:06:06.666Z
+      ✓ should return 12s after forceNow
+      ✓ should return 12m from now
+      ✓ should return 12m after 2014-01-01T06:06:06.666Z
+      ✓ should return 12m after forceNow
+      ✓ should return 12h from now
+      ✓ should return 12h after 2014-01-01T06:06:06.666Z
+      ✓ should return 12h after forceNow
+      ✓ should return 12d from now
+      ✓ should return 12d after 2014-01-01T06:06:06.666Z
+      ✓ should return 12d after forceNow
+      ✓ should return 12w from now
+      ✓ should return 12w after 2014-01-01T06:06:06.666Z
+      ✓ should return 12w after forceNow
+      ✓ should return 12M from now
+      ✓ should return 12M after 2014-01-01T06:06:06.666Z
+      ✓ should return 12M after forceNow
+      ✓ should return 12y from now
+      ✓ should return 12y after 2014-01-01T06:06:06.666Z
+      ✓ should return 12y after forceNow
+      ✓ should return 12ms from now
+      ✓ should return 12ms after 2014-01-01T06:06:06.666Z
+      ✓ should return 12ms after forceNow
+      ✓ should return 247s from now
+      ✓ should return 247s after 2014-01-01T06:06:06.666Z
+      ✓ should return 247s after forceNow
+      ✓ should return 247m from now
+      ✓ should return 247m after 2014-01-01T06:06:06.666Z
+      ✓ should return 247m after forceNow
+      ✓ should return 247h from now
+      ✓ should return 247h after 2014-01-01T06:06:06.666Z
+      ✓ should return 247h after forceNow
+      ✓ should return 247d from now
+      ✓ should return 247d after 2014-01-01T06:06:06.666Z
+      ✓ should return 247d after forceNow
+      ✓ should return 247w from now
+      ✓ should return 247w after 2014-01-01T06:06:06.666Z
+      ✓ should return 247w after forceNow
+      ✓ should return 247M from now
+      ✓ should return 247M after 2014-01-01T06:06:06.666Z
+      ✓ should return 247M after forceNow
+      ✓ should return 247y from now
+      ✓ should return 247y after 2014-01-01T06:06:06.666Z
+      ✓ should return 247y after forceNow
+      ✓ should return 247ms from now
+      ✓ should return 247ms after 2014-01-01T06:06:06.666Z
+      ✓ should return 247ms after forceNow
+    rounding
+      ✓ should round now to the beginning of the s
+      ✓ should round now to the beginning of forceNow's s
+      ✓ should round now to the end of the s
+      ✓ should round now to the end of forceNow's s
+      ✓ should round now to the beginning of the m
+      ✓ should round now to the beginning of forceNow's m
+      ✓ should round now to the end of the m
+      ✓ should round now to the end of forceNow's m
+      ✓ should round now to the beginning of the h
+      ✓ should round now to the beginning of forceNow's h
+      ✓ should round now to the end of the h
+      ✓ should round now to the end of forceNow's h
+      ✓ should round now to the beginning of the d
+      ✓ should round now to the beginning of forceNow's d
+      ✓ should round now to the end of the d
+      ✓ should round now to the end of forceNow's d
+      ✓ should round now to the beginning of the w
+      ✓ should round now to the beginning of forceNow's w
+      ✓ should round now to the end of the w
+      ✓ should round now to the end of forceNow's w
+      ✓ should round now to the beginning of the M
+      ✓ should round now to the beginning of forceNow's M
+      ✓ should round now to the end of the M
+      ✓ should round now to the end of forceNow's M
+      ✓ should round now to the beginning of the y
+      ✓ should round now to the beginning of forceNow's y
+      ✓ should round now to the end of the y
+      ✓ should round now to the end of forceNow's y
+      ✓ should round now to the beginning of the ms
+      ✓ should round now to the beginning of forceNow's ms
+      ✓ should round now to the end of the ms
+      ✓ should round now to the end of forceNow's ms
+    math and rounding
+      ✓ should round to the nearest second with 0 value
+      ✓ should subtract 17s, rounded to the nearest second
+      ✓ should add 555ms, rounded to the nearest millisecond
+      ✓ should subtract 555ms, rounded to the nearest second
+      ✓ should round weeks to Sunday by default
+      ✓ should round weeks based on the passed moment locale start of week setting
+      ✓ should round up weeks based on the passed moment locale start of week setting
+      ✓ should round relative to forceNow
+      ✓ should parse long expressions
+    used momentjs instance
+      ✓ should use the default moment instance if parameter not specified
+      ✓ should not use default moment instance if parameter is specified
+      ✓ should work with multiple different instances
+      ✓ should use global instance after passing an instance
+    units
+      ✓ should have units descending for unitsDesc
+      ✓ should have units ascending for unitsAsc
+
+  testSubjSelector()
+    ✓ converts subjectSelectors to cssSelectors
+
+  @kbn/eslint/disallow-license-headers
+    valid
+      ✓ /* license */
+
+console.log('foo')
+      ✓ // license
+
+console.log('foo')
+    invalid
+      ✓ console.log('foo')
+      ✓ console.log('foo')
+      ✓ console.log('foo')
+      ✓ console.log('foo')
+      ✓ console.log('foo')
+
+  @kbn/eslint/no-restricted-paths
+    valid
+      ✓ import a from "../client/a.js"
+      ✓ const a = require("../client/a.js")
+      ✓ import b from "../server/b.js"
+      ✓ notrequire("../server/b.js")
+      ✓ notrequire("../server/b.js")
+      ✓ require("../server/b.js")
+      ✓ import b from "../server/b.js"
+      ✓ require("os")
+      ✓ const d = require("./deep/d.js")
+      ✓ const d = require("./deep/d.js")
+      ✓ import { X } from "./index_patterns"
+    invalid
+      ✓ export { b } from "../server/b.js"
+      ✓ import b from "../server/b.js"
+      ✓ import a from "../client/a"
+import c from "./c"
+      ✓ const b = require("../server/b.js")
+      ✓ const b = require("../server/b.js")
+      ✓ const d = require("./deep/d.js")
+      ✓ const d = require("src/core/server/saved_objects")
+      ✓ const d = require("ui/kfetch")
+      ✓ const d = require("ui/kfetch/public/index")
+      ✓ import { X } from "./index_patterns"
+
+  @kbn/eslint/require-license-header
+    valid
+      ✓ /* license */
+
+console.log('foo')
+      ✓ // license
+
+console.log('foo')
+    invalid
+      ✓ console.log('foo')
+      ✓ console.log('foo')
+      ✓ console.log('foo')
+      ✓ console.log('foo')
+      ✓ console.log('foo')
+      ✓ console.log('foo')
+      ✓ 
+
+/* license */
+
+console.log('foo')
+      ✓ /* not license */
+/* license */
+console.log('foo')
+
+  dev/mocha/junit report generation
+    ✓ reports on failed setup hooks
+
+  basic config file with a single app and test
+    ✓ runs and prints expected output
+
+  failure hooks
+    ✓ runs and prints expected output
+
+  readConfigFile()
+    ✓ reads config from a file, returns an instance of Config class
+    ✓ merges setting overrides into log
+    ✓ supports loading config files from within config files
+    ✓ throws if settings are invalid
+
+
+  386 passing (3s)

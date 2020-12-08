@@ -18,10 +18,9 @@
  */
 
 import fs from 'fs';
-import { engines } from '../../../package.json';
+import { engines } from '../../package.json';
 import { promisify } from 'util';
 const readFile = promisify(fs.readFile);
-import expect from '@kbn/expect';
 
 describe('All configs should use a single version of Node', () => {
   it('should compare .node-version and .nvmrc', async () => {
@@ -30,13 +29,13 @@ describe('All configs should use a single version of Node', () => {
       readFile('./.nvmrc', { encoding: 'utf-8' }),
     ]);
 
-    expect(nodeVersion.trim()).to.be(nvmrc.trim());
+    expect(nodeVersion.trim()).toBe(nvmrc.trim());
   });
 
   it('should compare .node-version and engines.node from package.json', async () => {
     const nodeVersion = await readFile('./.node-version', {
       encoding: 'utf-8',
     });
-    expect(nodeVersion.trim()).to.be(engines.node);
+    expect(nodeVersion.trim()).toBe(engines.node);
   });
 });

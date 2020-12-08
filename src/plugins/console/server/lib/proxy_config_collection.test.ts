@@ -17,14 +17,11 @@
  * under the License.
  */
 
-/* eslint-env mocha */
-
-import expect from '@kbn/expect';
 import sinon from 'sinon';
 import fs from 'fs';
 import { Agent as HttpsAgent } from 'https';
 
-import { ProxyConfigCollection } from '../lib/proxy_config_collection';
+import { ProxyConfigCollection } from './proxy_config_collection';
 
 describe('ProxyConfigCollection', function () {
   beforeEach(function () {
@@ -88,61 +85,61 @@ describe('ProxyConfigCollection', function () {
 
   describe('http://localhost:5601', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('http://localhost:5601')).to.be(3);
+      expect(getTimeout('http://localhost:5601')).toBe(3);
     });
   });
 
   describe('https://localhost:5601/.kibana', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('https://localhost:5601/.kibana')).to.be(1);
+      expect(getTimeout('https://localhost:5601/.kibana')).toBe(1);
     });
   });
 
   describe('http://localhost:5602', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('http://localhost:5602')).to.be(4);
+      expect(getTimeout('http://localhost:5602')).toBe(4);
     });
   });
 
   describe('https://localhost:5602', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('https://localhost:5602')).to.be(4);
+      expect(getTimeout('https://localhost:5602')).toBe(4);
     });
   });
 
   describe('http://localhost:5603', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('http://localhost:5603')).to.be(4);
+      expect(getTimeout('http://localhost:5603')).toBe(4);
     });
   });
 
   describe('https://localhost:5603', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('https://localhost:5603')).to.be(4);
+      expect(getTimeout('https://localhost:5603')).toBe(4);
     });
   });
 
   describe('https://localhost:5601/index', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('https://localhost:5601/index')).to.be(2);
+      expect(getTimeout('https://localhost:5601/index')).toBe(2);
     });
   });
 
   describe('http://localhost:5601/index', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('http://localhost:5601/index')).to.be(3);
+      expect(getTimeout('http://localhost:5601/index')).toBe(3);
     });
   });
 
   describe('https://localhost:5601/index/type', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('https://localhost:5601/index/type')).to.be(2);
+      expect(getTimeout('https://localhost:5601/index/type')).toBe(2);
     });
   });
 
   describe('http://notlocalhost', function () {
     it('defaults to the first matching timeout', function () {
-      expect(getTimeout('http://notlocalhost')).to.be(5);
+      expect(getTimeout('http://notlocalhost')).toBe(5);
     });
   });
 
@@ -162,14 +159,14 @@ describe('ProxyConfigCollection', function () {
 
     it('verifies for config that produces ssl agent', function () {
       const conf = makeCollection().configForUri('https://es.internal.org/_search');
-      expect(conf.agent.options).to.have.property('rejectUnauthorized', true);
-      expect(conf.agent).to.be.an(HttpsAgent);
+      expect(conf.agent.options).toHaveProperty('rejectUnauthorized', true);
+      expect(conf.agent instanceof HttpsAgent).toBeTruthy();
     });
 
     it('disabled verification for * config', function () {
       const conf = makeCollection().configForUri('https://extenal.org/_search');
-      expect(conf).to.have.property('rejectUnauthorized', false);
-      expect(conf.agent).to.be(undefined);
+      expect(conf).toHaveProperty('rejectUnauthorized', false);
+      expect(conf.agent).toBe(undefined);
     });
   });
 });

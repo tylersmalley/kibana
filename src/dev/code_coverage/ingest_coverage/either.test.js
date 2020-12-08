@@ -17,27 +17,26 @@
  * under the License.
  */
 
-import * as Either from '../either';
-import { noop } from '../utils';
-import expect from '@kbn/expect';
+import * as Either from './either';
+import { noop } from './utils';
 
 const pluck = (x) => (obj) => obj[x];
-const expectNull = (x) => expect(x).to.equal(null);
+const expectNull = (x) => expect(x).toBeNull();
 const attempt = (obj) => Either.fromNullable(obj).map(pluck('detail'));
 
 describe(`either datatype functions`, () => {
   describe(`helpers`, () => {
     it(`'fromNullable' should be a fn`, () => {
-      expect(typeof Either.fromNullable).to.be('function');
+      expect(typeof Either.fromNullable).toBe('function');
     });
     it(`' Either.tryCatch' should be a fn`, () => {
-      expect(typeof Either.tryCatch).to.be('function');
+      expect(typeof Either.tryCatch).toBe('function');
     });
     it(`'left' should be a fn`, () => {
-      expect(typeof Either.left).to.be('function');
+      expect(typeof Either.left).toBe('function');
     });
     it(`'right' should be a fn`, () => {
-      expect(typeof Either.right).to.be('function');
+      expect(typeof Either.right).toBe('function');
     });
   });
   describe(' Either.tryCatch', () => {
@@ -46,18 +45,18 @@ describe(`either datatype functions`, () => {
       sut = Either.tryCatch(() => {
         throw new Error('blah');
       });
-      expect(sut.inspect()).to.be('Left(Error: blah)');
+      expect(sut.inspect()).toBe('Left(Error: blah)');
     });
     it(`should return a 'Right' on successful execution`, () => {
       sut = Either.tryCatch(noop);
-      expect(sut.inspect()).to.be('Right(undefined)');
+      expect(sut.inspect()).toBe('Right(undefined)');
     });
   });
   describe(`fromNullable`, () => {
     it(`should continue processing if a truthy is calculated`, () => {
       attempt({ detail: 'x' }).fold(
         () => {},
-        (x) => expect(x).to.equal('x')
+        (x) => expect(x).toBe('x')
       );
     });
     it(`should drop processing if a falsey is calculated`, () => {
@@ -66,16 +65,16 @@ describe(`either datatype functions`, () => {
   });
   describe(`predicate fns`, () => {
     it(`right.isRight() is true`, () => {
-      expect(Either.right('a').isRight()).to.be(true);
+      expect(Either.right('a').isRight()).toBe(true);
     });
     it(`right.isLeft() is false`, () => {
-      expect(Either.right('a').isLeft()).to.be(false);
+      expect(Either.right('a').isLeft()).toBe(false);
     });
     it(`left.isLeft() is true`, () => {
-      expect(Either.left().isLeft()).to.be(true);
+      expect(Either.left().isLeft()).toBe(true);
     });
     it(`left.isRight() is true`, () => {
-      expect(Either.left().isRight()).to.be(false);
+      expect(Either.left().isRight()).toBe(false);
     });
   });
 });

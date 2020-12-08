@@ -17,9 +17,8 @@
  * under the License.
  */
 
-import expect from '@kbn/expect';
-import { whichIndex } from '../ingest_helpers';
-import { TOTALS_INDEX, RESEARCH_TOTALS_INDEX, RESEARCH_COVERAGE_INDEX } from '../constants';
+import { whichIndex } from './ingest_helpers';
+import { TOTALS_INDEX, RESEARCH_TOTALS_INDEX, RESEARCH_COVERAGE_INDEX } from './constants';
 
 describe(`Ingest Helper fns`, () => {
   describe(`whichIndex`, () => {
@@ -29,14 +28,14 @@ describe(`Ingest Helper fns`, () => {
         const isTotal = true;
         it(`should return the Research Totals Index`, () => {
           const actual = whichIndexAgainstResearchJob(isTotal);
-          expect(actual).to.be(RESEARCH_TOTALS_INDEX);
+          expect(actual).toBe(RESEARCH_TOTALS_INDEX);
         });
       });
       describe(`against the coverage index`, () => {
         it(`should return the Research Totals Index`, () => {
           const isTotal = false;
           const actual = whichIndexAgainstResearchJob(isTotal);
-          expect(actual).to.be(RESEARCH_COVERAGE_INDEX);
+          expect(actual).toBe(RESEARCH_COVERAGE_INDEX);
         });
       });
     });
@@ -46,7 +45,7 @@ describe(`Ingest Helper fns`, () => {
         const isTotal = true;
         it(`should return the "Prod" Totals Index`, () => {
           const actual = whichIndexAgainstProdJob(isTotal);
-          expect(actual).to.be(TOTALS_INDEX);
+          expect(actual).toBe(TOTALS_INDEX);
         });
       });
     });

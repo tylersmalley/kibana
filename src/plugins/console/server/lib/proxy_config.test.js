@@ -19,12 +19,11 @@
 
 /* eslint-env mocha */
 
-import expect from '@kbn/expect';
 import sinon from 'sinon';
 import https, { Agent as HttpsAgent } from 'https';
 import { parse as parseUrl } from 'url';
 
-import { ProxyConfig } from '../lib/proxy_config';
+import { ProxyConfig } from './proxy_config';
 
 const matchGoogle = {
   protocol: 'https',
@@ -51,10 +50,10 @@ describe('ProxyConfig', function () {
         },
       });
 
-      expect(config.sslAgent).to.be.a(https.Agent);
+      expect(config.sslAgent instanceof https.Agent).toBeTruthy();
       sinon.assert.calledOnce(https.Agent);
       const sslAgentOpts = https.Agent.firstCall.args[0];
-      expect(sslAgentOpts).to.eql({
+      expect(sslAgentOpts).toEqual({
         ca: ['content-of-some-path'],
         cert: undefined,
         key: undefined,
@@ -70,10 +69,10 @@ describe('ProxyConfig', function () {
         },
       });
 
-      expect(config.sslAgent).to.be.a(https.Agent);
+      expect(config.sslAgent instanceof https.Agent).toBeTruthy();
       sinon.assert.calledOnce(https.Agent);
       const sslAgentOpts = https.Agent.firstCall.args[0];
-      expect(sslAgentOpts).to.eql({
+      expect(sslAgentOpts).toEqual({
         ca: undefined,
         cert: 'content-of-some-path',
         key: 'content-of-another-path',
@@ -91,10 +90,10 @@ describe('ProxyConfig', function () {
         },
       });
 
-      expect(config.sslAgent).to.be.a(https.Agent);
+      expect(config.sslAgent instanceof https.Agent).toBeTruthy();
       sinon.assert.calledOnce(https.Agent);
       const sslAgentOpts = https.Agent.firstCall.args[0];
-      expect(sslAgentOpts).to.eql({
+      expect(sslAgentOpts).toEqual({
         ca: ['content-of-some-path'],
         cert: 'content-of-another-path',
         key: 'content-of-yet-another-path',
@@ -111,7 +110,7 @@ describe('ProxyConfig', function () {
           timeout: 100,
         });
 
-        expect(config.getForParsedUri(parsedLocalEs)).to.eql({});
+        expect(config.getForParsedUri(parsedLocalEs)).toEqual({});
       });
     });
 
@@ -123,7 +122,7 @@ describe('ProxyConfig', function () {
           timeout: football,
         });
 
-        expect(config.getForParsedUri(parsedGoogle).timeout).to.be(football);
+        expect(config.getForParsedUri(parsedGoogle).timeout).toBe(football);
       });
 
       it('assigns ssl.verify to rejectUnauthorized', function () {
@@ -135,7 +134,7 @@ describe('ProxyConfig', function () {
           },
         });
 
-        expect(config.getForParsedUri(parsedGoogle).rejectUnauthorized).to.be(football);
+        expect(config.getForParsedUri(parsedGoogle).rejectUnauthorized).toBe(football);
       });
 
       describe('uri us http', function () {
@@ -147,8 +146,8 @@ describe('ProxyConfig', function () {
               },
             });
 
-            expect(config.sslAgent).to.be.an(HttpsAgent);
-            expect(config.getForParsedUri({ protocol: 'http:' }).agent).to.be(undefined);
+            expect(config.sslAgent instanceof HttpsAgent).toBeTruthy();
+            expect(config.getForParsedUri({ protocol: 'http:' }).agent).toBe(undefined);
           });
         });
         describe('cert is set', function () {
@@ -159,8 +158,8 @@ describe('ProxyConfig', function () {
               },
             });
 
-            expect(config.sslAgent).to.be.an(HttpsAgent);
-            expect(config.getForParsedUri({ protocol: 'http:' }).agent).to.be(undefined);
+            expect(config.sslAgent instanceof HttpsAgent).toBeTruthy();
+            expect(config.getForParsedUri({ protocol: 'http:' }).agent).toBe(undefined);
           });
         });
         describe('key is set', function () {
@@ -171,8 +170,8 @@ describe('ProxyConfig', function () {
               },
             });
 
-            expect(config.sslAgent).to.be.an(HttpsAgent);
-            expect(config.getForParsedUri({ protocol: 'http:' }).agent).to.be(undefined);
+            expect(config.sslAgent instanceof HttpsAgent).toBeTruthy();
+            expect(config.getForParsedUri({ protocol: 'http:' }).agent).toBe(undefined);
           });
         });
         describe('cert + key are set', function () {
@@ -184,8 +183,8 @@ describe('ProxyConfig', function () {
               },
             });
 
-            expect(config.sslAgent).to.be.an(HttpsAgent);
-            expect(config.getForParsedUri({ protocol: 'http:' }).agent).to.be(undefined);
+            expect(config.sslAgent instanceof HttpsAgent).toBeTruthy();
+            expect(config.getForParsedUri({ protocol: 'http:' }).agent).toBe(undefined);
           });
         });
       });
@@ -199,8 +198,8 @@ describe('ProxyConfig', function () {
               },
             });
 
-            expect(config.sslAgent).to.be.an(HttpsAgent);
-            expect(config.getForParsedUri({ protocol: 'https:' }).agent).to.be(config.sslAgent);
+            expect(config.sslAgent instanceof HttpsAgent).toBeTruthy();
+            expect(config.getForParsedUri({ protocol: 'https:' }).agent).toBe(config.sslAgent);
           });
         });
         describe('cert is set', function () {
@@ -211,8 +210,8 @@ describe('ProxyConfig', function () {
               },
             });
 
-            expect(config.sslAgent).to.be.an(HttpsAgent);
-            expect(config.getForParsedUri({ protocol: 'https:' }).agent).to.be(config.sslAgent);
+            expect(config.sslAgent instanceof HttpsAgent).toBeTruthy();
+            expect(config.getForParsedUri({ protocol: 'https:' }).agent).toBe(config.sslAgent);
           });
         });
         describe('key is set', function () {
@@ -223,8 +222,8 @@ describe('ProxyConfig', function () {
               },
             });
 
-            expect(config.sslAgent).to.be.an(HttpsAgent);
-            expect(config.getForParsedUri({ protocol: 'https:' }).agent).to.be(config.sslAgent);
+            expect(config.sslAgent instanceof HttpsAgent).toBeTruthy();
+            expect(config.getForParsedUri({ protocol: 'https:' }).agent).toBe(config.sslAgent);
           });
         });
         describe('cert + key are set', function () {
@@ -236,8 +235,8 @@ describe('ProxyConfig', function () {
               },
             });
 
-            expect(config.sslAgent).to.be.an(HttpsAgent);
-            expect(config.getForParsedUri({ protocol: 'https:' }).agent).to.be(config.sslAgent);
+            expect(config.sslAgent instanceof HttpsAgent).toBeTruthy();
+            expect(config.getForParsedUri({ protocol: 'https:' }).agent).toBe(config.sslAgent);
           });
         });
       });

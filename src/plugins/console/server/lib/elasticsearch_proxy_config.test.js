@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import expect from '@kbn/expect';
 import moment from 'moment';
 import { getElasticsearchProxyConfig } from '../lib/elasticsearch_proxy_config';
 import https from 'https';
@@ -39,7 +38,7 @@ describe('plugins/console', function () {
         ...getDefaultElasticsearchConfig(),
         requestTimeout: moment.duration(value),
       });
-      expect(proxyConfig.timeout).to.be(value);
+      expect(proxyConfig.timeout).toBe(value);
     });
 
     it(`uses https.Agent when url's protocol is https`, function () {
@@ -47,12 +46,12 @@ describe('plugins/console', function () {
         ...getDefaultElasticsearchConfig(),
         hosts: ['https://localhost:9200'],
       });
-      expect(agent).to.be.a(https.Agent);
+      expect(agent instanceof https.Agent).toBeTruthy();
     });
 
     it(`uses http.Agent when url's protocol is http`, function () {
       const { agent } = getElasticsearchProxyConfig(getDefaultElasticsearchConfig());
-      expect(agent).to.be.a(http.Agent);
+      expect(agent instanceof http.Agent).toBeTruthy();
     });
 
     describe('ssl', function () {
@@ -69,7 +68,7 @@ describe('plugins/console', function () {
           ...config,
           ssl: { ...config.ssl, verificationMode: 'none' },
         });
-        expect(agent.options.rejectUnauthorized).to.be(false);
+        expect(agent.options.rejectUnauthorized).toBe(false);
       });
 
       it('sets rejectUnauthorized to true when verificationMode is certificate', function () {
@@ -77,7 +76,7 @@ describe('plugins/console', function () {
           ...config,
           ssl: { ...config.ssl, verificationMode: 'certificate' },
         });
-        expect(agent.options.rejectUnauthorized).to.be(true);
+        expect(agent.options.rejectUnauthorized).toBe(true);
       });
 
       it('sets checkServerIdentity to not check hostname when verificationMode is certificate', function () {
@@ -92,11 +91,9 @@ describe('plugins/console', function () {
           },
         };
 
-        expect(agent.options.checkServerIdentity)
-          .withArgs('right.com', cert)
-          .to.not.throwException();
+        expect(() => agent.options.checkServerIdentity('right.com', cert)).not.toThrow();
         const result = agent.options.checkServerIdentity('right.com', cert);
-        expect(result).to.be(undefined);
+        expect(result).toBe(undefined);
       });
 
       it('sets rejectUnauthorized to true when verificationMode is full', function () {
@@ -105,7 +102,7 @@ describe('plugins/console', function () {
           ssl: { ...config.ssl, verificationMode: 'full' },
         });
 
-        expect(agent.options.rejectUnauthorized).to.be(true);
+        expect(agent.options.rejectUnauthorized).toBe(true);
       });
 
       it(`doesn't set checkServerIdentity when verificationMode is full`, function () {
@@ -114,7 +111,7 @@ describe('plugins/console', function () {
           ssl: { ...config.ssl, verificationMode: 'full' },
         });
 
-        expect(agent.options.checkServerIdentity).to.be(undefined);
+        expect(agent.options.checkServerIdentity).toBe(undefined);
       });
 
       it(`sets ca when certificateAuthorities are specified`, function () {
@@ -123,7 +120,7 @@ describe('plugins/console', function () {
           ssl: { ...config.ssl, certificateAuthorities: ['content-of-some-path'] },
         });
 
-        expect(agent.options.ca).to.contain('content-of-some-path');
+        expect(agent.options.ca).toContain('content-of-some-path');
       });
 
       describe('when alwaysPresentCertificate is false', () => {
@@ -138,8 +135,8 @@ describe('plugins/console', function () {
             },
           });
 
-          expect(agent.options.cert).to.be(undefined);
-          expect(agent.options.key).to.be(undefined);
+          expect(agent.options.cert).toBe(undefined);
+          expect(agent.options.key).toBe(undefined);
         });
 
         it(`doesn't set passphrase when certificate, key and keyPassphrase are specified`, function () {
@@ -154,7 +151,7 @@ describe('plugins/console', function () {
             },
           });
 
-          expect(agent.options.passphrase).to.be(undefined);
+          expect(agent.options.passphrase).toBe(undefined);
         });
       });
 
@@ -170,8 +167,8 @@ describe('plugins/console', function () {
             },
           });
 
-          expect(agent.options.cert).to.be('content-of-some-path');
-          expect(agent.options.key).to.be('content-of-another-path');
+          expect(agent.options.cert).toBe('content-of-some-path');
+          expect(agent.options.key).toBe('content-of-another-path');
         });
 
         it(`sets passphrase when certificate, key and keyPassphrase are specified`, function () {
@@ -186,7 +183,7 @@ describe('plugins/console', function () {
             },
           });
 
-          expect(agent.options.passphrase).to.be('secret');
+          expect(agent.options.passphrase).toBe('secret');
         });
 
         it(`doesn't set cert when only certificate path is specified`, async function () {
@@ -200,8 +197,8 @@ describe('plugins/console', function () {
             },
           });
 
-          expect(agent.options.cert).to.be(undefined);
-          expect(agent.options.key).to.be(undefined);
+          expect(agent.options.cert).toBe(undefined);
+          expect(agent.options.key).toBe(undefined);
         });
 
         it(`doesn't set key when only key path is specified`, async function () {
@@ -215,8 +212,8 @@ describe('plugins/console', function () {
             },
           });
 
-          expect(agent.options.cert).to.be(undefined);
-          expect(agent.options.key).to.be(undefined);
+          expect(agent.options.cert).toBe(undefined);
+          expect(agent.options.key).toBe(undefined);
         });
       });
     });
