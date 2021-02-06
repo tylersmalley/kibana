@@ -6,6 +6,8 @@
  * Side Public License, v 1.
  */
 
+// @ts-nocheck
+
 import { gt, valid } from 'semver';
 import * as Either from 'fp-ts/lib/Either';
 import * as Option from 'fp-ts/lib/Option';
@@ -60,13 +62,13 @@ function throwBadResponse(state: State, res: any): never {
  * Merge the _meta.migrationMappingPropertyHashes mappings of an index with
  * the given target mappings.
  *
- * @remarks Mapping updates are commutative (deeply merged) by Elasticsearch,
- * except for the _meta key. The source index we're migrating from might
- * contain documents created by a plugin that is disabled in the Kibana
- * instance performing this migration. We merge the
- * _meta.migrationMappingPropertyHashes mappings from the source index into
- * the targetMappings to ensure that any `migrationPropertyHashes` for
- * disabled plugins aren't lost.
+ * @remarks When another instance already completed a migration, the existing
+ * target index might contain documents and mappings created by a plugin that
+ * is disabled in the current Kibana instance performing this migration.
+ * Mapping updates are commutative (deeply merged) by Elasticsearch, except
+ * for the `_meta` key. By merging the `_meta.migrationMappingPropertyHashes`
+ * mappings from the existing target index index into the targetMappings we
+ * ensure that any `migrationPropertyHashes` for disabled plugins aren't lost.
  *
  * Right now we don't use these `migrationPropertyHashes` but it could be used
  * in the future to detect if mappings were changed. If mappings weren't
@@ -209,7 +211,7 @@ export const model = (currentState: State, resW: ResponseType<AllActionStates>):
           // index
           sourceIndex: Option.none,
           targetIndex: `${stateP.indexPrefix}_${stateP.kibanaVersion}_001`,
-          targetIndexMappings: disableUnknownTypeMappingFields(
+          targetIndexMappings: mergeMigrationMappingPropertyHashes(
             stateP.targetIndexMappings,
             indices[aliases[stateP.currentAlias]].mappings
           ),
@@ -242,7 +244,7 @@ export const model = (currentState: State, resW: ResponseType<AllActionStates>):
           controlState: 'SET_SOURCE_WRITE_BLOCK',
           sourceIndex: Option.some(source) as Option.Some<string>,
           targetIndex: target,
-          targetIndexMappings: mergeMigrationMappingPropertyHashes(
+          targetIndexMappings: disableUnknownTypeMappingFields(
             stateP.targetIndexMappings,
             indices[source].mappings
           ),
@@ -279,7 +281,7 @@ export const model = (currentState: State, resW: ResponseType<AllActionStates>):
           controlState: 'LEGACY_SET_WRITE_BLOCK',
           sourceIndex: Option.some(legacyReindexTarget) as Option.Some<string>,
           targetIndex: target,
-          targetIndexMappings: mergeMigrationMappingPropertyHashes(
+          targetIndexMappings: disableUnknownTypeMappingFields(
             stateP.targetIndexMappings,
             indices[stateP.legacyIndex].mappings
           ),

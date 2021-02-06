@@ -26,6 +26,7 @@ import { CoreStart } from 'src/core/server';
 import { LegacyAPICaller } from '../server/elasticsearch';
 import { CliArgs, Env } from '../server/config';
 import { Root } from '../server/root';
+// import KbnServer from 'kibana/src/legacy/server/kbn_server';
 import KbnServer from '../../legacy/server/kbn_server';
 
 export type HttpMethod = 'delete' | 'get' | 'head' | 'post' | 'put';
@@ -40,7 +41,7 @@ const DEFAULTS_SETTINGS = {
   },
   logging: { silent: true },
   plugins: {},
-  migrations: { skip: true },
+  migrations: { skip: false },
 };
 
 const DEFAULT_SETTINGS_WITH_CORE_PLUGINS = {

@@ -1,0 +1,19 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "js_library")
+
+SRCS = glob(
+  [
+    "server/kbn_server.d.ts",
+    "server/kbn_server.js"
+  ],
+)
+
+copy_to_bin(
+    name = "srcs",
+    srcs = SRCS
+)
+
+js_library(
+    name = "legacy",
+    srcs = SRCS,
+    visibility = ["//visibility:public"],
+)
