@@ -1,0 +1,8 @@
+steps:
+  - label: ":docker: :package: (Dev)"
+    plugins:
+      - docker-login#v2.0.1:
+          username: tylersmalley
+      - docker-compose#v3.7.0:
+          build: kibana
+          image-repository: "tylersmalley/kibana-ci"

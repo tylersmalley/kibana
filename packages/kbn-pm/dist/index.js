@@ -8948,41 +8948,51 @@ const BootstrapCommand = {
      * have to, as it will slow down the bootstrapping process.
      */
 
-    const checksums = await Object(_utils_project_checksums__WEBPACK_IMPORTED_MODULE_5__["getAllChecksums"])(kbn, _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"], yarnLock);
-    const caches = new Map();
-    let cachedProjectCount = 0;
+    if (options.cache) {
+      const checksums = await Object(_utils_project_checksums__WEBPACK_IMPORTED_MODULE_5__["getAllChecksums"])(kbn, _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"], yarnLock);
+      const caches = new Map();
+      let cachedProjectCount = 0;
 
-    for (const project of nonBazelProjectsOnly.values()) {
-      if (project.hasScript('kbn:bootstrap') && !project.isBazelPackage()) {
-        const file = new _utils_bootstrap_cache_file__WEBPACK_IMPORTED_MODULE_6__["BootstrapCacheFile"](kbn, project, checksums);
-        const valid = options.cache && file.isValid();
+      for (const project of nonBazelProjectsOnly.values()) {
+        if (project.hasScript('kbn:bootstrap') && !project.isBazelPackage()) {
+          const file = new _utils_bootstrap_cache_file__WEBPACK_IMPORTED_MODULE_6__["BootstrapCacheFile"](kbn, project, checksums);
+          const valid = options.cache && file.isValid();
 
-        if (valid) {
-          _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].debug(`[${project.name}] cache up to date`);
-          cachedProjectCount += 1;
+          if (valid) {
+            _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].debug(`[${project.name}] cache up to date`);
+            cachedProjectCount += 1;
+          }
+
+          caches.set(project, {
+            file,
+            valid
+          });
         }
-
-        caches.set(project, {
-          file,
-          valid
-        });
       }
-    }
 
-    if (cachedProjectCount > 0) {
-      _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].success(`${cachedProjectCount} bootstrap builds are cached`);
+      if (cachedProjectCount > 0) {
+        _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].success(`${cachedProjectCount} bootstrap builds are cached`);
+      }
     }
 
     await Object(_utils_parallelize__WEBPACK_IMPORTED_MODULE_3__["parallelizeBatches"])(batchedNonBazelProjects, async project => {
-      const cache = caches.get(project);
+      if (options.cache) {
+        const cache = caches.get(project);
 
-      if (cache && !cache.valid) {
-        _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].info(`[${project.name}] running [kbn:bootstrap] script`);
-        cache.file.delete();
-        await project.runScriptStreaming('kbn:bootstrap');
-        cache.file.write();
-        _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].success(`[${project.name}] bootstrap complete`);
+        if (cache && !cache.valid) {
+          _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].info(`[${project.name}] running [kbn:bootstrap] script`);
+          cache.file.delete();
+          await project.runScriptStreaming('kbn:bootstrap');
+          cache.file.write();
+        }
+      } else {
+        if (project.hasScript('kbn:bootstrap')) {
+          _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].info(`[${project.name}] running [kbn:bootstrap] script`);
+          await project.runScriptStreaming('kbn:bootstrap');
+        }
       }
+
+      _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].success(`[${project.name}] bootstrap complete`);
     });
     _utils_log__WEBPACK_IMPORTED_MODULE_2__["log"].info('For IDE TypeScript support run `node scripts/build_ts_refs`');
   }

@@ -1,3 +1,4 @@
+.git
 /.yarn-local-mirror
 /bazel
 /data
@@ -6,6 +7,3 @@
 /rfcs
 node_modules
 target
-
-# TODO: Remove requirement for git from things like kbn-pm
-# .git
