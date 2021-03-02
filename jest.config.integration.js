@@ -11,7 +11,7 @@ const preset = require('@kbn/test/jest-preset');
 module.exports = {
   preset: '@kbn/test',
   rootDir: '.',
-  roots: ['<rootDir>/src', '<rootDir>/packages'],
+  roots: ['<rootDir>/src', '<rootDir>/packages', '<rootDir>/x-pack'],
   testMatch: ['**/integration_tests**/*.test.{js,mjs,ts,tsx}'],
   testRunner: 'jasmine2',
   testPathIgnorePatterns: preset.testPathIgnorePatterns.filter(
