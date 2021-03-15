@@ -37,7 +37,7 @@
   },
   "author": "Rashid Khan <rashid.khan@elastic.co>",
   "scripts": {
-    "bazel": "bazel",
+    "bazel": "node scripts/bazelisk",
     "preinstall": "node ./preinstall_check",
     "kbn": "node scripts/kbn",
     "es": "node scripts/es",

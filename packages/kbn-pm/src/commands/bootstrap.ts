@@ -17,7 +17,7 @@ import { getAllChecksums } from '../utils/project_checksums';
 import { BootstrapCacheFile } from '../utils/bootstrap_cache_file';
 import { readYarnLock } from '../utils/yarn_lock';
 import { validateDependencies } from '../utils/validate_dependencies';
-import { ensureYarnIntegrityFileExists, installBazelTools, runBazel } from '../utils/bazel';
+import { ensureYarnIntegrityFileExists, runBazel } from '../utils/bazel';
 
 export const BootstrapCommand: ICommand = {
   description: 'Install dependencies and crosslink projects',
@@ -38,9 +38,6 @@ export const BootstrapCommand: ICommand = {
     // Ensure we have a `node_modules/.yarn-integrity` file as we depend on it
     // for bazel to know it has to re-install the node_modules after a reset or a clean
     await ensureYarnIntegrityFileExists(resolve(kibanaProjectPath, 'node_modules'));
-
-    // Install bazel machinery tools if needed
-    await installBazelTools(rootPath);
 
     // Bootstrap process for Bazel packages
     // Bazel is now managing dependencies so yarn install
