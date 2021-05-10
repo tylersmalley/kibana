@@ -2682,6 +2682,10 @@
   version "0.0.0"
   uid ""
 
+"@kbn/node-env@link:bazel-bin/packages/kbn-node-env/npm_module":
+  version "0.0.0"
+  uid ""
+
 "@kbn/optimizer@link:packages/kbn-optimizer":
   version "0.0.0"
   uid ""

@@ -1,0 +1,11 @@
+{
+    "name": "@kbn/node-env",
+    "main": "./index.js",
+    "version": "1.0.0",
+    "license": "MIT",
+    "private": true,
+    "kibana": {
+      "devOnly": true
+    }
+  }
+  

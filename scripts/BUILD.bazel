@@ -1,0 +1,13 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+package(default_visibility = ["//visibility:public"])
+
+DEPS = [
+  "@npm//require-in-the-middle"
+]
+
+nodejs_binary(
+  name = "es",
+  data = ["//packages/kbn-es:build", "//packages/kbn-node-env:build"] + DEPS,
+  chdir = "scripts",
+  entry_point = ":es.js",
+)

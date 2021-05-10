@@ -1,0 +1,10 @@
+package(default_visibility = ["//visibility:public"])
+
+DEPS = [
+  "@npm//require-in-the-middle"
+]
+
+filegroup(
+  name = "setup_node_env",
+  srcs = glob(["**/*.js"]) + DEPS,
+)
