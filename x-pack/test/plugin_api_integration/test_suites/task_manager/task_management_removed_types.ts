@@ -8,7 +8,7 @@
 import _ from 'lodash';
 import expect from '@kbn/expect';
 import url from 'url';
-import supertestAsPromised from 'supertest-as-promised';
+import SuperTest from 'supertest';
 import { FtrProviderContext } from '../../ftr_provider_context';
 import { ConcreteTaskInstance } from '../../../../plugins/task_manager/server';
 
@@ -43,7 +43,7 @@ export default function ({ getService }: FtrProviderContext) {
   const esArchiver = getService('esArchiver');
   const retry = getService('retry');
   const config = getService('config');
-  const supertest = supertestAsPromised(url.format(config.get('servers.kibana')));
+  const supertest = SuperTest(url.format(config.get('servers.kibana')));
 
   const REMOVED_TASK_TYPE_ID = 'be7e1250-3322-11eb-94c1-db6995e83f6a';
 

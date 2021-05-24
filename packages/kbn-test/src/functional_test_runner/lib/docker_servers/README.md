@@ -53,7 +53,7 @@ export default function () {
 To consume the test server, use can use something like supertest to send request. Just make sure that you disable your test suite if the user doesn't choose to enable your docker server:
 
 ```ts
-import makeSupertest from 'supertest-as-promised';
+import makeSupertest from 'supertest';
 import { FtrProviderContext } from '../ftr_provider_context';
 
 export default function ({ getService }: FtrProviderContext) {

@@ -6,7 +6,6 @@
  */
 
 import expect from '@kbn/expect';
-import supertestAsPromised from 'supertest-as-promised';
 import type { ApiResponse, estypes } from '@elastic/elasticsearch';
 import { FtrProviderContext } from '../../../common/ftr_provider_context';
 
@@ -478,7 +477,7 @@ export default ({ getService }: FtrProviderContext): void => {
       });
 
       const createCasesWithTitleAsNumber = async (total: number) => {
-        const responsePromises: supertestAsPromised.Test[] = [];
+        const responsePromises: supertest.Test[] = [];
         for (let i = 0; i < total; i++) {
           // this doesn't guarantee that the cases will be created in order that the for-loop executes,
           // for example case with title '2', could be created before the case with title '1' since we're doing a promise all here

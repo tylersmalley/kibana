@@ -9,8 +9,7 @@ import expect from '@kbn/expect';
 import type { ApiResponse, estypes } from '@elastic/elasticsearch';
 import type { KibanaClient } from '@elastic/elasticsearch/api/kibana';
 
-import * as st from 'supertest';
-import supertestAsPromised from 'supertest-as-promised';
+import type SuperTest from 'supertest';
 import { CASES_URL, SUB_CASES_PATCH_DEL_URL } from '../../../../plugins/cases/common/constants';
 import {
   CasesConfigureRequest,
@@ -92,7 +91,7 @@ export const setStatus = async ({
   cases,
   type,
 }: {
-  supertest: st.SuperTest<supertestAsPromised.Test>;
+  supertest: SuperTest.SuperTest<SuperTest.Test>;
   cases: SetStatusCasesParams[];
   type: 'case' | 'sub_case';
 }): Promise<CasesResponse | SubCasesResponse> => {
@@ -130,7 +129,7 @@ export interface CreateSubCaseResp {
  * generated alert style comment which can be overridden.
  */
 export const createSubCase = async (args: {
-  supertest: st.SuperTest<supertestAsPromised.Test>;
+  supertest: SuperTest.SuperTest<SuperTest.Test>;
   comment?: ContextTypeGeneratedAlertType;
   caseID?: string;
   caseInfo?: CasePostRequest;
@@ -142,7 +141,7 @@ export const createSubCase = async (args: {
 /**
  * Add case as a connector
  */
-export const createCaseAction = async (supertest: st.SuperTest<supertestAsPromised.Test>) => {
+export const createCaseAction = async (supertest: SuperTest.SuperTest<SuperTest.Test>) => {
   const { body: createdAction } = await supertest
     .post('/api/actions/action')
     .set('kbn-xsrf', 'foo')
@@ -159,7 +158,7 @@ export const createCaseAction = async (supertest: st.SuperTest<supertestAsPromis
  * Remove a connector
  */
 export const deleteCaseAction = async (
-  supertest: st.SuperTest<supertestAsPromised.Test>,
+  supertest: SuperTest.SuperTest<SuperTest.Test>,
   id: string
 ) => {
   await supertest.delete(`/api/actions/action/${id}`).set('kbn-xsrf', 'foo');
@@ -178,7 +177,7 @@ export const createSubCaseComment = async ({
   forceNewSubCase = false,
   actionID,
 }: {
-  supertest: st.SuperTest<supertestAsPromised.Test>;
+  supertest: SuperTest.SuperTest<SuperTest.Test>;
   comment?: ContextTypeGeneratedAlertType;
   caseID?: string;
   caseInfo?: CasePostRequest;
