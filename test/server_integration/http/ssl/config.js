@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'fs';
 import { CA_CERT_PATH, KBN_CERT_PATH, KBN_KEY_PATH } from '@kbn/dev-utils';
-import { createKibanaSupertestProvider } from '../../services';
+import { createKibanaSupertestProvider } from '../../../common/services';
 
 export default async function ({ readConfigFile }) {
   const httpConfig = await readConfigFile(require.resolve('../../config'));

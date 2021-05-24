@@ -45,7 +45,6 @@ import {
 } from './visualizations';
 import { ListingTableProvider } from './listing_table';
 import { SavedQueryManagementComponentProvider } from './saved_query_management_component';
-import { KibanaSupertestProvider } from './supertest';
 import { MenuToggleProvider } from './menu_toggle';
 import { MonacoEditorProvider } from './monaco_editor';
 
@@ -82,7 +81,6 @@ export const services = {
   toasts: ToastsProvider,
   savedQueryManagementComponent: SavedQueryManagementComponentProvider,
   elasticChart: ElasticChartProvider,
-  supertest: KibanaSupertestProvider,
   managementMenu: ManagementMenuProvider,
   monacoEditor: MonacoEditorProvider,
   MenuToggle: MenuToggleProvider,

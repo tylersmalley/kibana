@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'fs';
 import { CA1_CERT_PATH, CA2_CERT_PATH, EE_P12_PATH, EE_P12_PASSWORD } from '../../__fixtures__';
-import { createKibanaSupertestProvider } from '../../services';
+import { createKibanaSupertestProvider } from '../../../common/services';
 
 export default async function ({ readConfigFile }) {
   const httpConfig = await readConfigFile(require.resolve('../../config'));

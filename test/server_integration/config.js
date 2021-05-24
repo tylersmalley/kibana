@@ -6,12 +6,6 @@
  * Side Public License, v 1.
  */
 
-import {
-  createKibanaSupertestProvider,
-  KibanaSupertestWithoutAuthProvider,
-  ElasticsearchSupertestProvider,
-} from './services';
-
 export default async function ({ readConfigFile }) {
   const commonConfig = await readConfigFile(require.resolve('../common/config'));
   const functionalConfig = await readConfigFile(require.resolve('../functional/config'));
@@ -19,9 +13,6 @@ export default async function ({ readConfigFile }) {
   return {
     services: {
       ...commonConfig.get('services'),
-      supertest: createKibanaSupertestProvider(),
-      supertestWithoutAuth: KibanaSupertestWithoutAuthProvider,
-      esSupertest: ElasticsearchSupertestProvider,
     },
     servers: commonConfig.get('servers'),
     junit: {

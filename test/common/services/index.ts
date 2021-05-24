@@ -16,6 +16,12 @@ import { RandomnessProvider } from './randomness';
 import { SecurityServiceProvider } from './security';
 import { EsDeleteAllIndicesProvider } from './es_delete_all_indices';
 import { SavedObjectInfoProvider } from './saved_object_info';
+import {
+  createKibanaSupertestProvider,
+  KibanaSupertestWithoutAuthProvider,
+  ElasticsearchSupertestProvider,
+  ElasticsearchSupertestWithoutAuthProvider,
+} from './supertest';
 
 export const services = {
   deployment: DeploymentProvider,
@@ -28,4 +34,8 @@ export const services = {
   security: SecurityServiceProvider,
   esDeleteAllIndices: EsDeleteAllIndicesProvider,
   savedObjectInfo: SavedObjectInfoProvider,
+  supertest: createKibanaSupertestProvider(),
+  supertestWithoutAuth: KibanaSupertestWithoutAuthProvider,
+  esSupertest: ElasticsearchSupertestProvider,
+  esSupertestWithoutAuth: ElasticsearchSupertestWithoutAuthProvider,
 };
