@@ -1,6 +1,6 @@
 pageLoadAssetSize:
   advancedSettings: 27596
-  alerting: 106936
+  alerting: 99999
   apm: 64385
   apmOss: 18996
   bfetch: 51874
@@ -30,15 +30,15 @@ pageLoadAssetSize:
   graph: 31504
   grokdebugger: 26779
   home: 30182
-  indexLifecycleManagement: 107090
-  indexManagement: 140608
+  indexLifecycleManagement: 99999
+  indexManagement: 99999
   indexPatternManagement: 28222
   infra: 184320
   fleet: 465774
   ingestPipelines: 58003
-  inputControlVis: 172675
-  inspector: 148711
-  kibanaLegacy: 107711
+  inputControlVis: 99999
+  inspector: 99999
+  kibanaLegacy: 99999
   kibanaOverview: 56279
   kibanaReact: 161921
   kibanaUtils: 198829
@@ -55,13 +55,13 @@ pageLoadAssetSize:
   navigation: 37269
   newsfeed: 42228
   observability: 89709
-  painlessLab: 179748
+  painlessLab: 99999
   regionMap: 66098
   remoteClusters: 51327
-  reporting: 183418
+  reporting: 99999
   rollup: 97204
-  savedObjects: 108518
-  savedObjectsManagement: 101836
+  savedObjects: 99999
+  savedObjectsManagement: 99999
   savedObjectsTagging: 59482
   savedObjectsTaggingOss: 20590
   searchprofiler: 67080
@@ -91,9 +91,9 @@ pageLoadAssetSize:
   visTypeTagcloud: 37575
   visTypeTimelion: 68883
   visTypeTimeseries: 55203
-  visTypeVega: 153573
-  visTypeVislib: 242838
-  visTypeXy: 113478
+  visTypeVega: 99999
+  visTypeVislib: 99999
+  visTypeXy: 99999
   visualizations: 90000
   visualize: 57431
   watcher: 43598
