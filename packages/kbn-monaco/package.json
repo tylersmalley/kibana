@@ -2,7 +2,7 @@
   "name": "@kbn/monaco",
   "version": "1.0.0",
   "private": true,
-  "main": "target_node/src/index.js",
+  "main": "target_web/src/index.js",
   "types": "target_types/src/index.d.ts",
   "license": "SSPL-1.0 OR Elastic License 2.0",
   "scripts": {

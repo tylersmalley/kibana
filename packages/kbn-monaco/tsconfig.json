@@ -1,9 +1,9 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.browser.json",
   "compilerOptions": {
     "incremental": true,
     "declarationDir": "./target_types",
-    "outDir": "./target_node",
+    "outDir": "./target_web",
     "declaration": true,
     "declarationMap": true,
     "rootDir": ".",
