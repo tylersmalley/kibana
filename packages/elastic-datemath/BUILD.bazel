@@ -1,6 +1,8 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_config", "ts_project")
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "pkg_npm")
 load("//src/dev/bazel:index.bzl", "jsts_transpiler")
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_package_bin")
+load("@npm//typescript:index.bzl", "tsc")
 
 PKG_BASE_NAME = "elastic-datemath"
 PKG_REQUIRE_NAME = "@elastic/datemath"
@@ -24,6 +26,7 @@ NPM_MODULE_EXTRA_FILES = [
 TYPES_DEPS = [
   "@npm//moment",
   "@npm//@types/node",
+  "@npm//tslib"
 ]
 
 DEPS = TYPES_DEPS
@@ -43,24 +46,23 @@ ts_config(
   ],
 )
 
-ts_project(
-  name = "tsc_types",
-  args = ['--pretty'],
-  srcs = SRCS,
-  deps = DEPS,
-  declaration = True,
-  declaration_map = True,
-  emit_declaration_only = True,
-  out_dir = "target_types",
-  source_map = True,
-  root_dir = "src",
-  tsconfig = ":tsconfig",
+tsc(
+  name = "all_types",
+  outs = ["index.d.ts", "index.d.ts.map"],
+  args = [
+      "-p",
+      "$(execpath tsconfig.json)",
+      "--outDir",
+      "$(@D)",
+      "--pretty"
+  ],
+  data = SRCS + DEPS + ["//:tsconfig.base.json", "tsconfig.json"],
 )
 
 js_library(
   name = PKG_BASE_NAME,
   srcs = NPM_MODULE_EXTRA_FILES,
-  deps = DEPS + [":target_node", ":tsc_types"],
+  deps = DEPS + [":target_node"],
   package_name = PKG_REQUIRE_NAME,
   visibility = ["//visibility:public"],
 )
@@ -72,10 +74,32 @@ pkg_npm(
   ]
 )
 
+pkg_npm(
+  name = "npm_module",
+  deps = [
+    ":%s" % PKG_BASE_NAME % "-types",
+  ]
+)
+
 filegroup(
   name = "build",
   srcs = [
     ":npm_module",
   ],
   visibility = ["//visibility:public"],
+)
+
+npm_package_bin(
+  name = "types",
+  data = SRCS + DEPS + [
+    "tsconfig.json",
+    "//:tsconfig.base.json",
+    "index.d.ts",
+    ":all_types",
+    "@npm//@bazel/typescript",
+    "@npm//@microsoft/api-extractor",
+  ],
+  package = "kibana-api-extractor",
+  args = ["$(execpath tsconfig.json)", "$(execpath index.d.ts)", "$(@D)/index.d.ts"],
+  output_dir = 1,
 )

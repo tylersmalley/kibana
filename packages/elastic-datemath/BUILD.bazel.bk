@@ -1,0 +1,113 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_config", "ts_project")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "pkg_npm")
+load("//src/dev/bazel:index.bzl", "jsts_transpiler")
+load("@npm//@microsoft/api-extractor:index.bzl", "api_extractor")
+load("@npm//typescript:index.bzl", "tsc")
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_package_bin")
+
+PKG_BASE_NAME = "elastic-datemath"
+PKG_REQUIRE_NAME = "@elastic/datemath"
+
+SOURCE_FILES = glob([
+  "src/index.ts",
+])
+
+SRCS = SOURCE_FILES
+
+filegroup(
+  name = "srcs",
+  srcs = SRCS,
+)
+
+NPM_MODULE_EXTRA_FILES = [
+  "package.json",
+  "README.md",
+]
+
+TYPES_DEPS = [
+  "@npm//moment",
+  "@npm//@types/node",
+]
+
+DEPS = TYPES_DEPS
+
+jsts_transpiler(
+  name = "target_node",
+  srcs = SRCS,
+  build_pkg_name = package_name(),
+)
+
+tsc(
+  name = "all_types",
+  outs = ["index.d.ts", "index.d.ts.map"],
+  args = [
+      "-p",
+      "$(execpath tsconfig.json)",
+      "--outDir",
+      "$(@D)",
+      "--pretty"
+  ],
+  data = SRCS + DEPS + ["//:tsconfig.base.json", "tsconfig.json"],
+)
+
+npm_package_bin(
+  name = "types",
+  data = SOURCE_FILES + [
+    "tsconfig.json",
+    "//:tsconfig.base.json",
+    "index.d.ts",
+    ":all_types",
+    "@npm//@bazel/typescript",
+    "@npm//@microsoft/api-extractor",
+  ],
+  package = "kibana-api-extractor",
+  args = ["$(execpath tsconfig.json)", "$(execpath index.d.ts)", "$(@D)/foofoo.d.ts"],
+  output_dir = 1, 
+)
+
+# npm_package_bin(
+#   name = "types",
+#   data = SOURCE_FILES + [
+#     "tsconfig.json",
+#     "//:tsconfig.base.json",
+#     "index.d.ts",
+#     ":all_types",
+#     "//packages/bazel/src/api-extractor",
+#     "@npm//@bazel/typescript",
+#     "@npm//@microsoft/api-extractor",
+#   ],
+#   tool = "//packages/bazel/src/api-extractor",
+#   args = ["$(execpath tsconfig.json)", "$(execpath index.d.ts)", "$(@D)/foofoo.d.ts"],
+#   output_dir = 1, 
+# )
+
+# api_extractor(
+#   name = "types",
+#   output_dir = True,
+#   data = [":all_types", "api-extractor.json"],
+#   args = ["run", "--local", "--verbose", "--config", "$(execpath api-extractor.json)"]
+# )
+
+# js_library(
+#   name = "@types/" + PKG_BASE_NAME,
+#   srcs = [":all_types"],
+#   package_name = "@types/" + PKG_BASE_NAME,
+#   visibility = ["//visibility:private"],
+# )
+
+
+
+pkg_npm(
+  name = "npm_module",
+  deps = [
+    ":%s" % PKG_BASE_NAME,
+  ]
+)
+
+filegroup(
+  name = "build",
+  srcs = [
+    ":npm_module",
+  ],
+  visibility = ["//visibility:public"],
+)

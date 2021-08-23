@@ -413,6 +413,7 @@
     "yauzl": "^2.10.0"
   },
   "devDependencies": {
+    "kibana-api-extractor": "^0.0.2",
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
     "@babel/generator": "^7.12.11",

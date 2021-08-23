@@ -1,0 +1,65 @@
+# BEGIN-DEV-ONLY
+package(default_visibility = ["//packages:__subpackages__"])
+
+load("@npm//@bazel/typescript:index.bzl", "ts_config", "ts_project")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "nodejs_binary")
+
+PKG_BASE_NAME = "api-extractor"
+PKG_REQUIRE_NAME = "@kbn/bazel_api_extractor"
+
+SRCS = ["index.ts"]
+TYPES_DEPS = [
+  "@npm//@bazel/typescript",
+  "@npm//@microsoft/api-extractor",
+  "@npm//@types/node",
+  "@npm//tslib",
+]
+
+NPM_MODULE_EXTRA_FILES = [
+  "package.json",
+]
+
+RUNTIME_DEPS = [
+  "@npm//@microsoft/api-extractor",
+]
+
+ts_config(
+  name = "tsconfig",
+  src = "tsconfig.json",
+  deps = [
+    "//:tsconfig.base.json",
+  ],
+)
+
+ts_project(
+  name = "target_node",
+  args = ['--pretty'],
+  srcs = SRCS,
+  deps = TYPES_DEPS,
+  declaration = True,
+  declaration_map = True,
+  incremental = False,
+  out_dir = "target",
+  source_map = True,
+  tsconfig = ":tsconfig",
+)
+
+# js_library(
+#   name = PKG_BASE_NAME,
+#   srcs = NPM_MODULE_EXTRA_FILES,
+#   deps = RUNTIME_DEPS + [":target_node"],
+#   package_name = PKG_REQUIRE_NAME,
+#   visibility = ["//visibility:public"],
+# )
+
+nodejs_binary(
+  name = PKG_BASE_NAME,
+  data = [ ":target_node" ],
+  entry_point = "target/index.js",
+)
+
+filegroup(
+    name = "package_assets",
+    srcs = ["BUILD.bazel"],
+)
+# END-DEV-ONLY
