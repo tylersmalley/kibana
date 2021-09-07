@@ -1,6 +1,6 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_config", "ts_project")
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "pkg_npm")
-load("//src/dev/bazel:index.bzl", "jsts_transpiler")
+load("//src/dev/bazel:index.bzl", "jsts_transpiler", "types_pkg")
 load("@build_bazel_rules_nodejs//:index.bzl", "npm_package_bin")
 load("@npm//typescript:index.bzl", "tsc")
 
@@ -75,9 +75,9 @@ pkg_npm(
 )
 
 pkg_npm(
-  name = "npm_module",
+  name = "types_npm_module",
   deps = [
-    ":%s" % PKG_BASE_NAME % "-types",
+    ":%s" % PKG_BASE_NAME + "-types",
   ]
 )
 
@@ -102,4 +102,9 @@ npm_package_bin(
   package = "kibana-api-extractor",
   args = ["$(execpath tsconfig.json)", "$(execpath index.d.ts)", "$(@D)/index.d.ts"],
   output_dir = 1,
+)
+
+types_pkg(
+  name = "npm_package_types",
+  package_name = "@types/elastic__datemath",
 )
