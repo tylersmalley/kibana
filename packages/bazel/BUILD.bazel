@@ -1,0 +1,13 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
+
+pkg_npm(
+  name = "npm_package",
+  srcs = glob(
+    ["*"],
+  ) + [
+    "//packages/bazel/src/api-extractor:package_assets",
+  ],
+  deps = [
+    "//packages/bazel/src/api-extractor:lib",
+  ],
+)

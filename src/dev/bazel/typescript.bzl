@@ -1,14 +1,50 @@
+load("@build_bazel_rules_nodejs//:providers.bzl", "run_node")
+load("@build_bazel_rules_nodejs//internal/node:node.bzl", "nodejs_binary")
+
 load("@npm//typescript:index.bzl", "tsc")
 
 def _types_pkg_impl(ctx):
   out = ctx.actions.declare_file("package.json")
+  inputs = ctx.files.data[:]
+
   ctx.actions.expand_template(
     output = out,
     template = ctx.file._template,
     substitutions = {"{NAME}": ctx.attr.package_name},
   )
 
-  return [DefaultInfo(files = depset([out]))]
+  outputs = []
+  # outputs.append(ctx.actions.declare_file(ctx.label.name + "index.d.ts"))
+  js_out = ctx.actions.declare_directory("%s" % ctx.attr.name)
+  outputs.append(js_out)
+
+  extractor_args = ctx.actions.args()
+  extractor_args.add_all([
+    ctx.expand_location("tsconfig.json"),
+    ctx.expand_location("index.d.ts"),
+    "index.d.ts"
+  ])
+
+  ctx.actions.run(
+    progress_message = "Running API Extractor",
+    mnemonic = "APIExtractor",
+    executable = ctx.executable._api_extractor,
+    inputs = inputs,
+    outputs = outputs,
+    arguments = [extractor_args],
+  )
+
+  # run_node(
+  #   ctx,
+  #   inputs = inputs,
+  #   arguments = [extractor_args],
+  #   outputs = outputs,
+  #   mnemonic = "ApiExtractor",
+  #   executable = "_api_extractor"
+  #   execution_requirements = {},
+  # )
+
+  return [DefaultInfo(files = depset(outputs))]
 
 types_pkg = rule(
   implementation = _types_pkg_impl,
@@ -18,7 +54,14 @@ types_pkg = rule(
       allow_single_file = True,
       default = "package_json.tpl",
     ),
+    "data": attr.label_list(
+      allow_files = True,
+    ),
+    "_api_extractor": attr.label(
+      doc = "Target that executes the api-extractor binary",
+      executable = True,
+      cfg = "host",
+      default = Label("//packages/bazel/src/api-extractor:api_extractor"),
+    ),
   },
 )
-
-

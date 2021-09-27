@@ -1,0 +1,10 @@
+{
+  "name": "@kbn/bazel",
+  "version": "0.0.0",
+  "bin": {
+    "api-extractor": "./src/api-extractor/index.js",
+  },
+  "dependencies": {
+    "@microsoft/api-extractor": "7.18.7",
+  }
+}

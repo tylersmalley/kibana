@@ -46,17 +46,18 @@ ts_config(
   ],
 )
 
-tsc(
+ts_project(
   name = "all_types",
-  outs = ["index.d.ts", "index.d.ts.map"],
-  args = [
-      "-p",
-      "$(execpath tsconfig.json)",
-      "--outDir",
-      "$(@D)",
-      "--pretty"
-  ],
-  data = SRCS + DEPS + ["//:tsconfig.base.json", "tsconfig.json"],
+  args = ['--pretty'],
+  srcs = SRCS,
+  deps = DEPS,
+  declaration = True,
+  declaration_map = True,
+  emit_declaration_only = True,
+  out_dir = "all_types",
+  source_map = True,
+  root_dir = "src",
+  tsconfig = ":tsconfig",
 )
 
 js_library(
@@ -89,22 +90,28 @@ filegroup(
   visibility = ["//visibility:public"],
 )
 
-npm_package_bin(
-  name = "types",
-  data = SRCS + DEPS + [
-    "tsconfig.json",
-    "//:tsconfig.base.json",
-    "index.d.ts",
-    ":all_types",
-    "@npm//@bazel/typescript",
-    "@npm//@microsoft/api-extractor",
-  ],
-  package = "kibana-api-extractor",
-  args = ["$(execpath tsconfig.json)", "$(execpath index.d.ts)", "$(@D)/index.d.ts"],
-  output_dir = 1,
-)
+# npm_package_bin(
+#   name = "types",
+#   data = SRCS + DEPS + [
+#     "tsconfig.json",
+#     "//:tsconfig.base.json",
+#     "index.d.ts",
+#     ":all_types",
+#     "@npm//@bazel/typescript",
+#     "@npm//@microsoft/api-extractor",
+#   ],
+#   package = "kibana-api-extractor",
+#   args = ["$(execpath tsconfig.json)", "$(execpath index.d.ts)", "$(@D)/index.d.ts"],
+#   output_dir = 1,
+# )
 
 types_pkg(
   name = "npm_package_types",
   package_name = "@types/elastic__datemath",
+  data = SRCS + DEPS + [
+    "tsconfig.json",
+    "//:tsconfig.base.json",
+    ":all_types",
+
+  ]
 )

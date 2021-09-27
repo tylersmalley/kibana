@@ -7,7 +7,7 @@
     "incremental": false,
     "outDir": "target",
     "sourceMap": true,
-    "sourceRoot": "../../../../packages/bazel/src/api-extractor/src",
+    "sourceRoot": "../../../../packages/bazel/src/api-extractor",
     "types": [
       "node"
     ],
