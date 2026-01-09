@@ -17,6 +17,7 @@ const github = new Octokit({
 });
 
 let prChangesCache: null | RestEndpointMethodTypes['pulls']['listFiles']['response']['data'] = null;
+let pullRequestCache: null | RestEndpointMethodTypes['pulls']['get']['response']['data'] = null;
 
 export const getPrChanges = async (
   owner = process.env.GITHUB_PR_BASE_OWNER,
@@ -37,6 +38,29 @@ export const getPrChanges = async (
   });
 
   return files;
+};
+
+export const getPullRequest = async (
+  owner = process.env.GITHUB_PR_BASE_OWNER,
+  repo = process.env.GITHUB_PR_BASE_REPO,
+  prNumber: undefined | string | number = process.env.GITHUB_PR_NUMBER
+) => {
+  if (!owner || !repo || !prNumber) {
+    throw Error("Couldn't retrieve Github PR info from environment variables in order to retrieve PR");
+  }
+
+  const { data: pullRequest } = await github.pulls.get({
+    owner,
+    repo,
+    pull_number: typeof prNumber === 'number' ? prNumber : parseInt(prNumber, 10),
+  });
+
+  return pullRequest;
+};
+
+export const getPullRequestCached = async () => {
+  pullRequestCache = pullRequestCache || (await getPullRequest());
+  return pullRequestCache;
 };
 
 export const getPrChangesCached = async () => {

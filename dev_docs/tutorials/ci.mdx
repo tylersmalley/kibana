@@ -31,6 +31,10 @@ Build documentation from the root `docs` folder.
 
 Labels can be added to a pull request to run conditional pipelines.  Build artifacts will be available on the "Artifacts" tab of the "Build Kibana Distribution and Plugins" step.
 
+#### `ci:run-on-draft`
+
+Run CI even if the pull request is a draft.
+
 #### `ci:all-cypress-suites`
 
 Some Cypress test suites are only run when code changes are made in certain files, typically files with overlapping test coverage.  Adding this label will cause all Cypress tests to run.

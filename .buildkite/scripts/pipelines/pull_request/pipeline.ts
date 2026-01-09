@@ -23,6 +23,7 @@ import {
   getAgentImageConfig,
   emitPipeline,
   getPipeline,
+  getPullRequestCached,
   prHasFIPSLabel,
 } from '#pipeline-utils';
 
@@ -35,13 +36,28 @@ if (!prConfig) {
 }
 
 const GITHUB_PR_LABELS = process.env.GITHUB_PR_LABELS ?? '';
+const RUN_ON_DRAFT_LABEL = 'ci:run-on-draft';
 const REQUIRED_PATHS = prConfig.always_require_ci_on_changed!.map((r) => new RegExp(r, 'i'));
 const SKIPPABLE_PR_MATCHERS = prConfig.skip_ci_on_only_changed!.map((r) => new RegExp(r, 'i'));
+const PR_LABELS = GITHUB_PR_LABELS.split(',').map((label) => label.trim());
 
 (async () => {
   const pipeline: string[] = [];
 
   try {
+    try {
+      const pr = await getPullRequestCached();
+      if (pr.draft && !PR_LABELS.includes(RUN_ON_DRAFT_LABEL)) {
+        console.warn(
+          `Draft PR detected without '${RUN_ON_DRAFT_LABEL}' label. Skipping main PR pipeline.`
+        );
+        emitPipeline([emptyStep]);
+        return;
+      }
+    } catch (error) {
+      console.warn(`Unable to determine PR draft status, proceeding with pipeline generation: ${error}`);
+    }
+
     const skippable = await areChangesSkippable(SKIPPABLE_PR_MATCHERS, REQUIRED_PATHS);
 
     if (skippable) {
