@@ -6,31 +6,23 @@
  */
 
 //eslint-disable-next-line import/no-extraneous-dependencies
-const { ESLint } = require('eslint');
+const execa = require('execa');
 const { resolve } = require('path');
 //eslint-disable-next-line import/no-extraneous-dependencies
 const { argv } = require('yargs');
+const REPO_ROOT = resolve(__dirname, '..', '..', '..', '..', '..', '..');
 
 async function run() {
   const fix = !!argv.fix;
-
-  const eslint = new ESLint({
-    fix,
-    cache: true,
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+  const args = ['scripts/lint', ...(fix ? ['--fix'] : []), resolve(__dirname, '..')];
+  await execa('node', args, {
+    cwd: REPO_ROOT,
+    stdio: 'inherit',
   });
-
-  const report = await eslint.lintFiles(resolve(__dirname, '..'));
-
-  const formatter = await eslint.loadFormatter();
-
-  return formatter(report.results);
 }
 
 run()
-  .then((text) => {
-    //eslint-disable-next-line no-console
-    console.log(text);
+  .then(() => {
     process.exit(0);
   })
   .catch((err) => {

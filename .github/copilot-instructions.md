@@ -92,7 +92,7 @@ Verify **only the files you changed in this commit**:
 
    ```bash
    # Lint changed files
-   node scripts/eslint --fix $(git diff --name-only)
+   node scripts/lint --fix $(git diff --name-only)
    ```
 
 4. **Type checking (scoped):** Check types only for affected project(s) - MUST pass with 0 errors
@@ -335,17 +335,17 @@ yarn test:ftr --config path/to/config.ts --kibana-install-dir /path/to/build
 ### Linting & Code Quality - REQUIRED BEFORE EACH COMMIT
 
 ```bash
-# ESLint specific files/directories you changed (REQUIRED before each commit)
-node scripts/eslint --fix path/to/changed/file.ts
-node scripts/eslint --fix path/to/changed/directory/
-node scripts/eslint --fix x-pack/platform/plugins/your_plugin
+# Lint specific files/directories you changed (REQUIRED before each commit)
+node scripts/lint --fix path/to/changed/file.ts
+node scripts/lint --fix path/to/changed/directory/
+node scripts/lint --fix x-pack/platform/plugins/your_plugin
 
-# ESLint multiple changed files (using git)
-node scripts/eslint --fix $(git diff --name-only)
+# Lint multiple changed files (using git)
+node scripts/lint --fix $(git diff --name-only)
 
-# ESLint with type information for specific project (advanced)
-node scripts/eslint_with_types --project path/to/tsconfig.json
-node scripts/eslint_with_types --fix --project path/to/tsconfig.json
+# Typed linting for specific project (advanced)
+node scripts/lint_with_types --project path/to/tsconfig.json
+node scripts/lint_with_types --fix --project path/to/tsconfig.json
 
 # Type checking for specific project (REQUIRED before each commit)
 node scripts/type_check --project path/to/plugin/tsconfig.json
@@ -359,7 +359,7 @@ node scripts/type_check --clean-cache
 
 # Full repository linting (SLOW - only use for large refactors)
 yarn lint  # Runs: yarn lint:es && yarn lint:style
-node scripts/eslint_all_files --fix  # All files
+node scripts/lint_all_files --fix  # All files
 node scripts/type_check  # All projects
 ```
 

@@ -18,7 +18,7 @@ function listPaths(filePaths: string[]) {
 }
 
 run(async ({ log }) => {
-  const filePaths = await globby('**/.prettierrc*', {
+  const filePaths = await globby('**/.oxfmtrc*', {
     cwd: REPO_ROOT,
     onlyFiles: true,
     gitignore: true,
@@ -35,12 +35,12 @@ run(async ({ log }) => {
   // const filePaths = paths.map((path) => (new File(path)).getRelativePath());
 
   if (!filePaths.length) {
-    throw createFailError(`A top level .prettierrc file should exist and no file was found.`);
+    throw createFailError(`A top level .oxfmtrc file should exist and no file was found.`);
   }
 
   if (filePaths.length > 1) {
     throw createFailError(
-      `Only a single .prettierrc root file should exist and more than one were found.\n${listPaths(
+      `Only a single .oxfmtrc root file should exist and more than one were found.\n${listPaths(
         filePaths
       )}`
     );
@@ -50,7 +50,7 @@ run(async ({ log }) => {
     filePaths.length === 1 &&
     path.resolve(path.dirname(filePaths[0])) === path.resolve(REPO_ROOT)
   ) {
-    log.success('Only one .prettierrc file found at the root level.');
+    log.success('Only one .oxfmtrc file found at the root level.');
   }
 
   process.exit(0);

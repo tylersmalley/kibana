@@ -6,6 +6,6 @@ source .buildkite/scripts/common/util.sh
 
 .buildkite/scripts/bootstrap.sh
 
-echo '--- Lint: eslint (with types)'
+echo '--- Lint: with types'
 export NODE_OPTIONS='--max-old-space-size=8192'
-node scripts/eslint_with_types
+node scripts/lint_with_types

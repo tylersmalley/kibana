@@ -8,4 +8,4 @@
  */
 
 require('@kbn/setup-node-env');
-require('../src/dev/eslint').runEslintWithTypes();
+require('../src/dev/eslint').runLintWithTypes();

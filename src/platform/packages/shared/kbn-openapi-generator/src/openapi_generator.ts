@@ -14,7 +14,7 @@ import chalk from 'chalk';
 import fs from 'fs/promises';
 import globby from 'globby';
 import { resolve } from 'path';
-import { fixEslint } from './lib/fix_eslint';
+import { fixLint } from './lib/fix_lint';
 import { formatOutput } from './lib/format_output';
 import { getGeneratedFilePath } from './lib/get_generated_file_path';
 import { removeGenArtifacts } from './lib/remove_gen_artifacts';
@@ -133,15 +133,14 @@ export const generate = async (config: GeneratorConfig) => {
     );
   }
 
-  // Format the output folder using prettier as the generator produces
-  // unformatted code and fix any eslint errors
+  // Format and lint generated output.
   console.log(`💅  Formatting output`);
   if (bundle) {
     await formatOutput(bundle.outFile);
-    await fixEslint(bundle.outFile);
+    await fixLint(bundle.outFile);
   } else {
     const generatedArtifactsGlob = resolve(rootDir, './**/*.gen.ts');
     await formatOutput(generatedArtifactsGlob);
-    await fixEslint(generatedArtifactsGlob);
+    await fixLint(generatedArtifactsGlob);
   }
 };

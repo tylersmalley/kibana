@@ -7,5 +7,16 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-export { runLintWithTypes } from './run_lint_with_types';
-export { lintWithTypesBinPath } from './lint_with_types_bin_path';
+require('@kbn/babel-register/install');
+
+const { rules } = require('../../../../packages/kbn-eslint-plugin-telemetry/index.ts');
+
+module.exports = {
+  meta: {
+    name: '@kbn/telemetry',
+  },
+  rules: {
+    event_generating_elements_should_be_instrumented:
+      rules.event_generating_elements_should_be_instrumented,
+  },
+};

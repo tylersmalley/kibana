@@ -13,7 +13,7 @@ import Path from 'path';
 import inquirer from 'inquirer';
 import normalizePath from 'normalize-path';
 import globby from 'globby';
-import { ESLint } from 'eslint';
+import execa from 'execa';
 
 import { REPO_ROOT } from '@kbn/repo-info';
 import { createFailError, createFlagError, isFailError } from '@kbn/dev-cli-errors';
@@ -267,13 +267,9 @@ export const PackageCommand: GenerateCommand = {
     log.info('Wrote plugin files to', packageDir);
 
     log.info('Linting files');
-    const eslint = new ESLint({
-      cache: false,
+    await execa('node', ['scripts/lint', '--fix', packageDir], {
       cwd: REPO_ROOT,
-      fix: true,
-      extensions: ['.js', '.mjs', '.ts', '.tsx'],
     });
-    await ESLint.outputFixes(await eslint.lintFiles([packageDir]));
 
     const packageJsonPath = Path.resolve(REPO_ROOT, 'package.json');
     const packageJson = JSON.parse(await Fsp.readFile(packageJsonPath, 'utf8'));

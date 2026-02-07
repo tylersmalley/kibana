@@ -1,0 +1,898 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "react",
+    "unicorn",
+    "typescript",
+    "oxc",
+    "import",
+    "jsx-a11y",
+    "jest",
+    "node",
+    "promise",
+    "react-perf"
+  ],
+  "categories": {},
+  "rules": {
+    "no-console": "off",
+    "no-async-promise-executor": "warn",
+    "no-unused-vars": [
+      "warn",
+      {
+        "args": "none",
+        "ignoreRestSiblings": true,
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "unicorn/no-abusive-eslint-disable": "warn",
+    "no-restricted-imports": [
+      "warn",
+      {
+        "paths": [
+          {
+            "name": "handlebars",
+            "message": "Use @kbn/handlebars instead."
+          },
+          {
+            "name": "enzyme",
+            "message": "Enzyme is deprecated and no longer maintained. Please use @testing-library/react instead."
+          },
+          {
+            "name": "expect.js",
+            "message": "Import from \"@kbn/expect\" instead of \"expect.js\"."
+          },
+          {
+            "name": "mkdirp",
+            "message": "Don't use 'mkdirp', use the new { recursive: true } option of Fs.mkdir instead"
+          },
+          {
+            "name": "numeral",
+            "message": "Import from \"@elastic/numeral\" instead of \"numeral\"."
+          },
+          {
+            "name": "@kbn/elastic-idx",
+            "message": "Don't use idx(), use optional chaining syntax instead https://ela.st/optchain"
+          },
+          {
+            "name": "x-pack",
+            "message": "Use a relative import instead of \"x-pack\"."
+          },
+          {
+            "name": "react-router",
+            "message": "Import from \"react-router-dom\" instead of \"react-router\"."
+          },
+          {
+            "name": "@kbn/ui-shared-deps/monaco",
+            "message": "Import from \"@kbn/monaco\" instead of \"@kbn/ui-shared-deps/monaco\"."
+          },
+          {
+            "name": "monaco-editor",
+            "message": "Don't import monaco directly, use or add exports to @kbn/monaco"
+          },
+          {
+            "name": "tinymath",
+            "message": "Don't use 'tinymath', use '@kbn/tinymath'"
+          },
+          {
+            "name": "@kbn/test/types/ftr",
+            "message": "import from the root of @kbn/test instead"
+          },
+          {
+            "name": "@kbn/test/jest",
+            "message": "import from @kbn/test-jest-helpers instead"
+          },
+          {
+            "name": "@kbn/utility-types/jest",
+            "message": "import from @kbn/utility-types-jest instead"
+          },
+          {
+            "name": "@kbn/inspector-plugin",
+            "message": "Import from \"@kbn/inspector-plugin/common\" instead of \"@kbn/inspector-plugin\"."
+          },
+          {
+            "name": "@kbn/expressions-plugin",
+            "message": "Import from \"@kbn/expressions-plugin/common\" instead of \"@kbn/expressions-plugin\"."
+          },
+          {
+            "name": "@kbn/kibana-utils-plugin",
+            "message": "Import from \"@kbn/kibana-utils-plugin/common\" instead of \"@kbn/kibana-utils-plugin\"."
+          },
+          {
+            "name": "@elastic/safer-lodash-set",
+            "message": "Import from \"@kbn/safer-lodash-set\" instead of \"@elastic/safer-lodash-set\"."
+          },
+          {
+            "name": "@elastic/apm-synthtrace",
+            "message": "Import from \"@kbn/synthtrace\" instead of \"@elastic/apm-synthtrace\"."
+          },
+          {
+            "name": "rison-node",
+            "message": "Import from \"@kbn/rison\" instead of \"rison-node\"."
+          },
+          {
+            "name": "react-dom/client",
+            "message": "Use `react-dom` instead of `react-dom/client` until upgraded to React 18"
+          },
+          {
+            "name": "@tanstack/react-query",
+            "message": "Use `@kbn/react-query` instead of `@tanstack/react-query`, as it defaults to networkMode=\"always\""
+          },
+          {
+            "name": "@kbn/dev-utils",
+            "importNames": [
+              "DEFAULT_LOG_LEVEL",
+              "getLogLevelFlagsHelp",
+              "LOG_LEVEL_FLAGS",
+              "LogLevel",
+              "Message",
+              "ParsedLogLevel",
+              "parseLogLevel",
+              "pickLevelFromFlags",
+              "ToolingLog",
+              "ToolingLogCollectingWriter",
+              "ToolingLogOptions",
+              "ToolingLogTextWriter",
+              "ToolingLogTextWriterConfig",
+              "Writer"
+            ],
+            "message": "Import moved exports from \"@kbn/tooling-log\" instead."
+          },
+          {
+            "name": "@kbn/dev-utils",
+            "importNames": [
+              "CiStatsMetric",
+              "CiStatsReporter",
+              "CiStatsReportTestsOptions",
+              "CiStatsTestGroupInfo",
+              "CiStatsTestResult",
+              "CiStatsTestRun",
+              "CiStatsTestType",
+              "CiStatsTiming",
+              "getTimeReporter",
+              "MetricsOptions",
+              "TimingsOptions"
+            ],
+            "message": "Import moved exports from \"@kbn/ci-stats-reporter\" instead."
+          },
+          {
+            "name": "@kbn/dev-utils",
+            "importNames": [
+              "Config"
+            ],
+            "message": "Import moved exports from \"@kbn/ci-stats-core\" instead."
+          },
+          {
+            "name": "@kbn/dev-utils",
+            "importNames": [
+              "createAbsolutePathSerializer",
+              "createStripAnsiSerializer",
+              "createRecursiveSerializer",
+              "createAnyInstanceSerializer",
+              "createReplaceSerializer"
+            ],
+            "message": "Import moved exports from \"@kbn/jest-serializers\" instead."
+          },
+          {
+            "name": "@kbn/dev-utils",
+            "importNames": [
+              "observeReadable",
+              "observeLines"
+            ],
+            "message": "Import moved exports from \"@kbn/stdio-dev-helpers\" instead."
+          },
+          {
+            "name": "@kbn/dev-utils",
+            "importNames": [
+              "sortPackageJson"
+            ],
+            "message": "Import moved exports from \"@kbn/sort-package-json\" instead."
+          },
+          {
+            "name": "@kbn/dev-utils",
+            "importNames": [
+              "run",
+              "Command",
+              "RunWithCommands",
+              "CleanupTask",
+              "CommandRunFn",
+              "FlagOptions",
+              "Flags",
+              "RunContext",
+              "RunFn",
+              "RunOptions",
+              "RunWithCommandsOptions",
+              "getFlags",
+              "mergeFlagOptions"
+            ],
+            "message": "Import moved exports from \"@kbn/dev-cli-runner\" instead."
+          },
+          {
+            "name": "@kbn/dev-utils",
+            "importNames": [
+              "createFailError",
+              "createFlagError",
+              "isFailError"
+            ],
+            "message": "Import moved exports from \"@kbn/dev-cli-errors\" instead."
+          },
+          {
+            "name": "@kbn/dev-utils",
+            "importNames": [
+              "withProcRunner",
+              "ProcRunner"
+            ],
+            "message": "Import moved exports from \"@kbn/dev-proc-runner\" instead."
+          },
+          {
+            "name": "@kbn/utils",
+            "importNames": [
+              "REPO_ROOT",
+              "UPSTREAM_BRANCH",
+              "kibanaPackageJson",
+              "isKibanaDistributable",
+              "fromRoot"
+            ],
+            "message": "Import moved exports from \"@kbn/repo-info\" instead."
+          },
+          {
+            "name": "@kbn/presentation-util-plugin/common",
+            "importNames": [
+              "functionWrapper",
+              "fontStyle"
+            ],
+            "message": "Import moved exports from \"@kbn/presentation-util-plugin/test_helpers\" instead."
+          },
+          {
+            "name": "@kbn/fleet-plugin/common",
+            "importNames": [
+              "createFleetAuthzMock"
+            ],
+            "message": "Import moved exports from \"@kbn/fleet-plugin/common/mocks\" instead."
+          }
+        ],
+        "patterns": [
+          {
+            "group": [
+              "handlebars/*"
+            ],
+            "message": "Use @kbn/handlebars instead."
+          },
+          {
+            "group": [
+              "expect.js/*"
+            ],
+            "message": "Import from \"@kbn/expect/*\" instead of \"expect.js/*\"."
+          },
+          {
+            "group": [
+              "mkdirp/*"
+            ],
+            "message": "Don't use 'mkdirp', use the new { recursive: true } option of Fs.mkdir instead"
+          },
+          {
+            "group": [
+              "numeral/*"
+            ],
+            "message": "Import from \"@elastic/numeral/*\" instead of \"numeral/*\"."
+          },
+          {
+            "group": [
+              "@kbn/elastic-idx/*"
+            ],
+            "message": "Don't use idx(), use optional chaining syntax instead https://ela.st/optchain"
+          },
+          {
+            "group": [
+              "x-pack/*"
+            ],
+            "message": "Use a relative import instead of \"x-pack/*\"."
+          },
+          {
+            "group": [
+              "react-router/*"
+            ],
+            "message": "Import from \"react-router-dom/*\" instead of \"react-router/*\"."
+          },
+          {
+            "group": [
+              "@kbn/ui-shared-deps/monaco/*"
+            ],
+            "message": "Import from \"@kbn/monaco/*\" instead of \"@kbn/ui-shared-deps/monaco/*\"."
+          },
+          {
+            "group": [
+              "monaco-editor/*"
+            ],
+            "message": "Don't import monaco directly, use or add exports to @kbn/monaco"
+          },
+          {
+            "group": [
+              "tinymath/*"
+            ],
+            "message": "Don't use 'tinymath', use '@kbn/tinymath'"
+          },
+          {
+            "group": [
+              "@kbn/test/types/ftr/*"
+            ],
+            "message": "import from the root of @kbn/test instead"
+          },
+          {
+            "group": [
+              "@kbn/test/jest/*"
+            ],
+            "message": "import from @kbn/test-jest-helpers instead"
+          },
+          {
+            "group": [
+              "@kbn/utility-types/jest/*"
+            ],
+            "message": "import from @kbn/utility-types-jest instead"
+          },
+          {
+            "group": [
+              "@elastic/safer-lodash-set/*"
+            ],
+            "message": "Import from \"@kbn/safer-lodash-set/*\" instead of \"@elastic/safer-lodash-set/*\"."
+          },
+          {
+            "group": [
+              "@elastic/apm-synthtrace/*"
+            ],
+            "message": "Import from \"@kbn/synthtrace/*\" instead of \"@elastic/apm-synthtrace/*\"."
+          },
+          {
+            "group": [
+              "rison-node/*"
+            ],
+            "message": "Import from \"@kbn/rison/*\" instead of \"rison-node/*\"."
+          },
+          {
+            "regex": "^(?!\\.?\\.?/).+/$",
+            "message": "Using a trailing slash in package import statements causes issues with webpack and is inconsistent with the rest of the repository."
+          }
+        ]
+      }
+    ],
+    "unicorn/no-array-for-each": "warn",
+    "@kbn/imports/no_group_crossing_imports": "error"
+  },
+  "settings": {
+    "jsx-a11y": {
+      "polymorphicPropName": null,
+      "components": {},
+      "attributes": {}
+    },
+    "next": {
+      "rootDir": []
+    },
+    "react": {
+      "formComponents": [],
+      "linkComponents": [],
+      "version": null,
+      "componentWrapperFunctions": []
+    },
+    "jsdoc": {
+      "ignorePrivate": false,
+      "ignoreInternal": false,
+      "ignoreReplacesDocs": true,
+      "overrideReplacesDocs": true,
+      "augmentsExtendsReplacesDocs": false,
+      "implementsReplacesDocs": false,
+      "exemptDestructuredRootsFromChecks": false,
+      "tagNamePreference": {}
+    },
+    "vitest": {
+      "typecheck": false
+    }
+  },
+  "env": {
+    "builtin": true
+  },
+  "globals": {},
+  "overrides": [
+    {
+      "files": [
+        "src/core/{server,public,common}/index.ts",
+        "src/platform/plugins/**/{server,public,common}/index.ts",
+        "x-pack/platform/plugins/**/{server,public,common}/index.ts",
+        "x-pack/solutions/*/plugins/**/{server,public,common}/index.ts"
+      ],
+      "rules": {
+        "oxc/no-barrel-file": [
+          "warn",
+          {
+            "threshold": 0
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/platform/plugins/**/test/{scout,scout_*}/api/**/*.ts",
+        "x-pack/platform/**/plugins/**/test/{scout,scout_*}/api/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "warn",
+          {
+            "paths": [
+              {
+                "name": "@kbn/scout",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout/api' in Scout API tests."
+              },
+              {
+                "name": "@kbn/scout/ui",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout/api' in Scout API tests."
+              },
+              {
+                "name": "@playwright/test",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout/api' in Scout API tests."
+              },
+              {
+                "name": "playwright",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout/api' in Scout API tests."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/platform/plugins/**/test/{scout,scout_*}/ui/**/*.ts",
+        "x-pack/platform/**/plugins/**/test/{scout,scout_*}/ui/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "warn",
+          {
+            "paths": [
+              {
+                "name": "@kbn/scout",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout/ui' in Scout UI tests."
+              },
+              {
+                "name": "@kbn/scout/api",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout/ui' in Scout UI tests."
+              },
+              {
+                "name": "@playwright/test",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout/ui' in Scout UI tests."
+              },
+              {
+                "name": "playwright",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout/ui' in Scout UI tests."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "x-pack/solutions/observability/plugins/**/test/{scout,scout_*}/api/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "warn",
+          {
+            "paths": [
+              {
+                "name": "@kbn/scout-oblt",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-oblt/api' in Scout API tests."
+              },
+              {
+                "name": "@kbn/scout-oblt/ui",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-oblt/api' in Scout API tests."
+              },
+              {
+                "name": "@playwright/test",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-oblt/api' in Scout API tests."
+              },
+              {
+                "name": "playwright",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-oblt/api' in Scout API tests."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "x-pack/solutions/observability/plugins/**/test/{scout,scout_*}/ui/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "warn",
+          {
+            "paths": [
+              {
+                "name": "@kbn/scout-oblt",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-oblt/ui' in Scout UI tests."
+              },
+              {
+                "name": "@kbn/scout-oblt/api",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-oblt/ui' in Scout UI tests."
+              },
+              {
+                "name": "@playwright/test",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-oblt/ui' in Scout UI tests."
+              },
+              {
+                "name": "playwright",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-oblt/ui' in Scout UI tests."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "x-pack/solutions/search/plugins/**/test/{scout,scout_*}/api/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "warn",
+          {
+            "paths": [
+              {
+                "name": "@kbn/scout-search",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-search/api' in Scout API tests."
+              },
+              {
+                "name": "@kbn/scout-search/ui",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-search/api' in Scout API tests."
+              },
+              {
+                "name": "@playwright/test",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-search/api' in Scout API tests."
+              },
+              {
+                "name": "playwright",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-search/api' in Scout API tests."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "x-pack/solutions/search/plugins/**/test/{scout,scout_*}/ui/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "warn",
+          {
+            "paths": [
+              {
+                "name": "@kbn/scout-search",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-search/ui' in Scout UI tests."
+              },
+              {
+                "name": "@kbn/scout-search/api",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-search/ui' in Scout UI tests."
+              },
+              {
+                "name": "@playwright/test",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-search/ui' in Scout UI tests."
+              },
+              {
+                "name": "playwright",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-search/ui' in Scout UI tests."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "x-pack/solutions/security/plugins/**/test/{scout,scout_*}/api/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "warn",
+          {
+            "paths": [
+              {
+                "name": "@kbn/scout-security",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-security/api' in Scout API tests."
+              },
+              {
+                "name": "@kbn/scout-security/ui",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-security/api' in Scout API tests."
+              },
+              {
+                "name": "@playwright/test",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-security/api' in Scout API tests."
+              },
+              {
+                "name": "playwright",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-security/api' in Scout API tests."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "x-pack/solutions/security/plugins/**/test/{scout,scout_*}/ui/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "warn",
+          {
+            "paths": [
+              {
+                "name": "@kbn/scout-security",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-security/ui' in Scout UI tests."
+              },
+              {
+                "name": "@kbn/scout-security/api",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-security/ui' in Scout UI tests."
+              },
+              {
+                "name": "@playwright/test",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-security/ui' in Scout UI tests."
+              },
+              {
+                "name": "playwright",
+                "importNames": [
+                  "expect"
+                ],
+                "message": "Import `expect` from '@kbn/scout-security/ui' in Scout UI tests."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "x-pack/platform/test/api_integration_deployment_agnostic/apis/**/*.{js,ts}",
+        "x-pack/platform/test/api_integration_deployment_agnostic/services/**/*.{js,ts}",
+        "x-pack/solutions/**/test/api_integration_deployment_agnostic/apis/**/*.{js,ts}",
+        "x-pack/solutions/**/test/api_integration_deployment_agnostic/services/**/*.{js,ts}"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "src/platform/plugins/**/test/{scout,scout_*}/**/*.ts",
+        "x-pack/platform/**/plugins/**/test/{scout,scout_*}/**/*.ts",
+        "x-pack/solutions/**/plugins/**/test/{scout,scout_*}/**/*.ts"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "src/platform/plugins/shared/**/*.ts",
+        "x-pack/solutions/**/*.ts",
+        "x-pack/plugins/**/*.ts",
+        "x-pack/platform/plugins/shared/**/*.ts"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "x-pack/solutions/observability/plugins/**/!(*.stories.tsx|*.test.tsx|*.storybook_decorator.tsx|*.mock.tsx)",
+        "x-pack/solutions/observability/packages/**/!(*.stories.tsx|*.test.tsx|*.storybook_decorator.tsx|*.mock.tsx)",
+        "src/platform/plugins/shared/ai_assistant_management/**/!(*.stories.tsx|*.test.tsx|*.storybook_decorator.tsx|*.mock.tsx)",
+        "x-pack/platform/plugins/shared/streams_app/**/!(*.stories.tsx|*.test.tsx|*.storybook_decorator.tsx|*.mock.tsx)",
+        "src/platform/packages/shared/kbn-unified-chart-section-viewer/**/!(*.stories.tsx|*.test.tsx|*.storybook_decorator.tsx|*.mock.tsx)"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "x-pack/solutions/search/**/*.{ts,tsx}"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "x-pack/platform/plugins/shared/aiops/**/*.tsx",
+        "x-pack/platform/plugins/shared/observability_solution/**/*.{ts,tsx}",
+        "x-pack/solutions/observability/plugins/**/*.{ts,tsx}",
+        "src/platform/plugins/shared/ai_assistant_management/**/*.tsx",
+        "x-pack/solutions/observability/packages/**/*.{ts,tsx}"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "x-pack/solutions/search/**/*.tsx"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "x-pack/solutions/search/plugins/enterprise_search/**/*.{ts,tsx}"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "x-pack/solutions/search/plugins/serverless_search/**/*.{ts,tsx}",
+        "x-pack/solutions/search/packages/kbn-search-*"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "scripts/create_observability_rules.js",
+        "src/cli_setup/**",
+        "src/dev/build/tasks/install_chromium.ts",
+        "x-pack/platform/test/plugin_functional/plugins/resolver_test/**"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "packages/kbn-dependency-usage/**/*.{ts,tsx}"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "src/dev/oxlint/js_plugins/**/*.cjs"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "**/*.{test,spec}.{ts,tsx}",
+        "**/__tests__/**/*.{ts,tsx}",
+        "**/__mocks__/**/*.{ts,tsx}"
+      ],
+      "rules": {}
+    },
+    {
+      "files": [
+        "scripts/create_observability_rules.js",
+        "src/cli_setup/**",
+        "src/dev/build/tasks/install_chromium.ts",
+        "x-pack/platform/test/plugin_functional/plugins/resolver_test/**"
+      ],
+      "rules": {
+        "@kbn/imports/no_group_crossing_imports": "warn"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "**/*.js.snap",
+    "__tmp__",
+    "/.es",
+    "/.chromium",
+    "/build",
+    "/built_assets",
+    "/config/apm.dev.js",
+    "/data",
+    "/html_docs",
+    "/optimize",
+    "/plugins",
+    "/test/fixtures/scenarios",
+    "/x-pack/build",
+    "node_modules",
+    "target",
+    "snapshots.js",
+    "/src/platform/plugins/shared/data/common/es_query/kuery/ast/_generated_/**",
+    "/x-pack/platform/plugins/private/canvas/canvas_plugin",
+    "/x-pack/platform/plugins/private/reporting/server/export_types/printable_pdf/server/lib/pdf/assets/**",
+    "/x-pack/platform/plugins/private/reporting/server/export_types/printable_pdf_v2/server/lib/pdf/assets/**",
+    "/x-pack/platform/plugins/private/cloud_integrations/cloud_full_story/public/assets/**",
+    "/x-pack/solutions/security/test/security_solution_cypress/cypress/support/index.d.ts",
+    "/packages/kbn-eslint-config",
+    "/packages/kbn-plugin-generator/template",
+    "/packages/kbn-generate/templates",
+    "/src/platform/packages/shared/kbn-test/src/functional_test_runner/__tests__/fixtures/",
+    "/src/platform/packages/shared/kbn-test/src/functional_test_runner/lib/config/__tests__/fixtures/",
+    "/src/platform/packages/shared/kbn-flot-charts/lib",
+    "/src/platform/packages/shared/kbn-monaco/src/**/antlr",
+    "/src/platform/packages/shared/kbn-esql-language/src/parser/antlr",
+    "/src/platform/packages/shared/kbn-workflows/spec/elasticsearch/generated/**",
+    "/src/platform/packages/shared/kbn-workflows/spec/kibana/generated/**",
+    "/x-pack/platform/plugins/shared/screenshotting/chromium"
+  ],
+  "jsPlugins": [
+    "../../src/dev/oxlint/js_plugins/kbn_imports_plugin.cjs"
+  ]
+}

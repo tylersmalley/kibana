@@ -7,33 +7,21 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { ESLint } from 'eslint';
-
 import type { ToolingLog } from '@kbn/tooling-log';
 import type { File } from '../file';
 
-/**
- * Filters a list of files to only include lintable files.
- *
- * @param  {ToolingLog} log
- * @param  {Array<File>} files
- * @return {Array<File>}
- */
+const lintableFilePattern = /\.(js|mjs|ts|tsx)$/;
+
 export async function pickFilesToLint(log: ToolingLog, files: File[]) {
-  const eslint = new ESLint();
   const filesToLint = [];
 
   for (const file of files) {
-    if (!file.isJs() && !file.isTypescript()) continue;
-
     const path = file.getRelativePath();
-
-    if (await eslint.isPathIgnored(path)) {
-      log.warning(`[eslint] %j ignored by .eslintignore`, file);
+    if (!lintableFilePattern.test(path)) {
       continue;
     }
 
-    log.debug('[eslint] linting %j', file);
+    log.debug('[oxlint] linting %j', file);
     filesToLint.push(file);
   }
 

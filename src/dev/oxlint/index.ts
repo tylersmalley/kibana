@@ -7,5 +7,6 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-require('@kbn/setup-node-env');
-require('../src/dev/run_eslint');
+export { pickFilesToLint } from './pick_files_to_lint';
+export { lintFiles } from './lint_files';
+export { oxlintBinPath } from './oxlint_bin_path';

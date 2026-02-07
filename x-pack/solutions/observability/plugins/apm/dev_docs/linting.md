@@ -17,7 +17,7 @@ yarn prettier  "./x-pack/solutions/observability/plugins/apm/**/*.{tsx,ts,js}" -
 ### ESLint
 
 ```
-node scripts/eslint.js x-pack/solutions/observability/plugins/apm
+node scripts/lint x-pack/solutions/observability/plugins/apm
 ```
 
 ## Install pre-commit hook (optional)

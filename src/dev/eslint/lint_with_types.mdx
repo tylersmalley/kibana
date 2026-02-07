@@ -1,0 +1,30 @@
+id: kibDevDocsOpsEslintWithTypes
+slug: /kibana-dev-docs/ops/eslint-with-types
+title: "Linting (with types)"
+description: Running project-aware typed linting that consumes TypeScript type information
+tags: ['kibana', 'dev', 'contributor', 'operations', 'linting', 'ts']
+---
+
+By default linting runs on individual files and validates syntax-level rules. Typed linting loads a TypeScript project so rules can use type information during validation.
+
+The only rule we have enabled so far is `@typescript-eslint/consistent-type-exports` [[docs](https://typescript-eslint.io/rules/consistent-type-exports/)].
+
+## Usage
+
+```
+node scripts/lint_with_types --help
+```
+
+## How it works
+
+Because typed linting needs to load TypeScript project state into memory, this script lints one TS project per worker and runs multiple workers in parallel.
+
+Today this flow is still implemented via ESLint under the hood while the repository migrates to OXC. The public entrypoint remains `node scripts/lint_with_types`.
+
+## Parallel execution
+
+Typed linting across the whole repository is expensive, so this workflow parallelizes project-level runs to keep CI practical.
+
+## How do I customize the rules for my plugin?
+
+We don't support that yet. The goal is to avoid hundreds of per-directory lint configurations and broad disable comments.

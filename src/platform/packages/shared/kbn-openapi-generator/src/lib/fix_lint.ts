@@ -11,11 +11,8 @@ import execa from 'execa';
 import globby from 'globby';
 import Path from 'path';
 import { REPO_ROOT } from '@kbn/repo-info';
-import { dirname, join } from 'path';
 
-const oxfmtBinPath = join(dirname(require.resolve('oxfmt')), '..', 'bin', 'oxfmt');
-
-export async function formatOutput(path: string) {
+export async function fixLint(path: string) {
   const pattern = Path.relative(REPO_ROOT, path);
   const files = await globby([pattern], {
     cwd: REPO_ROOT,
@@ -27,7 +24,7 @@ export async function formatOutput(path: string) {
     return;
   }
 
-  await execa(process.execPath, [oxfmtBinPath, '--config', '.oxfmtrc.json', '--write', ...files], {
+  await execa('node', ['scripts/lint', '--fix', ...files], {
     cwd: REPO_ROOT,
   });
 }

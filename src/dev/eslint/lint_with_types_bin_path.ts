@@ -7,5 +7,10 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-require('@kbn/setup-node-env');
-require('../src/dev/eslint/run_eslint_full');
+import { join, dirname } from 'path';
+import { bin } from 'eslint/package.json';
+
+// Since eslint 8.0 we can't resolve `eslint/bin/eslint` directly since it's
+// not exported in the eslint package.json file. Instead we need to resolve it
+// using the following hack:
+export const lintWithTypesBinPath = join(dirname(require.resolve('eslint/package.json')), bin.eslint);

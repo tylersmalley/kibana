@@ -12,7 +12,7 @@ import Path from 'path';
 
 import { REPO_ROOT } from '@kbn/repo-info';
 import { createFlagError } from '@kbn/dev-cli-errors';
-import { ESLint } from 'eslint';
+import execa from 'execa';
 
 import type { GenerateCommand } from '../generate_command';
 import { ask } from '../lib/ask';
@@ -353,18 +353,12 @@ export const ConnectorCommand: GenerateCommand = {
       }
     }
 
-    // run eslint --fix on the generated connector folder and updated spec/icon maps
+    // run lint --fix on the generated connector folder and updated spec/icon maps
     {
       log.info('Linting generated connector files');
-      const eslint = new ESLint({
-        cache: false,
+      await execa('node', ['scripts/lint', '--fix', connectorDir, ICONS_MAP_FILE, ALL_SPECS_FILE], {
         cwd: REPO_ROOT,
-        fix: true,
-        extensions: ['.js', '.mjs', '.ts', '.tsx'],
       });
-      await ESLint.outputFixes(
-        await eslint.lintFiles([connectorDir, ICONS_MAP_FILE, ALL_SPECS_FILE])
-      );
     }
 
     log.success(`Connector scaffolded at ${Path.relative(REPO_ROOT, connectorDir)}`);

@@ -21,14 +21,14 @@ import { REPO_ROOT } from '@kbn/repo-info';
 
 import { TS_PROJECTS, type TsProject } from '@kbn/ts-projects';
 
-import { eslintBinPath } from './eslint_bin_path';
+import { lintWithTypesBinPath } from './lint_with_types_bin_path';
 
-export function runEslintWithTypes() {
+export function runLintWithTypes() {
   run(
     async ({ log, flags }) => {
       const ignoreFilePath = Path.resolve(REPO_ROOT, '.eslintignore');
       const configTemplate = Fs.readFileSync(
-        Path.resolve(__dirname, 'types.eslint.config.template.cjs'),
+        Path.resolve(__dirname, 'types.lint.config.template.cjs'),
         'utf8'
       );
 
@@ -65,7 +65,7 @@ export function runEslintWithTypes() {
       const failures = await Rx.lastValueFrom(
         Rx.from(projects).pipe(
           mergeMap(async (project) => {
-            const configFilePath = Path.resolve(project.directory, 'types.eslint.config.cjs');
+            const configFilePath = Path.resolve(project.directory, 'types.lint.config.cjs');
 
             Fs.writeFileSync(
               configFilePath,
@@ -79,7 +79,7 @@ export function runEslintWithTypes() {
             const proc = await execa(
               process.execPath,
               [
-                Path.relative(project.directory, eslintBinPath),
+                Path.relative(project.directory, lintWithTypesBinPath),
                 ...(project.config.include ?? []).map((p) =>
                   p.endsWith('*') ? `${p}.{ts,tsx}` : p
                 ),
@@ -132,7 +132,7 @@ export function runEslintWithTypes() {
         log.success(`All projects validated successfully!`);
         if (flags.fix) {
           log.info(`
-❗️ After staging your changes, don't forget to run eslint/prettier on them with:
+❗️ After staging your changes, don't forget to run lint/format checks on them with:
 
     node scripts/precommit_hook --fix
 `);
@@ -148,20 +148,20 @@ export function runEslintWithTypes() {
           } projects failed, run the following commands locally to try auto-fixing them:
 
             ${failures
-              .map((p) => `node scripts/eslint_with_types --fix --project ${p.repoRel}`)
+              .map((p) => `node scripts/lint_with_types --fix --project ${p.repoRel}`)
               .join('\n            ')}
         `
       );
     },
     {
       description:
-        'Run ESLint in each TS project, feeding it the TS config so it can validate our code using the type information',
+        'Run typed linting in each TS project, feeding it the TS config so it can validate code using type information',
       flags: {
         string: ['project'],
         boolean: ['fix'],
         help: `
-          --project          Only run eslint on a specific ts project
-          --fix              Run eslint in --fix mode
+          --project          Only run typed linting on a specific ts project
+          --fix              Run in --fix mode
         `,
       },
     }

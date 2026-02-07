@@ -8,7 +8,7 @@
  */
 
 /**
- * THIS FILE IS WRITTEN AUTOMATICALLY by `node scripts/eslint_with_types` and
+ * THIS FILE IS WRITTEN AUTOMATICALLY by `node scripts/lint_with_types` and
  * should be deleted automatically unless something goes wrong
  */
 

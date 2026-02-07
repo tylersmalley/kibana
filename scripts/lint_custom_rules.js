@@ -7,5 +7,5 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-export { runLintWithTypes } from './run_lint_with_types';
-export { lintWithTypesBinPath } from './lint_with_types_bin_path';
+require('@kbn/setup-node-env');
+require('../src/dev/run_lint_custom_rules');

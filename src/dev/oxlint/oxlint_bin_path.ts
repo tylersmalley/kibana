@@ -7,13 +7,6 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import execa from 'execa';
-import { REPO_ROOT } from '@kbn/repo-info';
+import { dirname, join } from 'path';
 
-export async function fixEslint(path: string) {
-  await execa('npx', ['eslint', '--fix', path], {
-    // Need to run eslint from the Kibana root directory, otherwise it will not
-    // be able to pick up the right config
-    cwd: REPO_ROOT,
-  });
-}
+export const oxlintBinPath = join(dirname(require.resolve('oxlint')), '..', 'bin', 'oxlint');

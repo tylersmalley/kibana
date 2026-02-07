@@ -22,12 +22,12 @@ run(
     const { batches, files } = getLintableFileBatches(flags._);
     log.info(`Found ${files.length} files in ${batches.length} batches to lint.`);
 
-    const eslintArgs = [...(flags.fix ? ['--fix'] : []), flags.cache ? '--cache' : '--no-cache'];
+    const oxlintArgs = [...(flags.fix ? ['--fix'] : []), flags.cache ? '--cache' : '--no-cache'];
 
-    // ESLint has no cache by default
+    // Keep the cache flags for CLI compatibility with previous ESLint-based workflows.
     log.info(
-      `Running ESLint with args: ${pretty({
-        args: eslintArgs.concat(flags._),
+      `Running OXlint with args: ${pretty({
+        args: oxlintArgs.concat(flags._),
         batchSize,
         maxParallelism,
       })}`
@@ -35,7 +35,7 @@ run(
 
     const lintPromiseThunks = batches.map(
       (batch, idx) => () =>
-        lintFileBatch({ batch, idx, eslintArgs, batchCount: batches.length, bail, log })
+        lintFileBatch({ batch, idx, oxlintArgs, batchCount: batches.length, bail, log })
     );
     const results = await runBatchedPromises(lintPromiseThunks, maxParallelism);
 
@@ -43,12 +43,14 @@ run(
     if (failedBatches.length > 0) {
       log.error(`Linting errors found ❌`);
       process.exit(1);
-    } else {
-      log.info('Linting successful ✅');
+      return;
     }
+
+    await runCustomRuleChecks({ log, pathSpecs: flags._ });
+    log.info('Linting successful ✅');
   },
   {
-    description: 'Run ESLint on all JavaScript/TypeScript files in the repository',
+    description: 'Run OXlint on all JavaScript/TypeScript files in the repository',
     flags: {
       boolean: ['bail', 'cache', 'fix'],
       default: {
@@ -57,7 +59,7 @@ run(
       },
       help: `
         --bail            Stop on the first linting error
-        --no-cache        Disable ESLint caching
+        --no-cache        Disable lint cache (kept for compatibility)
         --fix             Fix files
       `,
     },
@@ -85,21 +87,21 @@ async function lintFileBatch({
   batch,
   bail,
   idx,
-  eslintArgs,
+  oxlintArgs,
   batchCount,
   log,
 }: {
   batch: string[];
   bail: boolean;
   idx: number;
-  eslintArgs: string[];
+  oxlintArgs: string[];
   batchCount: number;
   log: ToolingLog;
 }) {
   log.info(`Running batch ${idx + 1}/${batchCount} with ${batch.length} files...`);
 
   const timeBefore = Date.now();
-  const args = ['scripts/eslint'].concat(eslintArgs).concat(batch);
+  const args = ['scripts/lint', '--skip-custom-rules'].concat(oxlintArgs).concat(batch);
   const { stdout, stderr, exitCode } = await execa('node', args, {
     cwd: REPO_ROOT,
     env: {
@@ -126,6 +128,40 @@ async function lintFileBatch({
       idx,
       time,
     };
+  }
+}
+
+async function runCustomRuleChecks({
+  log,
+  pathSpecs,
+}: {
+  log: ToolingLog;
+  pathSpecs: string[];
+}) {
+  log.info('Running custom lint checks...');
+
+  const { stdout, stderr, exitCode } = await execa(
+    'node',
+    ['scripts/lint_custom_rules', ...pathSpecs],
+    {
+      cwd: REPO_ROOT,
+      env: {
+        CI_STATS_DISABLED: 'true',
+      },
+      reject: false,
+    }
+  );
+
+  if (exitCode !== 0) {
+    const errorMessage = stderr?.toString() || stdout?.toString() || 'Custom lint checks failed';
+    log.error(errorMessage);
+    process.exit(1);
+  }
+
+  if (stdout) {
+    log.info(stdout.toString());
+  } else {
+    log.info('Custom lint checks successful ✅');
   }
 }
 

@@ -12,7 +12,7 @@ import SimpleGit from 'simple-git';
 import { run } from '@kbn/dev-cli-runner';
 import { createFlagError } from '@kbn/dev-cli-errors';
 import { REPO_ROOT } from '@kbn/repo-info';
-import * as Eslint from './eslint';
+import * as OXlint from './oxlint';
 import * as Stylelint from './stylelint';
 import { getFilesForCommit, checkFileCasing } from './precommit_hook';
 import { checkSemverRanges } from './no_pkg_semver_ranges';
@@ -155,7 +155,7 @@ class SemverRangesCheck extends PrecommitCheck {
 
 const PRECOMMIT_CHECKS = [
   new FileCasingCheck(),
-  new LinterCheck('ESLint', Eslint),
+  new LinterCheck('OXlint', OXlint),
   new LinterCheck('StyleLint', Stylelint),
   new YamlLintCheck(),
   new SemverRangesCheck(),

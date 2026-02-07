@@ -47,7 +47,7 @@ run(async ({ log }) => {
     );
 
     log.info(`Linting generated files: ${generatedGraphQlTypesDir}`);
-    await command(`node scripts/eslint --fix ${Path.join(generatedGraphQlTypesDir, '**/*.ts')}`, {
+    await command(`node scripts/lint --fix ${Path.join(generatedGraphQlTypesDir, '**/*.ts')}`, {
       stdio: 'ignore',
     });
   } finally {

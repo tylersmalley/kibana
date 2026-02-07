@@ -209,8 +209,8 @@ async function run() {
   // Delete tmp folder
   execSync(`rm -rf ${tmpDir}`);
 
-  // run ESLint on the generated metadata files
-  execSync('node scripts/eslint x-pack/**/*/archives_metadata.ts --fix', {
+  // run OXlint on the generated metadata files
+  execSync('node scripts/lint x-pack/**/*/archives_metadata.ts --fix', {
     cwd: REPO_ROOT,
     stdio: 'inherit',
   });

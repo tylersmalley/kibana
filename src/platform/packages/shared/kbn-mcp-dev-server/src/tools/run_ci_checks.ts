@@ -71,7 +71,7 @@ const CI_CHECKS = {
   linting: {
     name: 'Linting',
     command: 'yarn lint',
-    description: 'Run all linting checks (ESLint and Stylelint)',
+    description: 'Run all linting checks (OXlint and Stylelint)',
   },
   type_check: {
     name: 'Type Check',
@@ -80,8 +80,8 @@ const CI_CHECKS = {
   },
   linting_with_types: {
     name: 'Linting (with types)',
-    command: 'node --no-experimental-require-module scripts/eslint_with_types',
-    description: 'Run ESLint with type checking',
+    command: 'node --no-experimental-require-module scripts/lint_with_types',
+    description: 'Run typed lint checks',
   },
   oas_snapshot: {
     name: 'OAS Snapshot',

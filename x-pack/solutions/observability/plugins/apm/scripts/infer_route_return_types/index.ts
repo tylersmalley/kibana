@@ -120,8 +120,8 @@ changedFiles.forEach((file) => file.saveSync());
 
 const root = Path.join(__dirname, '../../../../../..');
 
-// run ESLint on the changed files
-execSync(`node scripts/eslint ${glob} --fix`, {
+// run OXlint on the changed files
+execSync(`node scripts/lint ${glob} --fix`, {
   cwd: root,
   stdio: 'inherit',
 });
