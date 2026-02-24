@@ -16,6 +16,7 @@ export const IGNORE_PATTERNS = [
   // so it's still super slow. This prevents loading the files
   // and still relies on gitignore to final ignores
   '**/node_modules',
+  '.buildkite/.agent/skills/**',
   '.buildkite/**/*',
   '.github/**/*',
   '**/__fixtures__/**/*',
