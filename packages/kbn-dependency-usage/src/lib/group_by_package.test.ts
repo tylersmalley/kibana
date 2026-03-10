@@ -9,7 +9,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { groupByPackage } from './group_by_package';
+import { groupByPackage } from './group_by_package.ts';
 
 // Mock fs and path modules
 jest.mock('fs');

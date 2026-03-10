@@ -7,7 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { groupFilesByOwners } from './group_by_owners';
+import { groupFilesByOwners } from './group_by_owners.ts';
 
 jest.mock('./code_owners', () => ({
   getPathsWithOwnersReversed: jest.fn(),

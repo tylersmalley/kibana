@@ -9,6 +9,7 @@
 
 import Path from 'path';
 import Fsp from 'fs/promises';
+import { createRequire } from 'module';
 import { run } from '@kbn/dev-cli-runner';
 import { createFailError } from '@kbn/dev-cli-errors';
 import { REPO_ROOT } from '@kbn/repo-info';
@@ -22,6 +23,8 @@ import { restoreTSBuildArtifacts } from './src/archive/restore_ts_build_artifact
 import { LOCAL_CACHE_ROOT } from './src/archive/constants';
 import { isCiEnvironment } from './src/archive/utils';
 import { normalizeProjectPath } from './src/normalize_project_path';
+
+const lazyRequire = createRequire(__filename);
 
 const rel = (from: string, to: string) => {
   const path = Path.relative(from, to);
@@ -118,9 +121,9 @@ run(
       return;
     }
 
-    const { updateRootRefsConfig, cleanupRootRefsConfig, ROOT_REFS_CONFIG_PATH } = await import(
+    const { updateRootRefsConfig, cleanupRootRefsConfig, ROOT_REFS_CONFIG_PATH } = lazyRequire(
       './root_refs_config'
-    );
+    ) as typeof import('./root_refs_config');
 
     // if the tsconfig.refs.json file is not self-managed then make sure it has
     // a reference to every composite project in the repo

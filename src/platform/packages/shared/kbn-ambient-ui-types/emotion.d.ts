@@ -8,10 +8,18 @@
  */
 
 import '@emotion/react';
-import '@emotion/react/types/css-prop';
+import {} from 'react';
+import type { Interpolation } from '@emotion/serialize';
+import type { Theme } from '@emotion/react';
 import type { UseEuiTheme } from '@elastic/eui';
 
 declare module '@emotion/react' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   export interface Theme extends UseEuiTheme {}
+}
+
+declare module 'react' {
+  interface Attributes {
+    css?: Interpolation<Theme>;
+  }
 }

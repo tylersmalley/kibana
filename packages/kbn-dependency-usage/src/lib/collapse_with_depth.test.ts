@@ -7,7 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { createCollapseRegexWithDepth } from './collapse_with_depth';
+import { createCollapseRegexWithDepth } from './collapse_with_depth.ts';
 
 describe('createCollapseRegexWithDepth', () => {
   it('should generate regex with a base path and depth of 0', () => {

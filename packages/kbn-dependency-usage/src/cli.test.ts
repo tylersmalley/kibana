@@ -8,7 +8,7 @@
  */
 
 import { identifyDependencyUsageWithCruiser } from './dependency_graph/providers/cruiser.ts';
-import { configureYargs } from './cli';
+import { configureYargs } from './cli.ts';
 
 jest.mock('chalk', () => ({
   green: jest.fn((str) => str),
