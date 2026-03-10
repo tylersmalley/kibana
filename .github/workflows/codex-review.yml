@@ -1,0 +1,235 @@
+name: Codex Review
+
+on:
+  issue_comment:
+    types:
+      - created
+  pull_request_target:
+    types:
+      - labeled
+      - synchronize
+
+jobs:
+  prepare:
+    name: Prepare /codex-review run
+    if: |
+      (github.event_name == 'issue_comment'
+        && github.event.issue.pull_request
+        && startsWith(github.event.comment.body, '/codex-review'))
+      || (github.event_name == 'pull_request_target'
+        && (
+          (github.event.action == 'synchronize'
+            && contains(github.event.pull_request.labels.*.name, 'ai:review-codex'))
+          || (github.event.action == 'labeled'
+            && github.event.label.name == 'ai:review-codex')
+        ))
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      prompt: ${{ steps.prepare.outputs.prompt }}
+      pr_number: ${{ steps.prepare.outputs.pr_number }}
+      head_sha: ${{ steps.prepare.outputs.head_sha }}
+      head_repo: ${{ steps.prepare.outputs.head_repo }}
+      should_run: ${{ steps.prepare.outputs.should_run }}
+    steps:
+      - name: Resolve prompt and PR context
+        id: prepare
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+          COMMENT_PR_NUMBER: ${{ github.event.issue.number }}
+          EVENT_PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = 'issue_comment' ]; then
+            PR_NUMBER="$COMMENT_PR_NUMBER"
+          else
+            PR_NUMBER="$EVENT_PR_NUMBER"
+          fi
+
+          PR_JSON="$(gh api "repos/${REPO}/pulls/${PR_NUMBER}")"
+          HEAD_REPO="$(printf '%s' "$PR_JSON" | jq -r '.head.repo.full_name')"
+          HEAD_SHA="$(printf '%s' "$PR_JSON" | jq -r '.head.sha')"
+
+          PROMPT='/review'
+
+          if [ "$EVENT_NAME" = 'issue_comment' ]; then
+            PERMISSION_JSON="$(
+              gh api "repos/${REPO}/collaborators/${COMMENT_AUTHOR}/permission"
+            )"
+            COMMENT_PERMISSION="$(
+              printf '%s' "$PERMISSION_JSON" | jq -r '.permission'
+            )"
+
+            case "$COMMENT_PERMISSION" in
+              admin|write)
+                ;;
+              *)
+                echo "::notice::Ignoring /codex-review from ${COMMENT_AUTHOR}; requires write access."
+                echo "should_run=false" >> "$GITHUB_OUTPUT"
+                exit 0
+                ;;
+            esac
+
+            if ! printf '%s' "$COMMENT_BODY" | grep -Eq '^/codex-review([[:space:]]|$)'; then
+              echo "::error::Comment must start with /codex-review."
+              exit 1
+            fi
+
+            ADDITIONAL_PROMPT="$(
+              COMMENT_BODY="$COMMENT_BODY" python3 - <<'PY'
+              import os
+              import re
+
+              comment = os.environ['COMMENT_BODY']
+              additional = re.sub(r'^/codex-review(?:\s+)?', '', comment, count=1, flags=re.DOTALL)
+              print(additional.lstrip(), end='')
+              PY
+            )"
+
+            if [ -n "$ADDITIONAL_PROMPT" ]; then
+              PROMPT="/review ${ADDITIONAL_PROMPT}"
+            fi
+          fi
+
+          DELIM="PROMPT_$(openssl rand -hex 8)"
+          {
+            echo "prompt<<${DELIM}"
+            printf '%s\n' "$PROMPT"
+            echo "${DELIM}"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "head_sha=${HEAD_SHA}" >> "$GITHUB_OUTPUT"
+          echo "head_repo=${HEAD_REPO}" >> "$GITHUB_OUTPUT"
+          echo "should_run=true" >> "$GITHUB_OUTPUT"
+
+  run:
+    name: Run Codex review
+    needs: prepare
+    if: needs.prepare.outputs.should_run == 'true'
+    uses: elastic/github-actions/.github/workflows/ai-isolated-run.yml@ai-harness-runner
+    with:
+      harness: codex
+      prompt: ${{ needs.prepare.outputs.prompt }}
+      checkout_repo: ${{ needs.prepare.outputs.head_repo }}
+      checkout_ref: ${{ needs.prepare.outputs.head_sha }}
+      runner_ref: ai-harness-runner
+      output_artifact_name: codex-review-output
+    secrets:
+      openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+
+  validate:
+    name: Validate Codex review output
+    needs:
+      - prepare
+      - run
+    if: needs.prepare.outputs.should_run == 'true' && needs.run.result == 'success'
+    runs-on: ubuntu-latest
+    permissions: {}
+    outputs:
+      artifact_name: ${{ steps.meta.outputs.artifact_name }}
+    steps:
+      - name: Set validation metadata
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'artifact_name=codex-review-output-validated' >> "$GITHUB_OUTPUT"
+
+      - name: Download Codex output
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.run.outputs.artifact_name }}
+          path: /tmp/codex-review-output
+
+      - name: Validate output contract
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          OUTPUT_DIR='/tmp/codex-review-output'
+          MANIFEST_FILE="${OUTPUT_DIR}/manifest.json"
+          OUTPUTS_FILE="${OUTPUT_DIR}/outputs.json"
+          RESPONSE_FILE="${OUTPUT_DIR}/last_response.md"
+
+          test -f "$MANIFEST_FILE"
+          test -f "$OUTPUTS_FILE"
+          test -f "$RESPONSE_FILE"
+          test -s "$RESPONSE_FILE"
+
+          jq -e '
+            .harness == "codex"
+            and .status == "completed"
+            and (.error == "")
+            and (.outputsFile | endswith("/outputs.json"))
+            and (.lastResponseFile | endswith("/last_response.md"))
+          ' "$MANIFEST_FILE" > /dev/null
+
+          jq -e '
+            .version == 1
+            and .message.format == "markdown"
+            and .message.path == "last_response.md"
+          ' "$OUTPUTS_FILE" > /dev/null
+
+          if [ "$(wc -c < "$RESPONSE_FILE")" -gt 50000 ]; then
+            echo 'Codex response is too large to publish directly.' >&2
+            exit 1
+          fi
+
+      - name: Upload validated output
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.artifact_name }}
+          path: /tmp/codex-review-output/
+          retention-days: 7
+          if-no-files-found: error
+
+  publish:
+    name: Publish Codex review response
+    needs:
+      - prepare
+      - validate
+    if: needs.prepare.outputs.should_run == 'true' && needs.validate.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Download Codex output
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.validate.outputs.artifact_name }}
+          path: /tmp/codex-review-output
+
+      - name: Comment on PR
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ needs.prepare.outputs.pr_number }}
+        run: |
+          set -euo pipefail
+
+          RESPONSE_FILE='/tmp/codex-review-output/last_response.md'
+          COMMENT_FILE='/tmp/codex-review-comment.md'
+
+          {
+            echo 'Codex review response.'
+            echo ''
+            if [ -f "$RESPONSE_FILE" ]; then
+              cat "$RESPONSE_FILE"
+            else
+              echo '- No response file was produced.'
+            fi
+            echo ''
+            echo '---'
+            echo "**Workflow run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } > "$COMMENT_FILE"
+
+          gh pr comment "$PR_NUMBER" --repo "${{ github.repository }}" --body-file "$COMMENT_FILE"
