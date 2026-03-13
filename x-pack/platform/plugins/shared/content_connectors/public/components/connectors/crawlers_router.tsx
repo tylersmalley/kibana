@@ -11,7 +11,9 @@ import { EuiLoadingSpinner } from '@elastic/eui';
 import { Routes, Route } from '@kbn/shared-ux-router';
 
 import { CRAWLERS_ELASTIC_MANAGED_PATH, CRAWLERS_PATH } from '../routes';
-const Connectors = lazy(() => import('./connectors'));
+const Connectors = lazy(() =>
+  import('./connectors.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export const CrawlersRouter: React.FC = () => {
   return (

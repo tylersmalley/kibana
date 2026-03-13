@@ -24,7 +24,7 @@ type TelemetryUsageCounter = ReturnType<UsageCollectionSetup['createUsageCounter
 
 export interface RegisterRoutesDeps {
   router: CasesRouter;
-  routes: CaseRoute[];
+  routes: ReadonlyArray<AnyCaseRoute>;
   logger: Logger;
   kibanaVersion: PluginInitializerContext['env']['packageInfo']['version'];
   telemetryUsageCounter?: TelemetryUsageCounter;
@@ -62,3 +62,5 @@ export interface CaseRoute<P = unknown, Q = unknown, B = unknown> {
    */
   security?: RouteSecurity;
 }
+
+export type AnyCaseRoute = CaseRoute<unknown, unknown, unknown>;

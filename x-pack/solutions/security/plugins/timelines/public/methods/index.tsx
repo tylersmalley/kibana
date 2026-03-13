@@ -9,7 +9,11 @@ import React, { lazy, Suspense } from 'react';
 import { EuiLoadingSpinner } from '@elastic/eui';
 import type { LastUpdatedAtProps } from '../components';
 
-const LastUpdatedLazy = lazy(() => import('../components/last_updated'));
+const LastUpdatedLazy = lazy(() =>
+  import('../components/last_updated/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 export const getLastUpdatedLazy = (props: LastUpdatedAtProps) => {
   return (
     <Suspense fallback={<EuiLoadingSpinner />}>

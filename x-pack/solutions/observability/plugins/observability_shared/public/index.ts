@@ -18,10 +18,10 @@ export const plugin = () => {
 
 export type {
   ObservabilityPageTemplateProps,
-  LazyObservabilityPageTemplateProps,
   NavigationSection,
   NavigationEntry,
 } from './components/page_template/page_template';
+export type { LazyObservabilityPageTemplateProps } from './components/page_template';
 export { HeaderMenuPortal } from './components/header_menu';
 export { ActionMenu, ActionMenuDivider } from './components/action_menu/action_menu';
 export {

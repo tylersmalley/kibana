@@ -13,7 +13,11 @@ import type { LensAppServices } from '@kbn/lens-common';
 import type { SaveModalContainerProps } from '../save_modal_container';
 import type { LensPluginStartDependencies } from '../../plugin';
 
-const SaveModal = React.lazy(() => import('../save_modal_container'));
+const SaveModal = React.lazy(() =>
+  import('../save_modal_container.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 function LoadingSpinnerWithOverlay() {
   return (
@@ -40,7 +44,9 @@ export function getSaveModalComponent(
 
     useEffect(() => {
       async function loadLensService() {
-        const { getLensServices, getLensAttributeService } = await import('../../async_services');
+        const { getLensServices, getLensAttributeService } = await import(
+          '../../async_services.js'
+        );
 
         const lensServicesT = await getLensServices(
           coreStart,

@@ -12,7 +12,11 @@ import type { ServicesWrapperProps } from './services_wrapper';
 import type { OsqueryActionProps } from './osquery_action';
 import { AlertAttachmentContext } from '../common/contexts';
 
-const OsqueryAction = lazy(() => import('./osquery_action'));
+const OsqueryAction = lazy(() =>
+  import('./osquery_action/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 export const getLazyOsqueryAction =
   (services: ServicesWrapperProps['services']) =>
   // eslint-disable-next-line react/display-name

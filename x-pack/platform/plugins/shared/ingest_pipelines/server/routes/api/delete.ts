@@ -39,7 +39,7 @@ export const registerDeleteRoute = ({ router }: RouteDependencies): void => {
       };
 
       await Promise.all(
-        pipelineNames.map((pipelineName) => {
+        pipelineNames.map((pipelineName: string) => {
           return clusterClient.asCurrentUser.ingest
             .deletePipeline({ id: pipelineName })
             .then(() => response.itemsDeleted.push(pipelineName))

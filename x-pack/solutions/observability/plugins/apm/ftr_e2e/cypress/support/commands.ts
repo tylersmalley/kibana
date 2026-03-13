@@ -5,12 +5,17 @@
  * 2.0.
  */
 import 'cypress-real-events/support';
-import type { Interception } from 'cypress/types/net-stubbing';
 import 'cypress-axe';
 import moment from 'moment';
 import '@frsource/cypress-plugin-visual-regression-diff';
 import { AXE_CONFIG, AXE_OPTIONS } from '@kbn/axe-config';
 import { ApmUsername } from '@kbn/apm-plugin/server/test_helpers/create_apm_users/authentication';
+
+interface Interception {
+  request: {
+    url: string;
+  };
+}
 
 Cypress.Commands.add('loginAsSuperUser', () => {
   return cy.loginAs({ username: 'elastic', password: 'changeme' });

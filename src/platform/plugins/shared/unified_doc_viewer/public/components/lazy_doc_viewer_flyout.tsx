@@ -11,7 +11,11 @@ import React from 'react';
 import { withSuspense } from '@kbn/shared-ux-utility';
 import type { UnifiedDocViewerFlyoutProps } from './doc_viewer_flyout/doc_viewer_flyout';
 
-const LazyUnifiedDocViewerFlyout = React.lazy(() => import('./doc_viewer_flyout'));
+const LazyUnifiedDocViewerFlyout = React.lazy(() =>
+  import('./doc_viewer_flyout/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 export const UnifiedDocViewerFlyout = withSuspense<UnifiedDocViewerFlyoutProps>(
   LazyUnifiedDocViewerFlyout,
   <></>

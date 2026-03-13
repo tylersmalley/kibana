@@ -39,7 +39,6 @@ export const registerCreateRoute = ({
       try {
         const { id } = request.body.job;
         // Create job.
-        // @ts-expect-error elasticsearch@9.0.0 missing mandatory fields like cron, groups, index_pattern, page_size, rollup_index
         await clusterClient.asCurrentUser.rollup.putJob(request.body.job);
         // Then request the newly created job.
         const results = await clusterClient.asCurrentUser.rollup.getJobs({ id });

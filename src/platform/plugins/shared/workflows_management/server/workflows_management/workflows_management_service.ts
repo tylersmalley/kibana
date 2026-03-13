@@ -72,17 +72,26 @@ import { updateWorkflowYamlFields } from '../../common/lib/yaml';
 import { getWorkflowZodSchema } from '../../common/schema';
 import { getAuthenticatedUser } from '../lib/get_user';
 import { hasScheduledTriggers } from '../lib/schedule_utils';
+import type { WorkflowTrigger } from '../lib/schedule_utils';
 import type { WorkflowProperties, WorkflowStorage } from '../storage/workflow_storage';
 import { createStorage } from '../storage/workflow_storage';
 import type { WorkflowTaskScheduler } from '../tasks/workflow_task_scheduler';
 import type { WorkflowsServerPluginStartDeps } from '../types';
 
+type TriggerTypeCandidate = { type?: string } | null | undefined;
+
 /** Derives a list of trigger type ids from a workflow definition (e.g. ['manual', 'scheduled', 'cases.updated']). */
 function getTriggerTypesFromDefinition(definition: WorkflowYaml | null | undefined): string[] {
   const triggers = definition?.triggers ?? [];
   return triggers
-    .map((t) => (t && typeof t.type === 'string' ? t.type : null))
+    .map((trigger: TriggerTypeCandidate) =>
+      trigger && typeof trigger.type === 'string' ? trigger.type : null
+    )
     .filter(<T>(v: T): v is NonNullable<T> => v != null);
+}
+
+function isScheduledTrigger(trigger: TriggerTypeCandidate): trigger is WorkflowTrigger {
+  return trigger?.type === 'scheduled';
 }
 
 const DEFAULT_PAGE_SIZE = 100;
@@ -253,9 +262,9 @@ export class WorkflowsService {
       return;
     }
 
-    const scheduledTriggers = definition.triggers.filter((t) => t.type === 'scheduled');
+    const scheduledTriggers = definition.triggers.filter(isScheduledTrigger);
     await Promise.allSettled(
-      scheduledTriggers.map((trigger) =>
+      scheduledTriggers.map((trigger: WorkflowTrigger) =>
         taskScheduler.scheduleWorkflowTask(workflowId, spaceId, trigger, request)
       )
     ).then((results) => {
@@ -402,8 +411,7 @@ export class WorkflowsService {
     // Phase 3: Schedule triggers for successfully created workflows (in parallel)
     const workflowsToSchedule = validWorkflows.filter(
       (vw) =>
-        created.some((w) => w.id === vw.id) &&
-        vw.definition?.triggers?.some((t) => t.type === 'scheduled')
+        created.some((w) => w.id === vw.id) && vw.definition?.triggers?.some(isScheduledTrigger)
     );
 
     await Promise.allSettled(

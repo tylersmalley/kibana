@@ -15,12 +15,11 @@ export const attackDiscoveryCardConfig: OnboardingCardConfig = {
   id: OnboardingCardId.attackDiscovery,
   title: ATTACK_DISCOVERY_CARD_TITLE,
   icon: attackDiscoveryIcon,
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_attack_discovery_card" */
-        './attack_discovery_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_attack_discovery_card" */
+      './attack_discovery_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   capabilitiesRequired: 'securitySolutionAttackDiscovery.attack-discovery',
   licenseTypeRequired: 'enterprise',

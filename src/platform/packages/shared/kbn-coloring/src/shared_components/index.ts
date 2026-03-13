@@ -14,7 +14,9 @@ import { withSuspense } from '@kbn/shared-ux-utility';
  * The Lazily-loaded `CustomizablePalette` component.  Consumers should use `React.Suspense` or
  * the withSuspense` HOC to load this component.
  */
-export const CustomizablePaletteLazy = React.lazy(() => import('./coloring'));
+export const CustomizablePaletteLazy = React.lazy(() =>
+  import('./coloring/index.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 /**
  * A `CustomizablePalette` component that is wrapped by the `withSuspense` HOC. This component can

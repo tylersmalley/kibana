@@ -336,7 +336,9 @@ export function validateJsonSchemaDefaults(
           endOffset,
           yamlDocument
         );
-        const errorMessage = result.error.issues.map((issue) => issue.message).join(', ');
+        const errorMessage = result.error.issues
+          .map((issue: { message: string }) => issue.message)
+          .join(', ');
 
         errors.push(
           createValidationError(

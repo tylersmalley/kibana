@@ -187,7 +187,7 @@ export function getEnhancedTypeInfo(schema: z.ZodType): {
     enhancedType = `${elementType}[]`;
   } else if (currentSchema instanceof z.ZodUnion) {
     const options = currentSchema._def.options;
-    const unionTypes = options.map((opt) => getZodTypeName(opt as z.ZodType)).join(' | ');
+    const unionTypes = options.map((option) => getZodTypeName(option)).join(' | ');
     enhancedType = unionTypes;
   } else if (currentSchema instanceof z.ZodEnum) {
     const values = currentSchema.options;

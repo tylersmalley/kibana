@@ -11,7 +11,13 @@ import type { AlertSummaryWidgetProps } from '../application/sections/alert_summ
 import type { AlertSummaryWidgetDependencies } from '../application/sections/alert_summary_widget/types';
 
 const AlertSummaryWidgetLazy: React.FC<AlertSummaryWidgetProps & AlertSummaryWidgetDependencies> =
-  lazy(() => import('../application/sections/alert_summary_widget/alert_summary_widget'));
+  lazy(() =>
+    import('../application/sections/alert_summary_widget/alert_summary_widget.js').then(
+      ({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      })
+    )
+  );
 
 export const getAlertSummaryWidgetLazy = (
   props: AlertSummaryWidgetProps & AlertSummaryWidgetDependencies

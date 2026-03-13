@@ -14,6 +14,11 @@ import { PainlessLexerEnhanced } from './lexer';
 import type { MonacoEditorError } from '../../../../types';
 import { ANTLRErrorListener } from '../../../../common/error_listener';
 
+interface ErrorListenerTarget {
+  addErrorListener: (listener: ANTLRErrorListener) => void;
+  removeErrorListeners: () => void;
+}
+
 const parse = (
   code: string
 ): {
@@ -24,13 +29,17 @@ const parse = (
   const lexer = new PainlessLexerEnhanced(inputStream);
   const painlessLangErrorListener = new ANTLRErrorListener();
   const tokenStream = new CommonTokenStream(lexer);
-  const parser = new PainlessParser(tokenStream);
+  const parser = new PainlessParser(
+    tokenStream as unknown as ConstructorParameters<typeof PainlessParser>[0]
+  );
+  const lexerWithListeners = lexer as unknown as ErrorListenerTarget;
+  const parserWithListeners = parser as unknown as ErrorListenerTarget;
 
-  lexer.removeErrorListeners();
-  parser.removeErrorListeners();
+  lexerWithListeners.removeErrorListeners();
+  parserWithListeners.removeErrorListeners();
 
-  lexer.addErrorListener(painlessLangErrorListener);
-  parser.addErrorListener(painlessLangErrorListener);
+  lexerWithListeners.addErrorListener(painlessLangErrorListener);
+  parserWithListeners.addErrorListener(painlessLangErrorListener);
 
   const errors: MonacoEditorError[] = painlessLangErrorListener.getErrors();
 

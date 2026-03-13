@@ -7,10 +7,11 @@
 
 import type { AIMessage, BaseMessage } from '@langchain/core/messages';
 import { ToolMessage } from '@langchain/core/messages';
-import type { ToolCall } from '@langchain/core/dist/messages/tool';
 import { set } from '@kbn/safer-lodash-set';
 import { toolDetails } from '../../../../tools/inspect_index_mapping_tool/inspect_index_mapping_tool';
 import { messageContainsToolCalls } from '../../../../utils/common';
+
+type ToolCall = NonNullable<AIMessage['tool_calls']>[number];
 
 export const buildContext = (messages: BaseMessage[]): Record<string, unknown> => {
   const orderedInspectIndexMappingToolCalls: ToolCall[] = messages

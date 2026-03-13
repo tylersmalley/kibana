@@ -106,7 +106,7 @@ export function getConnectorType(
     validateParams: async (
       actionParams: EmailActionParams
     ): Promise<GenericValidationResult<EmailActionParams>> => {
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors = {
         to: new Array<string>(),
         cc: new Array<string>(),
@@ -164,8 +164,16 @@ export function getConnectorType(
 
       return validationResult;
     },
-    actionConnectorFields: lazy(() => import('./email_connector')),
-    actionParamsFields: lazy(() => import('./email_params')),
+    actionConnectorFields: lazy(() =>
+      import('./email_connector.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./email_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
   };
 }
 

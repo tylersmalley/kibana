@@ -14,7 +14,7 @@ import { patchCaseRoute } from './cases/patch_cases';
 import { postCaseRoute } from './cases/post_case';
 import { pushCaseRoute } from './cases/push_case';
 import { getReportersRoute } from './cases/reporters/get_reporters';
-import type { CaseRoute } from './types';
+import type { AnyCaseRoute } from './types';
 import { getTagsRoute } from './cases/tags/get_tags';
 import { deleteAllCommentsRoute } from './comments/delete_all_comments';
 import { deleteCommentRoute } from './comments/delete_comment';
@@ -61,4 +61,4 @@ export const getExternalRoutes = ({
     postCaseConfigureRoute,
     getAllAlertsAttachedToCaseRoute,
     postFileRoute,
-  ] as CaseRoute[];
+  ] as AnyCaseRoute[];

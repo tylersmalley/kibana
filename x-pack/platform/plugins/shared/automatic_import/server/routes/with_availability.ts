@@ -14,14 +14,16 @@ import type { AutomaticImportRouteHandlerContext } from '../plugin';
  * license (stateful) or product type (serverless).
  */
 export const withAvailability = <
-  P = unknown,
-  Q = unknown,
-  B = unknown,
-  Method extends RouteMethod = never
+  P,
+  Q,
+  B,
+  Method extends RouteMethod,
+  THandler extends RequestHandler<P, Q, B, AutomaticImportRouteHandlerContext, Method>
 >(
-  handler: RequestHandler<P, Q, B, AutomaticImportRouteHandlerContext, Method>
-): RequestHandler<P, Q, B, AutomaticImportRouteHandlerContext, Method> => {
-  return async (context, req, res) => {
+  handler: THandler
+): THandler => {
+  return (async (...args: Parameters<THandler>) => {
+    const [context, req, res] = args;
     const { isAvailable } = await context.automaticImport;
     if (!isAvailable()) {
       return res.notFound({
@@ -29,5 +31,5 @@ export const withAvailability = <
       });
     }
     return handler(context, req, res);
-  };
+  }) as unknown as THandler;
 };

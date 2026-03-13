@@ -176,7 +176,7 @@ function validateInputValueType(
     const zodSchema = convertJsonSchemaToZodWithRefs(propSchema, schema);
     const parseResult = zodSchema.safeParse(rawValue);
     if (!parseResult.success) {
-      return parseResult.error.issues.map((issue) => issue.message).join('; ');
+      return parseResult.error.issues.map((issue: { message: string }) => issue.message).join('; ');
     }
   } catch {
     // Gracefully skip type validation for schemas that convertJsonSchemaToZodWithRefs
@@ -195,7 +195,7 @@ function validateStepInputs(
 ): YamlValidationResult[] {
   const results: YamlValidationResult[] = [];
   const schemaPropertyNames = new Set(Object.keys(schema.properties ?? {}));
-  const requiredNames = new Set(schema.required ?? []);
+  const requiredNames = new Set<string>((schema.required ?? []) as string[]);
   const providedInputNames = new Set<string>();
   const workflowIdProp = step.propInfos['with.workflow-id'];
   if (!workflowIdProp) return results;

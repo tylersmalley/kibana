@@ -18,7 +18,11 @@ export interface IExternalReferenceMetaDataProps {
     queryId: string;
   };
 }
-const AttachmentContent = lazy(() => import('./external_references_content'));
+const AttachmentContent = lazy(() =>
+  import('./external_references_content.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const getLazyExternalContent =
   // eslint-disable-next-line react/display-name

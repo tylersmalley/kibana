@@ -13,9 +13,11 @@ import { checkTemplateExists } from '../utils';
 import type { ValidatedFile } from './use_validate_yaml';
 import * as i18n from '../../templates/translations';
 
+type ImportedField = z.infer<typeof FieldSchema>;
+
 const ImportedDefinitionSchema = z.object({
   fields: z.array(FieldSchema).refine(
-    (fields) => {
+    (fields: ImportedField[]) => {
       const fieldNames = new Set(fields.map((field) => field.name));
       return fieldNames.size === fields.length;
     },
@@ -103,7 +105,7 @@ export const useParseYaml = () => {
             });
           } else {
             const issues = result.error.issues
-              .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+              .map((issue: z.core.$ZodIssue) => `${issue.path.join('.')}: ${issue.message}`)
               .join('; ');
 
             errors.push({

@@ -9,7 +9,6 @@ import type { ElasticsearchClient } from '@kbn/core/server';
 import type { RequestHandlerContext } from '@kbn/core-http-request-handler-context-server';
 import type { SearchTotalHits } from '@elastic/elasticsearch/lib/api/types';
 import type { SetupRouteOptions } from '../types';
-import type { MetricIndicesAPIResponse } from '../../../common/http_api/metric_indices';
 
 function getIndexStatus(client: ElasticsearchClient, index: string) {
   return client
@@ -47,7 +46,7 @@ export function initMetricIndicesRoute<T extends RequestHandlerContext>({
   router,
   metricsClient,
 }: SetupRouteOptions<T>) {
-  router.get<unknown, unknown, MetricIndicesAPIResponse>(
+  router.get(
     {
       path: `/api/metrics/indices`,
       security: {

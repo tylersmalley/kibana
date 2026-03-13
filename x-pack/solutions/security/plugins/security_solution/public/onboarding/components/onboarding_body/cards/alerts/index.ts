@@ -18,12 +18,11 @@ export const alertsCardConfig: OnboardingCardConfig = {
   title: ALERTS_CARD_TITLE,
   icon: alertsIcon,
   iconDark: alertsDarkIcon,
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_alerts_card" */
-        './alerts_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_alerts_card" */
+      './alerts_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   capabilitiesRequired: [RULES_UI_DETECTIONS_PRIVILEGE],
 };

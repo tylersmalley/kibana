@@ -25,6 +25,8 @@ import {
 import { generateLatestMetadataAggregations } from './generate_metadata_aggregations';
 import { TRANSFORM_IGNORED_SLOW_TIERS } from './constants';
 
+type EntityIdentityField = EntityDefinition['identityFields'][number];
+
 export function generateLatestTransform(
   definition: EntityDefinition
 ): TransformPutTransformRequest {
@@ -102,8 +104,8 @@ const generateTransformPutRequest = ({
 };
 
 export function generatePivotGroup(identityFields: EntityDefinition['identityFields']) {
-  return identityFields.reduce(
-    (acc, id) => ({
+  return identityFields.reduce<Record<string, { terms: { field: string } }>>(
+    (acc: Record<string, { terms: { field: string } }>, id: EntityIdentityField) => ({
       ...acc,
       [`entity.identity.${id.field}`]: {
         terms: { field: id.field },
@@ -125,7 +127,7 @@ function generateFilters(definition: EntityDefinition) {
     filter.bool.must.push(getElasticsearchQueryOrThrow(definition.filter));
   }
 
-  definition.identityFields.forEach(({ field }) => {
+  definition.identityFields.forEach(({ field }: EntityIdentityField) => {
     filter.bool.must.push({ exists: { field } });
     filter.bool.must_not.push({
       term: { [field]: '' }, // identity field can't be empty

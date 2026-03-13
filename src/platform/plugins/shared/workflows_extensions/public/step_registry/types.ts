@@ -7,10 +7,24 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { DotKeysOf, DotObject } from '@kbn/utility-types';
+import type { DotObject } from '@kbn/utility-types';
 import type { StepPropertyHandler } from '@kbn/workflows';
 import type { z } from '@kbn/zod/v4';
 import type { CommonStepDefinition } from '../../common';
+
+type IsUnknown<T> = unknown extends T ? ([T] extends [unknown] ? true : false) : false;
+
+type EditorHandlerValues<TValue extends Record<string, unknown>> = DotObject<TValue>;
+
+type EditorHandlersObjectMap<TValue extends Record<string, unknown>> = Partial<{
+  [K in keyof EditorHandlerValues<TValue>]: StepPropertyHandler<EditorHandlerValues<TValue>[K]>;
+}>;
+
+type EditorHandlersMap<TValue> = IsUnknown<TValue> extends true
+  ? Record<string, StepPropertyHandler<unknown>>
+  : [TValue] extends [Record<string, unknown>]
+  ? EditorHandlersObjectMap<Extract<TValue, Record<string, unknown>>>
+  : Record<string, never>;
 
 /**
  * Helper function to create a PublicStepDefinition with automatic type inference.
@@ -64,15 +78,13 @@ export interface EditorHandlers<
   dynamicSchema?: DynamicSchema<Input, Output, Config>;
 }
 
-export type EditorHandlersConfig<Config extends z.ZodObject = z.ZodObject> = {
-  [K in DotKeysOf<z.infer<Config>>]?: StepPropertyHandler<DotObject<z.infer<Config>>[K]>;
-};
+export type EditorHandlersConfig<Config extends z.ZodObject = z.ZodObject> = EditorHandlersMap<
+  z.output<Config>
+>;
 
 export type EditorHandlersInput<Input extends z.ZodType = z.ZodType> = Input extends z.ZodObject
-  ? {
-      [K in DotKeysOf<z.infer<Input>>]?: StepPropertyHandler<DotObject<z.infer<Input>>[K]>;
-    }
-  : {};
+  ? EditorHandlersMap<z.output<Input>>
+  : Record<string, never>;
 
 /**
  * Dynamic schema handlers for a step
@@ -89,7 +101,7 @@ export interface DynamicSchema<
    * @returns A Zod schema defining structure and validation rules for the output of the step.
    */
   getOutputSchema?(params: {
-    input: z.infer<Input>;
-    config: z.infer<Config>;
-  }): z.ZodType<z.infer<Output>>;
+    input: z.output<Input>;
+    config: z.output<Config>;
+  }): z.ZodType<z.output<Output>>;
 }

@@ -15,7 +15,11 @@ import { setDataViewsService } from '../common/lib/data_apis';
 import { KibanaContextProvider } from '../common/lib/kibana';
 import type { TriggersAndActionsUiServices } from './rules_app';
 
-const StackAlertsPage = lazy(() => import('./sections/alerts_page'));
+const StackAlertsPage = lazy(() =>
+  import('./sections/alerts_page/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const renderApp = (deps: TriggersAndActionsUiServices) => {
   const { element } = deps;

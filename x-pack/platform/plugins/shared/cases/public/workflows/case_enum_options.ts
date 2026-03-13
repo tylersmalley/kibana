@@ -7,4 +7,4 @@
 
 import { ConnectorTypesEnum } from '../../common/bundled-types.gen';
 
-export const connectorTypesOptions = Object.values(ConnectorTypesEnum);
+export const connectorTypesOptions: string[] = Object.values(ConnectorTypesEnum);

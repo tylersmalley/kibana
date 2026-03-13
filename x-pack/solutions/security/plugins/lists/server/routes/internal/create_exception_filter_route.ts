@@ -10,6 +10,7 @@ import type {
   CreateExceptionListItemSchema,
   ExceptionListItemSchema,
   FoundExceptionListItemSchema,
+  GetExceptionFilterSchema,
 } from '@kbn/securitysolution-io-ts-list-types';
 import { INTERNAL_EXCEPTION_FILTER } from '@kbn/securitysolution-list-constants';
 import { APP_ID } from '@kbn/security-solution-features/constants';
@@ -60,17 +61,17 @@ export const getExceptionFilterRoute = (router: ListsPluginRouter): void => {
           }
           const exceptionListClient = ctx.lists?.getExceptionListClient();
           const exceptionItems: Array<ExceptionListItemSchema | CreateExceptionListItemSchema> = [];
+          const requestBody: GetExceptionFilterSchema = request.body;
           const {
-            type,
             alias = null,
             exclude_exceptions: excludeExceptions = true,
             chunk_size: chunkSize = 10,
-          } = request.body;
-          if (type === 'exception_list_ids') {
-            const listIds = request.body.exception_list_ids.map(
+          } = requestBody;
+          if (requestBody.type === 'exception_list_ids') {
+            const listIds = requestBody.exception_list_ids.map(
               ({ exception_list_id: listId }) => listId
             );
-            const namespaceTypes = request.body.exception_list_ids.map(
+            const namespaceTypes = requestBody.exception_list_ids.map(
               ({ namespace_type: namespaceType }) => namespaceType
             );
 
@@ -92,7 +93,7 @@ export const getExceptionFilterRoute = (router: ListsPluginRouter): void => {
             });
             exceptionItems.push(...items);
           } else {
-            const { exceptions } = request.body;
+            const { exceptions } = requestBody;
             exceptionItems.push(...exceptions);
           }
 

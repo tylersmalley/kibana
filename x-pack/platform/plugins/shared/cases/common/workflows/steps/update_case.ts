@@ -24,9 +24,12 @@ const UpdateFieldsSchema = UpdateCaseRequestSchema.shape.cases.element.omit({
 
 export const InputSchema = z.object({
   case_id: z.string().min(1, 'case_id is required'),
-  updates: UpdateFieldsSchema.refine((updates) => Object.keys(updates).length > 0, {
-    message: 'updates must include at least one field',
-  }),
+  updates: UpdateFieldsSchema.refine(
+    (updates: z.infer<typeof UpdateFieldsSchema>) => Object.keys(updates).length > 0,
+    {
+      message: 'updates must include at least one field',
+    }
+  ),
 });
 
 export const OutputSchema = z.object({

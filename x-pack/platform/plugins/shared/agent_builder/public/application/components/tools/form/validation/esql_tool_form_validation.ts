@@ -10,6 +10,7 @@ import { validateQuery } from '@kbn/esql-language';
 import { i18n } from '@kbn/i18n';
 
 import { EsqlToolFieldType, ToolType } from '@kbn/agent-builder-common/tools';
+import type { EsqlToolFieldTypes } from '@kbn/agent-builder-common/tools';
 import { z } from '@kbn/zod/v4';
 import { sharedValidationSchemas } from './shared_tool_validation';
 import { EsqlParamSource } from '../types/tool_form_types';
@@ -61,77 +62,80 @@ const esqlI18nMessages = {
   },
 };
 
-export const esqlFormValidationSchema = z
-  .object({
-    // Use shared validation schemas for common fields
-    toolId: sharedValidationSchemas.toolId,
-    description: sharedValidationSchemas.description,
-    labels: sharedValidationSchemas.labels,
+const esqlToolFieldTypeValues = Object.values(EsqlToolFieldType) as [
+  EsqlToolFieldTypes,
+  ...EsqlToolFieldTypes[]
+];
 
-    // ESQL specific validation
-    esql: z
-      .string()
-      .min(1, { message: esqlI18nMessages.esql.requiredError })
-      .refine(
-        async (esql) => {
-          const result = await validateQuery(esql);
-          return result.errors.length === 0;
-        },
-        { message: esqlI18nMessages.esql.esqlError }
-      ),
-    params: z
-      .array(
-        z.object({
-          name: z
-            .string()
-            .min(1, { message: esqlI18nMessages.params.nameRequiredError })
-            .regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/, {
-              message: esqlI18nMessages.params.nameFormatError,
-            }),
-          description: z
-            .string()
-            .min(1, { message: esqlI18nMessages.params.descriptionRequiredError }),
-          type: z.enum(EsqlToolFieldType),
-          source: z.enum(EsqlParamSource),
-          optional: z.boolean(),
-          defaultValue: z
-            .union([z.string(), z.number(), z.boolean(), z.array(z.string()), z.array(z.number())])
-            .optional(),
-        })
-      )
-      .superRefine((params, ctx) => {
-        params.forEach(({ name, optional, defaultValue }, index) => {
-          const otherParamNames = new Set(
-            params.filter((_, i) => i !== index).map((param) => param.name)
-          );
+const esqlParamSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: esqlI18nMessages.params.nameRequiredError })
+    .regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/, {
+      message: esqlI18nMessages.params.nameFormatError,
+    }),
+  description: z.string().min(1, { message: esqlI18nMessages.params.descriptionRequiredError }),
+  type: z.enum(esqlToolFieldTypeValues),
+  source: z.enum(EsqlParamSource),
+  optional: z.boolean(),
+  defaultValue: z
+    .union([z.string(), z.number(), z.boolean(), z.array(z.string()), z.array(z.number())])
+    .optional(),
+});
 
-          if (otherParamNames.has(name)) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: esqlI18nMessages.params.duplicateError(name),
-              path: [index, 'name'],
-            });
-          }
+type EsqlParam = z.output<typeof esqlParamSchema>;
 
-          // Validate default value is provided for optional parameters
-          if (
-            optional &&
-            (defaultValue == null ||
-              (typeof defaultValue === 'string' && defaultValue.trim() === ''))
-          ) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: esqlI18nMessages.params.defaultValueRequiredError,
-              path: [index, 'defaultValue'],
-            });
-          }
+const esqlFormValidationSchemaBase = z.object({
+  toolId: sharedValidationSchemas.toolId,
+  description: sharedValidationSchemas.description,
+  labels: sharedValidationSchemas.labels,
+  esql: z
+    .string()
+    .min(1, { message: esqlI18nMessages.esql.requiredError })
+    .refine(
+      async (esql: string) => {
+        const result = await validateQuery(esql);
+        return result.errors.length === 0;
+      },
+      { message: esqlI18nMessages.esql.esqlError }
+    ),
+  params: z.array(esqlParamSchema).superRefine((params: EsqlParam[], ctx: z.RefinementCtx) => {
+    params.forEach(({ name, optional, defaultValue }: EsqlParam, index: number) => {
+      const otherParamNames = new Set(
+        params
+          .filter((_: EsqlParam, i: number) => i !== index)
+          .map((param: EsqlParam) => param.name)
+      );
+
+      if (otherParamNames.has(name)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: esqlI18nMessages.params.duplicateError(name),
+          path: [index, 'name'],
         });
-      }),
-    type: z.literal(ToolType.esql),
-  })
-  .superRefine(({ esql, params }, ctx) => {
+      }
+
+      if (
+        optional &&
+        (defaultValue == null || (typeof defaultValue === 'string' && defaultValue.trim() === ''))
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: esqlI18nMessages.params.defaultValueRequiredError,
+          path: [index, 'defaultValue'],
+        });
+      }
+    });
+  }),
+  type: z.literal(ToolType.esql),
+});
+
+type EsqlToolFormData = z.output<typeof esqlFormValidationSchemaBase>;
+
+export const esqlFormValidationSchema = esqlFormValidationSchemaBase.superRefine(
+  ({ esql, params }: EsqlToolFormData, ctx: z.RefinementCtx) => {
     const inferredParams = getESQLQueryVariables(esql);
-    const definedParams = new Set(params.map((param) => param.name));
+    const definedParams = new Set(params.map((param: EsqlParam) => param.name));
 
     for (const param of inferredParams) {
       if (!definedParams.has(param)) {
@@ -143,4 +147,5 @@ export const esqlFormValidationSchema = z
         return;
       }
     }
-  });
+  }
+);

@@ -25,6 +25,7 @@ import * as i18n from '../../templates/translations';
 import type { ParsedTemplateEntry, ParseYamlError } from '../hooks/use_parse_yaml';
 
 const getItemId = (item: ParsedTemplateEntry) => `${item.sourceFileName}-${item.documentIndex}`;
+type TemplateField = NonNullable<NonNullable<ParsedTemplateEntry['definition']>['fields']>[number];
 
 export interface SelectTemplatesStepProps {
   templates: ParsedTemplateEntry[];
@@ -164,7 +165,7 @@ export const SelectTemplatesStep: React.FC<SelectTemplatesStepProps> = ({
           const fields = template.definition?.fields;
           const count = fields?.length ?? 0;
           if (!fields || count === 0) return 0;
-          const tooltip = fields.map((f) => f.name).join(', ');
+          const tooltip = fields.map((field: TemplateField) => field.name).join(', ');
           return (
             <EuiToolTip content={tooltip}>
               <span tabIndex={0}>{count}</span>

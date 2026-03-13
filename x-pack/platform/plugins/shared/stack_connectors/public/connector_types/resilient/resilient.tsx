@@ -32,14 +32,20 @@ export function getConnectorType(): ConnectorTypeModel<
 > {
   return {
     id: CONNECTOR_ID,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: DESC,
     actionTypeTitle: TITLE,
-    actionConnectorFields: lazy(() => import('./resilient_connectors')),
+    actionConnectorFields: lazy(() =>
+      import('./resilient_connectors.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validateParams: async (
       actionParams: ResilientActionParams
     ): Promise<GenericValidationResult<unknown>> => {
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors = {
         'subActionParams.incident.name': new Array<string>(),
       };
@@ -55,6 +61,10 @@ export function getConnectorType(): ConnectorTypeModel<
       }
       return validationResult;
     },
-    actionParamsFields: lazy(() => import('./resilient_params')),
+    actionParamsFields: lazy(() =>
+      import('./resilient_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
   };
 }

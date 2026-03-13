@@ -70,7 +70,7 @@ function registerRoute(
         try {
           await esClient.bulk({
             index: TELEMETRY_LOCAL_EBT_INDICES.BROWSER,
-            operations: request.body.events.flatMap((doc) => [{ create: {} }, doc]),
+            operations: request.body.events.flatMap((doc: unknown) => [{ create: {} }, doc]),
           });
 
           return response.ok();

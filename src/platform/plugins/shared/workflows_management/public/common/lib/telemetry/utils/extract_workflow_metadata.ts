@@ -176,7 +176,9 @@ export function extractWorkflowMetadata(
   const triggers = workflow.triggers || [];
   const triggerTypes = [
     ...new Set(
-      triggers.filter((trigger) => trigger?.type).map((trigger) => trigger.type as string)
+      triggers
+        .filter((trigger: { type?: string } | null | undefined) => trigger?.type)
+        .map((trigger: { type?: string } | null | undefined) => trigger?.type as string)
     ),
   ];
 

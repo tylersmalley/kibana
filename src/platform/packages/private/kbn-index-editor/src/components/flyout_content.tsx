@@ -41,7 +41,11 @@ export interface FlyoutContentProps {
   props: EditLookupIndexContentContext & { onClose: () => void };
 }
 
-const DataGridLazy = withSuspense(lazy(() => import('./data_grid')));
+const DataGridLazy = withSuspense(
+  lazy(() =>
+    import('./data_grid.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+  )
+);
 
 export const FlyoutContent: FC<FlyoutContentProps> = ({ deps, props }) => {
   const { coreStart, ...restDeps } = deps;

@@ -12,8 +12,16 @@ import React, { lazy } from 'react';
 import type { VisParams } from '../../../types';
 import type { ValidationVisOptionsProps } from '../common';
 
-const PointSeriesOptionsLazy = lazy(() => import('./point_series'));
-const MetricsAxisOptionsLazy = lazy(() => import('./metrics_axes'));
+const PointSeriesOptionsLazy = lazy(() =>
+  import('./point_series/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
+const MetricsAxisOptionsLazy = lazy(() =>
+  import('./metrics_axes/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const PointSeriesOptions = (props: ValidationVisOptionsProps<VisParams>) => (
   <PointSeriesOptionsLazy {...props} />

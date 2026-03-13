@@ -8,10 +8,12 @@
  */
 
 import Boom from '@hapi/boom';
-import type { RequestHandlerWrapper } from '@kbn/core-http-server';
+import type { RequestHandler, RequestHandlerWrapper } from '@kbn/core-http-server';
 
-export const wrapErrors: RequestHandlerWrapper = (handler) => {
-  return async (context, request, response) => {
+export const wrapErrors: RequestHandlerWrapper = <THandler extends RequestHandler<any, any, any>>(
+  handler: THandler
+) => {
+  return (async (context, request, response) => {
     try {
       return await handler(context, request, response);
     } catch (e) {
@@ -24,5 +26,5 @@ export const wrapErrors: RequestHandlerWrapper = (handler) => {
       }
       throw e;
     }
-  };
+  }) as THandler;
 };

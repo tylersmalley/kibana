@@ -10,23 +10,32 @@
 import React from 'react';
 import { EuiPanel, EuiSpacer, EuiButtonGroup, EuiText, EuiFormRow, EuiTitle } from '@elastic/eui';
 import { z } from '@kbn/zod/v4';
-import { createSidebarStore, type SidebarComponentProps } from '@kbn/core-chrome-sidebar';
+import { createSidebarStore } from '@kbn/core-chrome-sidebar';
 import { SidebarHeader, SidebarBody, useSidebarApp } from '@kbn/core-chrome-sidebar-components';
 
 export const tabSelectionAppId = 'sidebarExampleTabs';
 
+const tabSelectionSchema = z.object({
+  selectedTab: z.string().default('overview'),
+});
+
+export type TabSelectionState = z.output<typeof tabSelectionSchema>;
+
 /** Store for tab selection sidebar app */
 export const tabSelectionStore = createSidebarStore({
-  schema: z.object({
-    selectedTab: z.string().default('overview'),
-  }),
+  schema: tabSelectionSchema,
   actions: (set, get, sidebar) => ({
     selectTab: (tabId: string) => set({ selectedTab: tabId }),
   }),
 });
 
-export type TabSelectionState = typeof tabSelectionStore.types.state;
 export type TabSelectionActions = typeof tabSelectionStore.types.actions;
+
+interface TabSelectionAppProps {
+  state: TabSelectionState;
+  actions: TabSelectionActions;
+  onClose: () => void;
+}
 
 /** Typed hook for the tab selection sidebar app */
 export const useTabSelectionSidebarApp = () =>
@@ -36,11 +45,7 @@ export const useTabSelectionSidebarApp = () =>
  * Tab selection app that demonstrates custom header content.
  * Uses children prop of SidebarHeader for a dynamic title based on the selected tab.
  */
-export function TabSelectionApp({
-  state,
-  actions,
-  onClose,
-}: SidebarComponentProps<TabSelectionState, TabSelectionActions>) {
+export function TabSelectionApp({ state, actions, onClose }: TabSelectionAppProps) {
   const { selectedTab } = state;
 
   const tabs = [

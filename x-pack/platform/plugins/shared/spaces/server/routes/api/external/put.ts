@@ -7,6 +7,7 @@
 
 import { schema } from '@kbn/config-schema';
 import { SavedObjectsErrorHelpers } from '@kbn/core/server';
+import type { KibanaRequest } from '@kbn/core/server';
 
 import type { ExternalRouteDeps } from '.';
 import { API_VERSIONS, type Space } from '../../../../common';
@@ -55,23 +56,25 @@ export function initPutSpacesApi(deps: ExternalRouteDeps) {
           },
         },
       },
-      createLicensedRouteHandler(async (context, request, response) => {
-        const spacesClient = getSpacesService().createSpacesClient(request);
+      createLicensedRouteHandler(
+        async (context, request: KibanaRequest<{ id: string }, unknown, Space>, response) => {
+          const spacesClient = getSpacesService().createSpacesClient(request);
 
-        const space = request.body;
-        const id = request.params.id;
+          const space = request.body;
+          const id = request.params.id;
 
-        let result: Space;
-        try {
-          result = await spacesClient.update(id, { ...space });
-        } catch (error) {
-          if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
-            return response.notFound();
+          let result: Space;
+          try {
+            result = await spacesClient.update(id, { ...space });
+          } catch (error) {
+            if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
+              return response.notFound();
+            }
+            return response.customError(wrapError(error));
           }
-          return response.customError(wrapError(error));
-        }
 
-        return response.ok({ body: result });
-      })
+          return response.ok({ body: result });
+        }
+      )
     );
 }

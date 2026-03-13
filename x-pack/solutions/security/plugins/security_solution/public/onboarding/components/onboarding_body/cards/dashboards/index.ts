@@ -17,12 +17,11 @@ export const dashboardsCardConfig: OnboardingCardConfig = {
   id: OnboardingCardId.dashboards,
   title: DASHBOARDS_CARD_TITLE,
   icon: IconDashboards,
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_dashboards_card" */
-        './dashboards_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_dashboards_card" */
+      './dashboards_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   capabilitiesRequired: [
     ['dashboard_v2.show', `${SECURITY_FEATURE_ID}.detections`],

@@ -33,7 +33,7 @@ export const createCreateCaseFromTemplateStepDefinition = () =>
       input: {
         case_template_id: {
           selection: {
-            search: async (input) => {
+            search: async (input: string) => {
               const templates = await getTemplatesForWorkflowOwner();
               const query = input.trim().toLowerCase();
 
@@ -55,7 +55,7 @@ export const createCreateCaseFromTemplateStepDefinition = () =>
                 return acc;
               }, []);
             },
-            resolve: async (value) => {
+            resolve: async (value: string) => {
               const templates = await getTemplatesForWorkflowOwner();
               const template = templates.find((currentTemplate) => currentTemplate.key === value);
               if (!template) {
@@ -68,7 +68,11 @@ export const createCreateCaseFromTemplateStepDefinition = () =>
                 description: template.description,
               };
             },
-            getDetails: async (value, _context, option) => {
+            getDetails: async (
+              value: string,
+              _context: unknown,
+              option: SelectionOption<string> | null
+            ) => {
               if (option) {
                 return {
                   message: i18n.TEMPLATE_CAN_BE_USED_MESSAGE(option.value),

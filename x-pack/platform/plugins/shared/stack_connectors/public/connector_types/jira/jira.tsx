@@ -26,14 +26,20 @@ export const JIRA_DESC = i18n.translate('xpack.stackConnectors.components.jira.s
 export function getConnectorType(): ConnectorTypeModel<JiraConfig, JiraSecrets, JiraActionParams> {
   return {
     id: CONNECTOR_ID,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: JIRA_DESC,
     actionTypeTitle: CONNECTOR_NAME,
-    actionConnectorFields: lazy(() => import('./jira_connector_params')),
+    actionConnectorFields: lazy(() =>
+      import('./jira_connector_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validateParams: async (
       actionParams: JiraActionParams
     ): Promise<GenericValidationResult<unknown>> => {
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors = {
         'subActionParams.incident.summary': new Array<string>(),
         'subActionParams.incident.labels': new Array<string>(),
@@ -67,6 +73,10 @@ export function getConnectorType(): ConnectorTypeModel<JiraConfig, JiraSecrets, 
 
       return validationResult;
     },
-    actionParamsFields: lazy(() => import('./jira_params')),
+    actionParamsFields: lazy(() =>
+      import('./jira_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
   };
 }

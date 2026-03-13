@@ -73,7 +73,7 @@ export const registerCreateRoute = (
         }),
       },
     },
-    catchAndReturnBoomErrors(async (context, request, response) => {
+    catchAndReturnBoomErrors(async (context: any, request: any, response: any) => {
       logWarnOnExternalRequest({
         method: 'post',
         path: '/api/saved_objects/{type}/{id?}',

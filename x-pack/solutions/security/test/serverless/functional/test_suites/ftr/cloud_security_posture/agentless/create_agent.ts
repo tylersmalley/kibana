@@ -29,7 +29,7 @@ export default function ({ getPageObjects, getService }: FtrProviderContext) {
     let cisIntegration: typeof pageObjects.cisAddIntegration;
 
     before(async () => {
-      const { setupMockServer } = await import('./mock_agentless_api');
+      const { setupMockServer } = await import('./mock_agentless_api.js');
       const mockAgentlessApiService = setupMockServer();
       mockApiServer = mockAgentlessApiService.listen(8089);
 

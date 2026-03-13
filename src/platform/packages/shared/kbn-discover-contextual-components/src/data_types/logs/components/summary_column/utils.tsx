@@ -73,11 +73,16 @@ const DurationIcon = () => {
       css={css`
         margin-right: ${euiTheme.size.xs};
       `}
+      aria-hidden={true}
     />
   );
 };
 
-const AgentIcon = dynamic(() => import('@kbn/custom-icons/src/components/agent_icon'));
+const AgentIcon = dynamic(() =>
+  import('@kbn/custom-icons').then(({ AgentIcon: LazyAgentIcon }) => ({
+    default: LazyAgentIcon,
+  }))
+);
 
 const EventOutcomeBadge = (props: FieldBadgeWithActionsProps) =>
   props.rawValue === 'failure' ? <FieldBadgeWithActions {...props} color="danger" /> : null;

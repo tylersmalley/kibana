@@ -166,7 +166,6 @@ export function jobValidationRoutes({ router, mlLicense, routeGuard }: RouteInit
       },
       routeGuard.fullLicenseAPIGuard(async ({ client, request, response }) => {
         try {
-          // @ts-expect-error datafeed config is incorrect
           const resp = await validateCardinality(client, request.body);
 
           return response.ok({

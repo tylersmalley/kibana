@@ -49,17 +49,22 @@ function buildAggregation(metric: Metric, timestampField: string) {
 }
 
 function buildMetricAggregations(keyMetric: KeyMetric, timestampField: string) {
-  return keyMetric.metrics.reduce((acc, metric) => {
-    const filter = metric.filter ? getElasticsearchQueryOrThrow(metric.filter) : { match_all: {} };
-    const aggs = { metric: buildAggregation(metric, timestampField) };
-    return {
-      ...acc,
-      [`_${keyMetric.name}_${metric.name}`]: {
-        filter,
-        ...(metric.aggregation !== 'doc_count' ? { aggs } : {}),
-      },
-    };
-  }, {});
+  return keyMetric.metrics.reduce<Record<string, unknown>>(
+    (acc: Record<string, unknown>, metric: Metric) => {
+      const filter = metric.filter
+        ? getElasticsearchQueryOrThrow(metric.filter)
+        : { match_all: {} };
+      const aggs = { metric: buildAggregation(metric, timestampField) };
+      return {
+        ...acc,
+        [`_${keyMetric.name}_${metric.name}`]: {
+          filter,
+          ...(metric.aggregation !== 'doc_count' ? { aggs } : {}),
+        },
+      };
+    },
+    {}
+  );
 }
 
 function buildBucketPath(prefix: string, metric: Metric) {
@@ -86,8 +91,8 @@ function convertEquationToPainless(bucketsPath: Record<string, string>, equation
 }
 
 function buildMetricEquation(keyMetric: KeyMetric) {
-  const bucketsPath = keyMetric.metrics.reduce(
-    (acc, metric) => ({
+  const bucketsPath = keyMetric.metrics.reduce<Record<string, string>>(
+    (acc: Record<string, string>, metric: Metric) => ({
       ...acc,
       [metric.name]: buildBucketPath(`_${keyMetric.name}_${metric.name}`, metric),
     }),
@@ -108,11 +113,14 @@ export function generateLatestMetricAggregations(definition: EntityDefinition) {
   if (!definition.metrics) {
     return {};
   }
-  return definition.metrics.reduce((aggs, keyMetric) => {
-    return {
-      ...aggs,
-      ...buildMetricAggregations(keyMetric, definition.latest.timestampField),
-      [`entity.metrics.${keyMetric.name}`]: buildMetricEquation(keyMetric),
-    };
-  }, {});
+  return definition.metrics.reduce<Record<string, unknown>>(
+    (aggs: Record<string, unknown>, keyMetric: KeyMetric) => {
+      return {
+        ...aggs,
+        ...buildMetricAggregations(keyMetric, definition.latest.timestampField),
+        [`entity.metrics.${keyMetric.name}`]: buildMetricEquation(keyMetric),
+      };
+    },
+    {}
+  );
 }

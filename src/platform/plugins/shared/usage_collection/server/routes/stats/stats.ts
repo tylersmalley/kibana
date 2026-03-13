@@ -17,7 +17,13 @@ import { type MetricsServiceSetup, ServiceStatusLevels } from '@kbn/core/server'
 import type { ICollectorSet } from '../../collector';
 import type { Stats } from '../../../common/types';
 const SNAPSHOT_REGEX = /-snapshot/i;
-
+const statsQuerySchema = schema.object({
+  extended: schema.oneOf([schema.literal(''), schema.boolean()], { defaultValue: false }),
+  legacy: schema.oneOf([schema.literal(''), schema.boolean()], { defaultValue: false }),
+  exclude_usage: schema.oneOf([schema.literal(''), schema.boolean()], {
+    defaultValue: true,
+  }),
+});
 export function registerStatsRoute({
   router,
   config,
@@ -66,13 +72,7 @@ export function registerStatsRoute({
         access: 'public', // needs to be public to allow access from "system" users like metricbeat.
       },
       validate: {
-        query: schema.object({
-          extended: schema.oneOf([schema.literal(''), schema.boolean()], { defaultValue: false }),
-          legacy: schema.oneOf([schema.literal(''), schema.boolean()], { defaultValue: false }),
-          exclude_usage: schema.oneOf([schema.literal(''), schema.boolean()], {
-            defaultValue: true,
-          }),
-        }),
+        query: statsQuerySchema,
       },
     },
     async (context, req, res) => {

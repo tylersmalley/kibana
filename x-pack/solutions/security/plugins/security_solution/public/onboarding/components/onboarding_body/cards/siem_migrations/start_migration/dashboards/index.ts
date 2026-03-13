@@ -18,12 +18,11 @@ export const startDashboardMigrationCardConfig: OnboardingCardConfig<StartMigrat
   title: START_DASHBOARD_MIGRATION_CARD_TITLE,
   icon: IconDashboards,
   experimentalFlagRequired: 'automaticDashboardsMigration',
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_siem_migrations_start_migration_card" */
-        './start_migration_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_siem_migrations_start_migration_card" */
+      './start_migration_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   checkComplete: checkStartMigrationCardComplete,
 };

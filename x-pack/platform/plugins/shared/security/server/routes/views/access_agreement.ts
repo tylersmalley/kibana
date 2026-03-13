@@ -5,8 +5,11 @@
  * 2.0.
  */
 
+import type { HttpResourcesRequestHandler } from '@kbn/core/server';
+
 import type { RouteDefinitionParams } from '..';
 import type { ConfigType } from '../../config';
+import type { SecurityRequestHandlerContext } from '../../types';
 import { createLicensedRouteHandler } from '../licensed_route_handler';
 
 /**
@@ -22,6 +25,17 @@ export function defineAccessAgreementRoutes({
 }: RouteDefinitionParams) {
   // If license doesn't allow access agreement we shouldn't handle request.
   const canHandleRequest = () => license.getFeatures().allowAccessAgreement;
+  const accessAgreementViewHandler: HttpResourcesRequestHandler<
+    unknown,
+    unknown,
+    unknown,
+    SecurityRequestHandlerContext
+  > = async (context, request, response) =>
+    canHandleRequest()
+      ? response.renderCoreApp()
+      : response.forbidden({
+          body: { message: `Current license doesn't support access agreement.` },
+        });
 
   httpResources.register(
     {
@@ -36,13 +50,7 @@ export function defineAccessAgreementRoutes({
         },
       },
     },
-    createLicensedRouteHandler(async (context, request, response) =>
-      canHandleRequest()
-        ? response.renderCoreApp()
-        : response.forbidden({
-            body: { message: `Current license doesn't support access agreement.` },
-          })
-    )
+    createLicensedRouteHandler(accessAgreementViewHandler)
   );
 
   router.get(

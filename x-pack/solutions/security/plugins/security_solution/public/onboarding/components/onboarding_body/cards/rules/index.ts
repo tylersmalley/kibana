@@ -17,12 +17,11 @@ export const rulesCardConfig: OnboardingCardConfig = {
   id: OnboardingCardId.rules,
   title: RULES_CARD_TITLE,
   icon: IconRules,
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_rules_card" */
-        './rules_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_rules_card" */
+      './rules_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   checkComplete: checkRulesComplete,
   capabilitiesRequired: [RULES_UI_DETECTIONS_PRIVILEGE],

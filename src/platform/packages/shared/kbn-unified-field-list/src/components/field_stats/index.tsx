@@ -16,8 +16,14 @@ import type {
 
 const Fallback = () => <Fragment />;
 
-const LazyFieldTopValuesBucket = React.lazy(() => import('./field_top_values_bucket'));
-const LazyFieldStats = React.lazy(() => import('./field_stats'));
+const LazyFieldTopValuesBucket = React.lazy(() =>
+  import('./field_top_values_bucket.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
+const LazyFieldStats = React.lazy(() =>
+  import('./field_stats.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 const WrappedFieldTopValuesBucket: React.FC<FieldTopValuesBucketProps> = (props) => (
   <React.Suspense fallback={<Fallback />}>

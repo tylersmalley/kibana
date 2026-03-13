@@ -100,7 +100,7 @@ export const ParsedTemplateDefinitionSchema = z.object({
   severity: z.enum(['low', 'medium', 'high', 'critical']).optional(),
   category: z.string().optional(),
   fields: z.array(FieldSchema).refine(
-    (fields) => {
+    (fields: Array<z.infer<typeof FieldSchema>>) => {
       const fieldNames = new Set(fields.map((field) => field.name));
       return fieldNames.size === fields.length;
     },

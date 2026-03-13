@@ -5,6 +5,27 @@
  * 2.0.
  */
 
-import type { CaseRoute } from './types';
+import type { RouteValidationSpec, RouteValidatorConfig } from '@kbn/core/server';
+import type { AnyCaseRoute, CaseRoute } from './types';
 
-export const createCasesRoute = <P, Q, B>(route: CaseRoute<P, Q, B>) => route;
+type InferValidatedValue<TSpec> = TSpec extends RouteValidationSpec<infer TValue>
+  ? TValue
+  : unknown;
+
+type InferCaseRoutePart<
+  TParams,
+  TPart extends keyof RouteValidatorConfig<unknown, unknown, unknown>
+> = TParams extends { [K in TPart]?: infer TSpec }
+  ? InferValidatedValue<NonNullable<TSpec>>
+  : unknown;
+
+export function createCasesRoute<
+  TParams extends RouteValidatorConfig<unknown, unknown, unknown>,
+  P = InferCaseRoutePart<TParams, 'params'>,
+  Q = InferCaseRoutePart<TParams, 'query'>,
+  B = InferCaseRoutePart<TParams, 'body'>
+>(route: Omit<CaseRoute<P, Q, B>, 'params'> & { params: TParams }): CaseRoute<P, Q, B>;
+export function createCasesRoute<P, Q, B>(route: CaseRoute<P, Q, B>): CaseRoute<P, Q, B>;
+export function createCasesRoute(route: AnyCaseRoute) {
+  return route;
+}

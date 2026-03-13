@@ -30,7 +30,7 @@ import { useAIFeatures } from '../../../../../../../hooks/use_ai_features';
 import type { GrokFormState } from '../../../../types';
 
 const GrokPatternAISuggestions = dynamic(() =>
-  import('./grok_pattern_suggestion').then((mod) => ({ default: mod.GrokPatternAISuggestions }))
+  import('./grok_pattern_suggestion.js').then((mod) => ({ default: mod.GrokPatternAISuggestions }))
 );
 
 export const GrokPatternsEditor = () => {
@@ -179,7 +179,7 @@ const DraggablePatternInput = ({
                   { defaultMessage: 'Drag Handle' }
                 )}
               >
-                <EuiIcon type="grab" />
+                <EuiIcon type="grab" aria-hidden={true} />
               </EuiPanel>
             </EuiFlexItem>
             <EuiFlexItem style={{ minWidth: 0 }}>

@@ -35,8 +35,12 @@ import { ConnectorProvider } from './context/connector_context';
 import type { Section } from './constants';
 import { queryClient } from './query_client';
 
-const ActionsConnectorsHome = lazy(
-  () => import('./sections/actions_connectors_list/components/actions_connectors_home')
+const ActionsConnectorsHome = lazy(() =>
+  import('./sections/actions_connectors_list/components/actions_connectors_home.js').then(
+    ({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    })
+  )
 );
 
 export interface TriggersAndActionsUiServices extends CoreStart {

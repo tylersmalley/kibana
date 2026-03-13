@@ -202,32 +202,7 @@ export class ImportResolver {
           type: 'built-in',
         };
       }
-
-      const pkgId = this.getPackageIdForPath(path);
-      if (pkgId) {
-        return {
-          type: 'file',
-          absolute: path,
-          pkgId,
-        };
-      }
-
-      const lastNmSeg = path.lastIndexOf(NODE_MODULE_SEG);
-      if (lastNmSeg !== -1) {
-        const segs = path.slice(lastNmSeg + NODE_MODULE_SEG.length).split(Path.sep);
-        const moduleId = segs[0].startsWith('@') ? `${segs[0]}/${segs[1]}` : segs[0];
-
-        return {
-          type: 'file',
-          absolute: path,
-          nodeModule: moduleId,
-        };
-      }
-
-      return {
-        type: 'file',
-        absolute: path,
-      };
+      return this.createFileResolveResult(path);
     } catch (error) {
       if (error && error.code === 'MODULE_NOT_FOUND') {
         // fallback: attempt to resolve using the "exports" map in package.json
@@ -248,6 +223,62 @@ export class ImportResolver {
 
       throw error;
     }
+  }
+
+  private createFileResolveResult(path: string): ResolveResult {
+    const pkgId = this.getPackageIdForPath(path);
+    if (pkgId) {
+      return {
+        type: 'file',
+        absolute: path,
+        pkgId,
+      };
+    }
+
+    const lastNmSeg = path.lastIndexOf(NODE_MODULE_SEG);
+    if (lastNmSeg !== -1) {
+      const segs = path.slice(lastNmSeg + NODE_MODULE_SEG.length).split(Path.sep);
+      const moduleId = segs[0].startsWith('@') ? `${segs[0]}/${segs[1]}` : segs[0];
+
+      return {
+        type: 'file',
+        absolute: path,
+        nodeModule: moduleId,
+      };
+    }
+
+    return {
+      type: 'file',
+      absolute: path,
+    };
+  }
+
+  private tryTypeScriptSourceFallback(req: string, dirname: string): ResolveResult | null {
+    if (!req.startsWith('.')) {
+      return null;
+    }
+
+    const parsedReq = Path.parse(req);
+    const sourceExtsByRuntimeExt: Record<string, string[]> = {
+      '.js': ['.ts', '.tsx', '.jsx', '.d.ts'],
+      '.mjs': ['.mts'],
+      '.cjs': ['.cts'],
+    };
+
+    const sourceExts = sourceExtsByRuntimeExt[parsedReq.ext];
+    if (!sourceExts) {
+      return null;
+    }
+
+    const absoluteWithoutExt = Path.resolve(dirname, Path.join(parsedReq.dir, parsedReq.name));
+    for (const sourceExt of sourceExts) {
+      const candidate = `${absoluteWithoutExt}${sourceExt}`;
+      if (this.safeStat(candidate)?.isFile()) {
+        return this.createFileResolveResult(candidate);
+      }
+    }
+
+    return null;
   }
 
   private tryTypesResolve(req: string, dirname: string): ResolveResult | null {
@@ -368,6 +399,10 @@ export class ImportResolver {
       return { type: 'ignore' };
     }
 
-    return this.tryNodeResolve(req, dirname) ?? this.tryTypesResolve(req, dirname);
+    return (
+      this.tryNodeResolve(req, dirname) ??
+      this.tryTypeScriptSourceFallback(req, dirname) ??
+      this.tryTypesResolve(req, dirname)
+    );
   }
 }

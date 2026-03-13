@@ -6,10 +6,15 @@
  */
 
 import { schema } from '@kbn/config-schema';
+import type { KibanaRequest } from '@kbn/core/server';
 
 import type { ExternalRouteDeps } from '.';
 import { wrapError } from '../../../lib/errors';
 import { createLicensedRouteHandler } from '../../lib';
+
+interface ShareableReferenceRequestBody {
+  objects: Array<{ type: string; id: string }>;
+}
 
 export function initGetShareableReferencesApi(deps: ExternalRouteDeps) {
   const { router, getStartServices, isServerless } = deps;
@@ -38,20 +43,26 @@ export function initGetShareableReferencesApi(deps: ExternalRouteDeps) {
         }),
       },
     },
-    createLicensedRouteHandler(async (context, request, response) => {
-      const [startServices] = await getStartServices();
-      const scopedClient = startServices.savedObjects.getScopedClient(request);
+    createLicensedRouteHandler(
+      async (
+        context,
+        request: KibanaRequest<unknown, unknown, ShareableReferenceRequestBody>,
+        response
+      ) => {
+        const [startServices] = await getStartServices();
+        const scopedClient = startServices.savedObjects.getScopedClient(request);
 
-      const { objects } = request.body;
+        const { objects } = request.body;
 
-      try {
-        const collectedObjects = await scopedClient.collectMultiNamespaceReferences(objects, {
-          purpose: 'updateObjectsSpaces',
-        });
-        return response.ok({ body: collectedObjects });
-      } catch (error) {
-        return response.customError(wrapError(error));
+        try {
+          const collectedObjects = await scopedClient.collectMultiNamespaceReferences(objects, {
+            purpose: 'updateObjectsSpaces',
+          });
+          return response.ok({ body: collectedObjects });
+        } catch (error) {
+          return response.customError(wrapError(error));
+        }
       }
-    })
+    )
   );
 }

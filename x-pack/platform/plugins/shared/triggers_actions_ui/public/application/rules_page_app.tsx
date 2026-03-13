@@ -24,11 +24,23 @@ import { ConnectorProvider } from './context/connector_context';
 import { queryClient } from './query_client';
 import type { TriggersAndActionsUiServices } from './rules_app';
 
-const RuleDetailsRouteWrapper = lazy(
-  () => import('./sections/rule_details/components/rule_details_route_wrapper')
+const RuleDetailsRouteWrapper = lazy(() =>
+  import('./sections/rule_details/components/rule_details_route_wrapper.js').then(
+    ({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    })
+  )
 );
-const RulesPage = lazy(() => import('./sections/rules_page/rules_page'));
-const RuleFormRoute = lazy(() => import('./sections/rule_form/rule_form_route'));
+const RulesPage = lazy(() =>
+  import('./sections/rules_page/rules_page.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
+const RuleFormRoute = lazy(() =>
+  import('./sections/rule_form/rule_form_route.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const renderRulesPageApp = (deps: TriggersAndActionsUiServices) => {
   const { element } = deps;

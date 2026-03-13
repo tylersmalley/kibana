@@ -17,7 +17,11 @@ export function ObservabilityAnnotations(props: ObservabilityAnnotationsProps) {
 
 import type { CreateAnnotationProps } from './create_annotation';
 
-const CreateAnnotationLazy = lazy(() => import('./create_annotation'));
+const CreateAnnotationLazy = lazy(() =>
+  import('./create_annotation.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function CreateAnnotation(props: CreateAnnotationProps) {
   return (
@@ -29,7 +33,11 @@ export function CreateAnnotation(props: CreateAnnotationProps) {
 
 import type { AnnotationIconProps } from './annotation_icon';
 
-const AnnotationIconLazy = lazy(() => import('./annotation_icon'));
+const AnnotationIconLazy = lazy(() =>
+  import('./annotation_icon.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function AnnotationIcon(props: AnnotationIconProps) {
   return (

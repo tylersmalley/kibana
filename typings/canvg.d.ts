@@ -7,6 +7,23 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-declare module 'vega-tooltip' {
-  export * from 'vega-tooltip/build';
+declare module 'canvg' {
+  interface CanvgOptions {
+    ignoreDimensions?: boolean;
+    offsetX?: number;
+    offsetY?: number;
+  }
+
+  interface CanvgInstance {
+    resize(width: number, height: number): void;
+    render(): Promise<void>;
+  }
+
+  export class Canvg {
+    static fromString(
+      ctx: CanvasRenderingContext2D,
+      svg: string,
+      options?: CanvgOptions
+    ): CanvgInstance;
+  }
 }

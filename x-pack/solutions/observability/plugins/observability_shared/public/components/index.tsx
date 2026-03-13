@@ -11,8 +11,10 @@ import type {
   FieldValueSelectionProps,
 } from './field_value_suggestions/types';
 
-const FieldValueSelectionLazy = lazy(
-  () => import('./field_value_suggestions/field_value_selection')
+const FieldValueSelectionLazy = lazy(() =>
+  import('./field_value_suggestions/field_value_selection.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 
 export function FieldValueSelection(props: FieldValueSelectionProps) {
@@ -23,7 +25,11 @@ export function FieldValueSelection(props: FieldValueSelectionProps) {
   );
 }
 
-const FieldValueSuggestionsLazy = lazy(() => import('./field_value_suggestions'));
+const FieldValueSuggestionsLazy = lazy(() =>
+  import('./field_value_suggestions/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function FieldValueSuggestions(props: FieldValueSuggestionsProps) {
   return (

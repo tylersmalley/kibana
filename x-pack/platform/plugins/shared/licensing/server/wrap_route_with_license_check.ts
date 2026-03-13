@@ -19,15 +19,16 @@ export type CheckLicense = (
   license: ILicense
 ) => { valid: false; message: string } | { valid: true; message: null };
 
-export function wrapRouteWithLicenseCheck<P, Q, B, Context extends LicensingRequestHandlerContext>(
-  checkLicense: CheckLicense,
-  handler: RequestHandler<P, Q, B, Context>
-): RequestHandler<P, Q, B, Context> {
-  return async (
-    context: Context,
-    request: KibanaRequest<P, Q, B, RouteMethod>,
-    response: KibanaResponseFactory
-  ) => {
+export function wrapRouteWithLicenseCheck<
+  Context extends LicensingRequestHandlerContext,
+  THandler extends RequestHandler<any, any, any, Context>
+>(checkLicense: CheckLicense, handler: THandler): THandler {
+  return (async (...args: Parameters<THandler>) => {
+    const [context, request, response] = args as [
+      Context,
+      KibanaRequest<any, any, any, RouteMethod>,
+      KibanaResponseFactory
+    ];
     const { license } = await context.licensing;
     const licenseCheckResult = checkLicense(license);
 
@@ -38,5 +39,5 @@ export function wrapRouteWithLicenseCheck<P, Q, B, Context extends LicensingRequ
         body: licenseCheckResult.message,
       });
     }
-  };
+  }) as THandler;
 }

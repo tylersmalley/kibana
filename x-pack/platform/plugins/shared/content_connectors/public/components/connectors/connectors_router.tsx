@@ -18,8 +18,14 @@ import {
 } from '../routes';
 import { ConnectorDetailRouter } from '../connector_detail/connector_detail_router';
 
-const Connectors = lazy(() => import('./connectors'));
-const CreateConnector = lazy(() => import('./create_connector/create_connector'));
+const Connectors = lazy(() =>
+  import('./connectors.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
+const CreateConnector = lazy(() =>
+  import('./create_connector/create_connector.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const ConnectorsRouter: React.FC = () => {
   return (

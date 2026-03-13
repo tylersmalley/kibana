@@ -16,7 +16,11 @@ const LazyWrapper: FC<PropsWithChildren<unknown>> = ({ children }) => (
   </EuiErrorBoundary>
 );
 
-const DataDriftLazy = React.lazy(() => import('../application/data_drift'));
+const DataDriftLazy = React.lazy(() =>
+  import('../application/data_drift/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 /**
  * Lazy-wrapped ExplainLogRateSpikesAppState React component

@@ -14,14 +14,18 @@ import { KibanaContextProvider } from '@kbn/kibana-react-plugin/public';
 import type { ESQLEditorProps } from '@kbn/esql-editor';
 import { untilPluginStartServicesReady } from './kibana_services';
 
+type ESQLEditorModule = typeof import('@kbn/esql-editor');
+
 export const ESQLLangEditor = (props: ESQLEditorProps) => {
   const { loading, value } = useAsync(() => {
     const startServicesPromise = untilPluginStartServicesReady();
-    const modulePromise = import('@kbn/esql-editor');
+    const modulePromise = import('@kbn/esql-editor').then(
+      ({ default: esqlEditorModule }) => esqlEditorModule.default as ESQLEditorModule['default']
+    );
     return Promise.all([startServicesPromise, modulePromise]);
   }, []);
 
-  const ESQLEditor = value?.[1]?.default;
+  const ESQLEditor = value?.[1];
   const deps = value?.[0];
 
   if (loading || !deps || !ESQLEditor) return <EuiLoadingSpinner />;

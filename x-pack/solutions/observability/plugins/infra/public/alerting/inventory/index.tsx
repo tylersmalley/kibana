@@ -58,7 +58,11 @@ const inventoryDefaultRecoveryMessage = i18n.translate(
   }
 );
 
-const LazyRuleParamsExpression = React.lazy(() => import('./components/expression'));
+const LazyRuleParamsExpression = React.lazy(() =>
+  import('./components/expression.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function createInventoryMetricRuleType({
   assetDetailsLocator,

@@ -269,24 +269,26 @@ export function registerInternalUserPromptsRoutes({
         esClient,
       });
 
-      const deleteResults = await Promise.allSettled(ids.map((id) => client.delete(id)));
+      const deleteResults = await Promise.allSettled(ids.map((id: string) => client.delete(id)));
 
-      const results: BulkDeleteUserPromptResult[] = deleteResults.map((result, index) => {
-        if (result.status !== 'fulfilled') {
+      const results: BulkDeleteUserPromptResult[] = deleteResults.map(
+        (result: PromiseSettledResult<unknown>, index: number) => {
+          if (result.status !== 'fulfilled') {
+            return {
+              promptId: ids[index],
+              success: false,
+              reason: result.reason.toJSON?.() ?? {
+                error: { message: 'Unknown error' },
+              },
+            };
+          }
+
           return {
             promptId: ids[index],
-            success: false,
-            reason: result.reason.toJSON?.() ?? {
-              error: { message: 'Unknown error' },
-            },
+            success: true,
           };
         }
-
-        return {
-          promptId: ids[index],
-          success: true,
-        };
-      });
+      );
 
       return response.ok<BulkDeleteUserPromptsResponse>({
         body: {

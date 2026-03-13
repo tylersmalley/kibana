@@ -37,7 +37,7 @@ export function getConnectorType(): ConnectorTypeModel<
       const webhookMethod: WebhookMethods | null = connectorConfig?.method
         ? connectorConfig.method
         : null;
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors = {
         body: new Array<string>(),
       };
@@ -54,8 +54,16 @@ export function getConnectorType(): ConnectorTypeModel<
 
       return validationResult;
     },
-    actionConnectorFields: lazy(() => import('./webhook_connectors')),
-    actionParamsFields: lazy(() => import('./webhook_params')),
+    actionConnectorFields: lazy(() =>
+      import('./webhook_connectors.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./webhook_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     connectorForm: {
       serializer: formSerializer,
       deserializer: formDeserializer,

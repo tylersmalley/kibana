@@ -6,12 +6,18 @@
  */
 
 import { schema } from '@kbn/config-schema';
-import type { ParsedTemplate } from '../../../../common/types/domain/template/v1';
+import type { SavedObject } from '@kbn/core/server';
+import type { ParsedTemplate, Template } from '../../../../common/types/domain/template/v1';
 import { INTERNAL_BULK_EXPORT_TEMPLATES_URL } from '../../../../common/constants';
 import { createCaseError } from '../../../common/error';
 import { createCasesRoute } from '../create_cases_route';
 import { DEFAULT_CASES_ROUTE_SECURITY } from '../constants';
 import { parseTemplate } from './parse_template';
+
+interface TemplateExportResult {
+  templateId: string;
+  template: SavedObject<Template> | undefined;
+}
 
 /**
  * POST /internal/cases/templates/_bulk_export
@@ -42,16 +48,16 @@ export const bulkExportTemplatesRoute = createCasesRoute({
       const caseContext = await context.cases;
       const casesClient = await caseContext.getCasesClient();
 
-      const templates = await Promise.all(
-        ids.map(async (templateId) => ({
+      const templates: TemplateExportResult[] = await Promise.all(
+        ids.map(async (templateId: string) => ({
           templateId,
           template: await casesClient.templates.getTemplate(templateId),
         }))
       );
 
       const notFound = templates
-        .filter(({ template }) => !template)
-        .map(({ templateId }) => templateId);
+        .filter(({ template }: TemplateExportResult) => !template)
+        .map(({ templateId }: TemplateExportResult) => templateId);
 
       if (notFound.length > 0) {
         return response.notFound({
@@ -59,19 +65,21 @@ export const bulkExportTemplatesRoute = createCasesRoute({
         });
       }
 
-      const parsedTemplates: ParsedTemplate[] = templates.flatMap(({ template, templateId }) => {
-        if (!template) {
-          return [];
+      const parsedTemplates: ParsedTemplate[] = templates.flatMap(
+        ({ template, templateId }: TemplateExportResult) => {
+          if (!template) {
+            return [];
+          }
+          try {
+            return [parseTemplate(template.attributes)];
+          } catch (parseError) {
+            logger.warn(
+              `Skipping invalid template "${template.attributes.name}" (ID: ${templateId}): ${parseError}`
+            );
+            return [];
+          }
         }
-        try {
-          return [parseTemplate(template.attributes)];
-        } catch (parseError) {
-          logger.warn(
-            `Skipping invalid template "${template.attributes.name}" (ID: ${templateId}): ${parseError}`
-          );
-          return [];
-        }
-      });
+      );
 
       return response.ok({
         body: parsedTemplates,

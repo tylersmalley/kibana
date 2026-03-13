@@ -58,14 +58,14 @@ export const registerBulkGetRoute = (
         ),
       },
     },
-    catchAndReturnBoomErrors(async (context, request, response) => {
+    catchAndReturnBoomErrors(async (context: any, request: any, response: any) => {
       logWarnOnExternalRequest({
         method: 'post',
         path: '/api/saved_objects/_bulk_get',
         request,
         logger,
       });
-      const types = [...new Set(request.body.map(({ type }) => type))];
+      const types = [...new Set((request.body as Array<{ type: string }>).map(({ type }) => type))];
 
       const usageStatsClient = coreUsageData.getClient();
       usageStatsClient.incrementSavedObjectsBulkGet({ request, types }).catch(() => {});

@@ -24,12 +24,11 @@ export const integrationsExternalDetectionsCardConfig: OnboardingCardConfig<Exte
       }
     ),
     icon: IconIntegrations,
-    Component: React.lazy(
-      () =>
-        import(
-          /* webpackChunkName: "onboarding_integrations_external_detections_card" */
-          './integrations_card'
-        )
+    Component: React.lazy(() =>
+      import(
+        /* webpackChunkName: "onboarding_integrations_external_detections_card" */
+        './integrations_card.js'
+      ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
     ),
     checkComplete: checkIntegrationsCardComplete,
     capabilitiesRequired: [RULES_UI_EXTERNAL_DETECTIONS_PRIVILEGE],

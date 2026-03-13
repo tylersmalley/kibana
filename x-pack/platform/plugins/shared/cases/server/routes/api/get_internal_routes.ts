@@ -11,7 +11,7 @@ import { getCaseUserActionStatsRoute } from './internal/get_case_user_actions_st
 import { bulkCreateAttachmentsRoute } from './internal/bulk_create_attachments';
 import { bulkGetCasesRoute } from './internal/bulk_get_cases';
 import { suggestUserProfilesRoute } from './internal/suggest_user_profiles';
-import type { CaseRoute } from './types';
+import type { AnyCaseRoute } from './types';
 import { bulkGetAttachmentsRoute } from './internal/bulk_get_attachments';
 import { getCaseUsersRoute } from './internal/get_case_users';
 import { bulkDeleteFileAttachments } from './internal/bulk_delete_file_attachments';
@@ -53,4 +53,4 @@ export const getInternalRoutes = (userProfileService: UserProfileService, config
     findUserActionsRoute,
     findCasesContainingAllDocumentsRoute,
     ...getTemplateRoutes(config),
-  ] as CaseRoute[];
+  ] as AnyCaseRoute[];

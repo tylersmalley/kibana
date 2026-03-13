@@ -130,23 +130,27 @@ const getParameters = (tool?: ToolDefinitionWithSchema): Array<ToolParameter> =>
   return Object.entries(properties).map(([paramName, paramSchema]) => {
     let type = 'string'; // default fallback
 
-    const schema = typeof paramSchema === 'object' ? paramSchema : undefined;
+    const schema =
+      paramSchema && typeof paramSchema === 'object' && !Array.isArray(paramSchema)
+        ? (paramSchema as Record<string, unknown>)
+        : undefined;
 
-    if (schema && 'type' in schema && schema.type) {
-      if (Array.isArray(schema.type)) {
-        type = schema.type[0];
-      } else if (typeof schema.type === 'string') {
-        type = schema.type;
+    const schemaType = schema?.type;
+    if (schemaType) {
+      if (Array.isArray(schemaType)) {
+        type = schemaType[0];
+      } else if (typeof schemaType === 'string') {
+        type = schemaType;
       }
     }
 
     return {
       name: paramName,
-      label: schema?.title || paramName,
+      label: typeof schema?.title === 'string' ? schema.title : paramName,
       value: '',
-      description: schema?.description || '',
+      description: typeof schema?.description === 'string' ? schema.description : '',
       type,
-      format: (schema && 'format' in schema && schema.format) || undefined,
+      format: typeof schema?.format === 'string' ? schema.format : undefined,
       optional: !requiredParams.has(paramName),
     };
   });

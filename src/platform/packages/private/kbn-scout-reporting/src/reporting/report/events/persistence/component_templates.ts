@@ -7,7 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { ClusterPutComponentTemplateRequest } from 'elasticsearch-8.x/lib/api/types'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
+import type { estypes } from 'elasticsearch-8.x'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
 import {
   buildkiteProperties,
   reporterProperties,
@@ -16,7 +16,7 @@ import {
   testProperties,
 } from './mappings';
 
-export const buildkiteMappings: ClusterPutComponentTemplateRequest = {
+export const buildkiteMappings: estypes.ClusterPutComponentTemplateRequest = {
   name: 'scout-test-event.mappings.buildkite',
   version: 3,
   template: {
@@ -31,7 +31,7 @@ export const buildkiteMappings: ClusterPutComponentTemplateRequest = {
   },
 };
 
-export const reporterMappings: ClusterPutComponentTemplateRequest = {
+export const reporterMappings: estypes.ClusterPutComponentTemplateRequest = {
   name: 'scout-test-event.mappings.reporter',
   version: 1,
   template: {
@@ -46,7 +46,7 @@ export const reporterMappings: ClusterPutComponentTemplateRequest = {
   },
 };
 
-export const testRunMappings: ClusterPutComponentTemplateRequest = {
+export const testRunMappings: estypes.ClusterPutComponentTemplateRequest = {
   name: 'scout-test-event.mappings.test-run',
   version: 4,
   template: {
@@ -61,7 +61,7 @@ export const testRunMappings: ClusterPutComponentTemplateRequest = {
   },
 };
 
-export const suiteMappings: ClusterPutComponentTemplateRequest = {
+export const suiteMappings: estypes.ClusterPutComponentTemplateRequest = {
   name: 'scout-test-event.mappings.suite',
   version: 1,
   template: {
@@ -76,7 +76,7 @@ export const suiteMappings: ClusterPutComponentTemplateRequest = {
   },
 };
 
-export const testMappings: ClusterPutComponentTemplateRequest = {
+export const testMappings: estypes.ClusterPutComponentTemplateRequest = {
   name: 'scout-test-event.mappings.test',
   version: 2,
   template: {

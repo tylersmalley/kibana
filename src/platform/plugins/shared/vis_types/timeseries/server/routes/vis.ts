@@ -8,17 +8,36 @@
  */
 
 import { schema } from '@kbn/config-schema';
+import type { RequestHandler } from '@kbn/core/server';
 import { ensureNoUnsafeProperties } from '@kbn/std';
 import { getVisData } from '../lib/get_vis_data';
 import { ROUTES } from '../../common/constants';
 import type { Framework } from '../plugin';
-import type { VisTypeTimeseriesRouter } from '../types';
+import type { VisTypeTimeseriesRequestHandlerContext, VisTypeTimeseriesRouter } from '../types';
 import type { VisPayload } from '../../common/types';
 
 const escapeHatch = schema.object({}, { unknowns: 'allow' });
 
 export const visDataRoutes = (router: VisTypeTimeseriesRouter, framework: Framework) => {
-  router.post<{}, {}, VisPayload>(
+  const handler: RequestHandler<
+    unknown,
+    unknown,
+    VisPayload,
+    VisTypeTimeseriesRequestHandlerContext
+  > = async (requestContext, request, response) => {
+    try {
+      ensureNoUnsafeProperties(request.body);
+    } catch (error) {
+      return response.badRequest({
+        body: error.message,
+      });
+    }
+
+    const results = await getVisData(requestContext, request, framework);
+    return response.ok({ body: results });
+  };
+
+  router.post(
     {
       path: ROUTES.VIS_DATA,
       security: {
@@ -32,17 +51,6 @@ export const visDataRoutes = (router: VisTypeTimeseriesRouter, framework: Framew
         body: escapeHatch,
       },
     },
-    async (requestContext, request, response) => {
-      try {
-        ensureNoUnsafeProperties(request.body);
-      } catch (error) {
-        return response.badRequest({
-          body: error.message,
-        });
-      }
-
-      const results = await getVisData(requestContext, request, framework);
-      return response.ok({ body: results });
-    }
+    handler
   );
 };

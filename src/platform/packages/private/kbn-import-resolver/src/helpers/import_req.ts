@@ -21,15 +21,21 @@ function wrap(req: string, options: WrapOptions) {
   return `${options.prefix ?? ''}${req}${options.postfix ?? ''}`;
 }
 
-const EXT_RE = /\.(jsx?|(d\.)?tsx?)$/;
-const INDEX_IN_INDEX_RE = /\/index\/index(\.jsx?|\.d\.tsx?|\.tsx?)$/;
+const EXT_RE = /\.(?:[cm]?jsx?|(?:d\.)?[cm]?tsx?)$/;
+const INDEX_IN_INDEX_RE = /\/index\/index(\.(?:[cm]?jsx?|(?:d\.)?[cm]?tsx?))$/;
 const INCLUDES_FILENAME_RE = /\/.*\..{2,4}$/;
+
+interface ReduceImportRequestOptions {
+  emittedExtension?: string;
+  preserveIndex?: boolean;
+}
 
 export function reduceImportRequest(
   req: string,
   type: ImportType,
   original?: string,
-  sourceExt?: string
+  sourceExt?: string,
+  options: ReduceImportRequestOptions = {}
 ) {
   let reduced = req;
 
@@ -46,13 +52,14 @@ export function reduceImportRequest(
 
   const indexInIndexMatch = req.match(INDEX_IN_INDEX_RE);
   if (indexInIndexMatch) {
-    if (indexInIndexMatch[1] !== '.ts' && indexInIndexMatch[1] !== '.tsx') {
+    if (
+      !options.preserveIndex &&
+      indexInIndexMatch[1] !== '.ts' &&
+      indexInIndexMatch[1] !== '.tsx'
+    ) {
       // this is a very ambiguous request, leave the whole import statement to make it less so
       return req;
     }
-
-    // this is also a very ambiguous request, but TS complains about leaving .ts or .tsx on a request so strip it
-    return req.slice(0, -indexInIndexMatch[1].length);
   }
 
   const extMatch = req.match(EXT_RE);
@@ -60,12 +67,16 @@ export function reduceImportRequest(
     reduced = reduced.slice(0, -extMatch[0].length);
   }
 
-  if (reduced === 'index') {
+  if (!options.preserveIndex && reduced === 'index') {
     return '';
   }
 
-  if (reduced.endsWith('/index')) {
+  if (!options.preserveIndex && reduced.endsWith('/index')) {
     reduced = reduced.slice(0, -6);
+  }
+
+  if (options.emittedExtension && !Path.extname(reduced)) {
+    reduced += options.emittedExtension;
   }
 
   return reduced;
@@ -77,6 +88,8 @@ interface RelativeImportReqOptions extends WrapOptions {
   type: ImportType;
   sourcePath?: string;
   original?: string;
+  emittedExtension?: string;
+  preserveIndex?: boolean;
 }
 
 export function getRelativeImportReq(options: RelativeImportReqOptions) {
@@ -86,7 +99,11 @@ export function getRelativeImportReq(options: RelativeImportReqOptions) {
       relative.startsWith('.') ? relative : `./${relative}`,
       options.type,
       options.original,
-      options.sourcePath ? Path.extname(options.sourcePath) : undefined
+      options.sourcePath ? Path.extname(options.sourcePath) : undefined,
+      {
+        emittedExtension: options.emittedExtension,
+        preserveIndex: options.preserveIndex,
+      }
     ),
     options
   );

@@ -7,7 +7,7 @@
 
 import type { IScopedClusterClient } from '@kbn/core/server';
 import { ALL_VALUE } from '@kbn/slo-schema';
-import type { TransformGetTransformStatsTransformStats } from 'elasticsearch-8.x/lib/api/types';
+import type { estypes } from 'elasticsearch-8.x';
 import { keyBy, uniqBy, type Dictionary } from 'lodash';
 import pLimit from 'p-limit';
 import {
@@ -59,7 +59,7 @@ export async function computeHealth(list: Item[], deps: Dependencies): Promise<S
 async function getTransformStatsById(
   list: Item[],
   deps: Dependencies
-): Promise<Dictionary<TransformGetTransformStatsTransformStats>> {
+): Promise<Dictionary<estypes.TransformGetTransformStatsTransformStats>> {
   const dedupedList = uniqBy(list, (i) => `${i.id}-${i.revision}`);
 
   if (dedupedList.length === 0) {
@@ -95,7 +95,7 @@ async function getTransformStatsById(
 }
 
 function computeItemHealth(
-  transformStatsById: Dictionary<TransformGetTransformStatsTransformStats>,
+  transformStatsById: Dictionary<estypes.TransformGetTransformStatsTransformStats>,
   item: Item
 ): { rollup: TransformHealth; summary: TransformHealth; isProblematic: boolean } {
   const rollup = getTransformHealth(
@@ -114,7 +114,7 @@ function computeItemHealth(
 
 function getTransformHealth(
   item: Item,
-  transformStat?: TransformGetTransformStatsTransformStats
+  transformStat?: estypes.TransformGetTransformStatsTransformStats
 ): TransformHealth {
   if (!transformStat) {
     return {

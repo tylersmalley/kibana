@@ -35,7 +35,7 @@ export const getDashboardsByTagsRoute = (router: SecuritySolutionPluginRouter, l
       async (context, request, response) => {
         const frameworkRequest = await buildFrameworkRequest(context, request);
         const savedObjectsClient = (await frameworkRequest.context.core).savedObjects.client;
-        const { tagIds } = request.body;
+        const { tagIds }: { tagIds: string[] } = request.body;
 
         try {
           const dashboardsResponse = await savedObjectsClient.find<DashboardSavedObjectAttributes>({

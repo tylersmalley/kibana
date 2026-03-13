@@ -50,9 +50,17 @@ export interface SidebarStoreConfig<TState, TActions> {
  * });
  * ```
  */
-export function createSidebarStore<TState, TActions>(config: {
-  schema: z.ZodType<TState>;
-  actions: (set: SetState<TState>, get: GetState<TState>, sidebar: SidebarContext) => TActions;
-}): SidebarStoreConfig<TState, TActions> {
-  return config as SidebarStoreConfig<TState, TActions>;
+export function createSidebarStore<TSchema extends z.ZodType, TActions>(config: {
+  schema: TSchema;
+  actions: (
+    set: SetState<z.output<TSchema>>,
+    get: GetState<z.output<TSchema>>,
+    sidebar: SidebarContext
+  ) => TActions;
+}): SidebarStoreConfig<z.output<TSchema>, TActions> {
+  return {
+    schema: config.schema as z.ZodType<z.output<TSchema>>,
+    actions: config.actions,
+    types: undefined as unknown as SidebarStoreConfig<z.output<TSchema>, TActions>['types'],
+  };
 }

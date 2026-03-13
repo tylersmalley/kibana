@@ -13,7 +13,11 @@ import { EuiErrorBoundary } from '@elastic/eui';
 import { VegaChartLoading } from './vega_chart_loading';
 import type { VegaChartViewProps } from './vega_chart_view';
 
-const VegaChartView = React.lazy(() => import('./vega_chart_view'));
+const VegaChartView = React.lazy(() =>
+  import('./vega_chart_view.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const VegaChart: FC<VegaChartViewProps> = (props) => (
   <EuiErrorBoundary>

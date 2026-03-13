@@ -13,7 +13,11 @@ import type { SelectableUrlListProps } from './exploratory_view/components/url_s
 import type { ExploratoryViewPageProps } from './exploratory_view';
 export type { LazyObservabilityPageTemplateProps } from '@kbn/observability-shared-plugin/public';
 
-const FilterValueLabelLazy = lazy(() => import('./filter_value_label/filter_value_label'));
+const FilterValueLabelLazy = lazy(() =>
+  import('./filter_value_label/filter_value_label.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function FilterValueLabel(props: FilterValueLabelProps) {
   return (
@@ -23,8 +27,10 @@ export function FilterValueLabel(props: FilterValueLabelProps) {
   );
 }
 
-const SelectableUrlListLazy = lazy(
-  () => import('./exploratory_view/components/url_search/selectable_url_list')
+const SelectableUrlListLazy = lazy(() =>
+  import('./exploratory_view/components/url_search/selectable_url_list.js').then(
+    ({ default: lazyModule }) => ({ default: lazyModule.default })
+  )
 );
 
 export function SelectableUrlList(props: SelectableUrlListProps) {
@@ -35,7 +41,11 @@ export function SelectableUrlList(props: SelectableUrlListProps) {
   );
 }
 
-const ExploratoryViewLazy = lazy(() => import('./exploratory_view'));
+const ExploratoryViewLazy = lazy(() =>
+  import('./exploratory_view/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function ExploratoryView(props: ExploratoryViewPageProps) {
   return (
@@ -45,7 +55,11 @@ export function ExploratoryView(props: ExploratoryViewPageProps) {
   );
 }
 
-const DatePickerLazy = lazy(() => import('./date_picker'));
+const DatePickerLazy = lazy(() =>
+  import('./date_picker/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function DatePicker(props: DatePickerProps) {
   return (

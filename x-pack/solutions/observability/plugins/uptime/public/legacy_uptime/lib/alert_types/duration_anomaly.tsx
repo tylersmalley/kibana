@@ -17,7 +17,11 @@ import { CLIENT_ALERT_TYPES } from '../../../../common/constants/uptime_alerts';
 import { DurationAnomalyTranslations } from '../../../../common/rules/legacy_uptime/translations';
 
 const { defaultActionMessage, defaultRecoveryMessage, description } = DurationAnomalyTranslations;
-const DurationAnomalyAlert = React.lazy(() => import('./lazy_wrapper/duration_anomaly'));
+const DurationAnomalyAlert = React.lazy(() =>
+  import('./lazy_wrapper/duration_anomaly.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const initDurationAnomalyAlertType: AlertTypeInitializer = ({
   core,

@@ -7,6 +7,12 @@
 
 import { lazy } from 'react';
 
-export const LazyDebugComponent = lazy(() => import('./debug'));
+export const LazyDebugComponent = lazy(() =>
+  import('./debug/index.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
-export const LazyDebugRenderComponent = lazy(() => import('./debug_component'));
+export const LazyDebugRenderComponent = lazy(() =>
+  import('./debug_component.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);

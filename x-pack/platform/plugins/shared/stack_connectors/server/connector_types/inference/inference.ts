@@ -9,6 +9,7 @@ import { text as streamToString } from 'node:stream/consumers';
 import type { ServiceParams } from '@kbn/actions-plugin/server';
 import { SubActionConnector } from '@kbn/actions-plugin/server';
 import { Stream } from 'openai/streaming';
+import { Response as NodeFetchResponse } from 'node-fetch';
 import type { Readable } from 'stream';
 
 import type { AxiosError } from 'axios';
@@ -248,7 +249,7 @@ export class InferenceConnector extends SubActionConnector<Config, Secrets> {
       // splits the stream in two, one is used for the UI and other for token tracking
 
       const stream = Stream.fromSSEResponse<ChatCompletionChunk>(
-        { body: res } as unknown as Response,
+        new NodeFetchResponse(res as unknown as Readable),
         controller
       );
       const teed = stream.tee();

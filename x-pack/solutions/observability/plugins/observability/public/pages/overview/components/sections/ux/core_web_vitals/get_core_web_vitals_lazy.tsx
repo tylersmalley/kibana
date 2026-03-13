@@ -8,7 +8,9 @@
 import React, { lazy, Suspense } from 'react';
 import type { CoreVitalProps } from './core_vitals';
 
-const CoreVitalsLazy = lazy(() => import('./core_vitals'));
+const CoreVitalsLazy = lazy(() =>
+  import('./core_vitals.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export function getCoreVitalsComponent(props: CoreVitalProps) {
   return (

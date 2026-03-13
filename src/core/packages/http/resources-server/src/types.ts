@@ -14,8 +14,53 @@ import type {
   HttpResponseOptions,
   KibanaResponseFactory,
   RequestHandler,
+  RouteValidationSpec,
+  RouteValidatorFullConfigRequest,
 } from '@kbn/core-http-server';
 import type { RequestHandlerContext } from '@kbn/core-http-request-handler-context-server';
+
+type InferValidatedValue<TSpec> = TSpec extends RouteValidationSpec<infer TValue>
+  ? TValue
+  : unknown;
+
+type IsUnknown<T> = unknown extends T ? ([T] extends [unknown] ? true : false) : false;
+
+type InferRouteValidatedPart<
+  TValidate,
+  TPart extends keyof RouteValidatorFullConfigRequest<any, any, any>
+> = TValidate extends false
+  ? unknown
+  : TValidate extends () => infer TResolvedValidate
+  ? InferRouteValidatedPart<TResolvedValidate, TPart>
+  : TValidate extends { request: infer TRequest }
+  ? InferRouteValidatedPart<TRequest, TPart>
+  : TValidate extends { [K in TPart]?: infer TSpec }
+  ? InferValidatedValue<NonNullable<TSpec>>
+  : unknown;
+
+type InferRouteConfigPart<
+  TRoute extends RouteConfig<any, any, any, 'get'>,
+  TPart extends keyof RouteValidatorFullConfigRequest<any, any, any>
+> = TPart extends 'params'
+  ? TRoute extends RouteConfig<infer P, any, any, 'get'>
+    ? P
+    : unknown
+  : TPart extends 'query'
+  ? TRoute extends RouteConfig<any, infer Q, any, 'get'>
+    ? Q
+    : unknown
+  : TPart extends 'body'
+  ? TRoute extends RouteConfig<any, any, infer B, 'get'>
+    ? B
+    : unknown
+  : unknown;
+
+type InferRouteRequestPart<
+  TRoute extends RouteConfig<any, any, any, 'get'>,
+  TPart extends keyof RouteValidatorFullConfigRequest<any, any, any>
+> = IsUnknown<InferRouteValidatedPart<TRoute['validate'], TPart>> extends true
+  ? InferRouteConfigPart<TRoute, TPart>
+  : InferRouteValidatedPart<TRoute['validate'], TPart>;
 
 /**
  * Allows to configure HTTP response parameters
@@ -102,8 +147,14 @@ export type HttpResourcesRequestHandler<
  */
 export interface HttpResources {
   /** To register a route handler executing passed function to form response. */
-  register: <P, Q, B, Context extends RequestHandlerContext = RequestHandlerContext>(
-    route: RouteConfig<P, Q, B, 'get'>,
+  register: <
+    TRoute extends RouteConfig<any, any, any, 'get'>,
+    P = InferRouteRequestPart<TRoute, 'params'>,
+    Q = InferRouteRequestPart<TRoute, 'query'>,
+    B = InferRouteRequestPart<TRoute, 'body'>,
+    Context extends RequestHandlerContext = RequestHandlerContext
+  >(
+    route: TRoute,
     handler: HttpResourcesRequestHandler<P, Q, B, Context>
   ) => void;
 }

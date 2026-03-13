@@ -38,14 +38,19 @@ export function defineInvalidateApiKeysRoutes({ router }: RouteDefinitionParams)
     },
     createLicensedRouteHandler(async (context, request, response) => {
       try {
+        const { apiKeys, isAdmin } = request.body as {
+          apiKeys: Array<Pick<ApiKey, 'id' | 'name'>>;
+          isAdmin: boolean;
+        };
+
         // Invalidate all API keys in parallel.
         const invalidationResult = (
           await Promise.all(
-            request.body.apiKeys.map(async (key) => {
+            apiKeys.map(async (key) => {
               try {
                 const esClient = (await context.core).elasticsearch.client;
                 const body: { ids: string[]; owner?: boolean } = { ids: [key.id] };
-                if (!request.body.isAdmin) {
+                if (!isAdmin) {
                   body.owner = true;
                 }
 

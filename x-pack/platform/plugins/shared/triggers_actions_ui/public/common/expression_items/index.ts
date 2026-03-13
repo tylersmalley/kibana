@@ -8,10 +8,46 @@
 import { lazy } from 'react';
 import { suspendedComponentWithProps } from '../../application/lib/suspended_component_with_props';
 
-export const GroupByExpression = suspendedComponentWithProps(lazy(() => import('./group_by_over')));
-export const ForLastExpression = suspendedComponentWithProps(lazy(() => import('./for_the_last')));
-export const ValueExpression = suspendedComponentWithProps(lazy(() => import('./value')));
+export const GroupByExpression = suspendedComponentWithProps(
+  lazy(() =>
+    import('./group_by_over.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
+);
+export const ForLastExpression = suspendedComponentWithProps(
+  lazy(() =>
+    import('./for_the_last.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
+);
+export const ValueExpression = suspendedComponentWithProps(
+  lazy(() =>
+    import('./value.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
+);
 
-export const WhenExpression = suspendedComponentWithProps(lazy(() => import('./when')));
-export const OfExpression = suspendedComponentWithProps(lazy(() => import('./of')));
-export const ThresholdExpression = suspendedComponentWithProps(lazy(() => import('./threshold')));
+export const WhenExpression = suspendedComponentWithProps(
+  lazy(() =>
+    import('./when.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
+);
+export const OfExpression = suspendedComponentWithProps(
+  lazy(() =>
+    import('./of.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
+);
+export const ThresholdExpression = suspendedComponentWithProps(
+  lazy(() =>
+    import('./threshold.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
+);

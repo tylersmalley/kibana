@@ -7,10 +7,10 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { readConfig } from 'jest-config';
-import { SearchSource } from 'jest';
-import Runtime from 'jest-runtime';
+import { createRequire } from 'node:module';
 import { asyncMapWithLimit } from '@kbn/std';
+
+const lazyRequire = createRequire(__filename);
 
 const EMPTY_ARGV = {
   $0: '',
@@ -34,6 +34,10 @@ export async function getTestsForConfigPaths(
 ): Promise<TestsForConfigPath[]> {
   return await asyncMapWithLimit(configPaths, 60, async (path) => {
     try {
+      const { readConfig } = lazyRequire('jest-config') as typeof import('jest-config');
+      const { SearchSource } = lazyRequire('jest') as typeof import('jest');
+      const Runtime = lazyRequire('jest-runtime').default as typeof import('jest-runtime').default;
+
       const config = await readConfig(EMPTY_ARGV, path);
       const searchSource = new SearchSource(
         await Runtime.createContext(config.projectConfig, {

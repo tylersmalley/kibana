@@ -193,9 +193,8 @@ export function jobRoutes({ router, routeGuard }: RouteInitialization) {
         try {
           const { jobId } = request.params;
           const body = await mlClient.putJob({
+            ...request.body,
             job_id: jobId,
-            // @ts-expect-error job type custom_rules is incorrect
-            body: request.body,
           });
 
           return response.ok({
@@ -234,7 +233,6 @@ export function jobRoutes({ router, routeGuard }: RouteInitialization) {
           const { jobId } = request.params;
           const body = await mlClient.updateJob({
             job_id: jobId,
-            // @ts-expect-error MlDetector is not compatible
             body: request.body,
           });
           return response.ok({

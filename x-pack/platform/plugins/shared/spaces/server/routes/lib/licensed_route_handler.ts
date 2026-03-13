@@ -9,18 +9,13 @@ import type { CustomRequestHandlerContext, RequestHandler } from '@kbn/core/serv
 import type { LicensingApiRequestHandlerContext } from '@kbn/licensing-plugin/server';
 
 export const createLicensedRouteHandler = <
-  P,
-  Q,
-  B,
-  Context extends CustomRequestHandlerContext<{ licensing: LicensingApiRequestHandlerContext }>
+  Context extends CustomRequestHandlerContext<{ licensing: LicensingApiRequestHandlerContext }>,
+  THandler extends RequestHandler<any, any, any, Context, any, any>
 >(
-  handler: RequestHandler<P, Q, B, Context>
-) => {
-  const licensedRouteHandler: RequestHandler<P, Q, B, Context> = async (
-    context,
-    request,
-    responseToolkit
-  ) => {
+  handler: THandler
+): THandler => {
+  return (async (...args: Parameters<THandler>) => {
+    const [context, request, responseToolkit] = args;
     const { license } = await context.licensing;
     const licenseCheck = license.check('spaces', 'basic');
     if (licenseCheck.state === 'unavailable' || licenseCheck.state === 'invalid') {
@@ -28,7 +23,5 @@ export const createLicensedRouteHandler = <
     }
 
     return handler(context, request, responseToolkit);
-  };
-
-  return licensedRouteHandler;
+  }) as THandler;
 };

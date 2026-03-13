@@ -396,7 +396,7 @@ export function savedObjectsRoutes(
           const currentSpaceId = await getCurrentSpaceId();
           if (currentSpaceId === null) {
             return response.ok({
-              body: ids.map((id) => ({
+              body: ids.map((id: string) => ({
                 [id]: {
                   success: false,
                   error: 'Cannot remove current space. Spaces plugin is disabled.',

@@ -25,13 +25,16 @@ function getDefaultWriteAccessFlag(method: SupportedMethod) {
 }
 
 export const createSyntheticsRouteWithAuth = <
-  ClientContract extends HttpResponsePayload | ResponseError = any
+  ClientContract extends HttpResponsePayload | ResponseError = any,
+  Params = Record<string, any>,
+  Query = Record<string, any>,
+  Body = Record<string, any>
 >(
-  routeCreator: SyntheticsRestApiRouteFactory
-): SyntheticsRoute<ClientContract> => {
+  routeCreator: SyntheticsRestApiRouteFactory<ClientContract, Params, Query, Body>
+): SyntheticsRoute<ClientContract, Params, Query, Body> => {
   const restRoute = routeCreator();
   const { handler, method, path, options, writeAccess, ...rest } = restRoute;
-  const licenseCheckHandler: SyntheticsRouteHandler<ClientContract> = async ({
+  const licenseCheckHandler: SyntheticsRouteHandler<ClientContract, Params, Query, Body> = async ({
     context,
     response,
     ...restProps

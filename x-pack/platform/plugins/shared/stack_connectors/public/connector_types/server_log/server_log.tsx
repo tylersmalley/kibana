@@ -47,6 +47,10 @@ export function getConnectorType(): ConnectorTypeModel<unknown, unknown, ServerL
       return Promise.resolve(validationResult);
     },
     actionConnectorFields: null,
-    actionParamsFields: lazy(() => import('./server_log_params')),
+    actionParamsFields: lazy(() =>
+      import('./server_log_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
   };
 }

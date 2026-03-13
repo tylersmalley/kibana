@@ -269,10 +269,10 @@ export function systemRoutes(
       },
       routeGuard.basicLicenseAPIGuard(async ({ client, request, response }) => {
         try {
-          const { indices } = request.body;
+          const { indices } = request.body as { indices: string[] };
 
           const results = await Promise.all(
-            indices.map(async (index) =>
+            indices.map(async (index: string) =>
               client.asCurrentUser.indices.exists({
                 index,
                 allow_no_indices: false,
@@ -280,10 +280,10 @@ export function systemRoutes(
             )
           );
 
-          const result = indices.reduce((acc, cur, i) => {
+          const result = indices.reduce<Record<string, { exists: boolean }>>((acc, cur, i) => {
             acc[cur] = { exists: results[i] };
             return acc;
-          }, {} as Record<string, { exists: boolean }>);
+          }, {});
 
           return response.ok({
             body: result,

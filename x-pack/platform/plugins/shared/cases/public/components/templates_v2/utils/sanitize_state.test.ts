@@ -30,7 +30,6 @@ describe('sanitizeState', () => {
   });
 
   it('sanitizes invalid sortOrder to default', () => {
-    // @ts-expect-error: testing invalid value
     expect(sanitizeState({ sortOrder: 'invalid' })).toEqual({ sortOrder: 'asc' });
   });
 
@@ -40,7 +39,6 @@ describe('sanitizeState', () => {
   });
 
   it('sanitizes tags to filter out falsy values', () => {
-    // @ts-expect-error: testing invalid values
     expect(sanitizeState({ tags: ['valid', '', null, undefined, 'another'] })).toEqual({
       tags: ['valid', 'another'],
     });
@@ -51,12 +49,10 @@ describe('sanitizeState', () => {
   });
 
   it('converts non-array tags to empty array', () => {
-    // @ts-expect-error: testing invalid value
     expect(sanitizeState({ tags: 'not-an-array' })).toEqual({ tags: [] });
   });
 
   it('sanitizes author to filter out falsy values', () => {
-    // @ts-expect-error: testing invalid values
     expect(sanitizeState({ author: ['user1', '', null, 'user2'] })).toEqual({
       author: ['user1', 'user2'],
     });
@@ -69,7 +65,6 @@ describe('sanitizeState', () => {
   });
 
   it('converts non-array author to empty array', () => {
-    // @ts-expect-error: testing invalid value
     expect(sanitizeState({ author: 'not-an-array' })).toEqual({ author: [] });
   });
 
@@ -81,7 +76,6 @@ describe('sanitizeState', () => {
     expect(
       sanitizeState({
         perPage: 500,
-        // @ts-expect-error: testing invalid value
         sortOrder: 'invalid',
         tags: ['valid'],
         page: 2,

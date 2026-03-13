@@ -17,12 +17,11 @@ export const assistantCardConfig: OnboardingCardConfig<AssistantCardMetadata> = 
   id: OnboardingCardId.assistant,
   title: ASSISTANT_CARD_TITLE,
   icon: AssistantIcon,
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_assistant_card" */
-        './assistant_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_assistant_card" */
+      './assistant_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   checkComplete: checkAssistantCardComplete,
   capabilitiesRequired: ['securitySolutionAssistant.ai-assistant'],

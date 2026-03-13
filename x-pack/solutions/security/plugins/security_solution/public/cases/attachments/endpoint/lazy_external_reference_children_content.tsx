@@ -8,7 +8,11 @@
 import React, { lazy, Suspense } from 'react';
 import type { IExternalReferenceMetaDataProps } from './types';
 
-const AttachmentContent = lazy(() => import('./external_reference_children'));
+const AttachmentContent = lazy(() =>
+  import('./external_reference_children.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const getLazyExternalChildrenContent = (props: IExternalReferenceMetaDataProps) => {
   return (

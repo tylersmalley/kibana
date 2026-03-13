@@ -24,11 +24,15 @@ export interface RouteWrapConfig {
 
 export const getHandlerWrapper =
   ({ logger }: { logger: Logger }) =>
-  <P, Q, B, Context extends AgentBuilderHandlerContext>(
-    handler: RequestHandler<P, Q, B, Context>,
+  <
+    Context extends AgentBuilderHandlerContext,
+    THandler extends RequestHandler<any, any, any, Context>
+  >(
+    handler: THandler,
     { featureFlag = false, ignoreLicense = false }: RouteWrapConfig = {}
-  ): RequestHandler<P, Q, B, Context> => {
-    return async (ctx, req, res) => {
+  ): THandler => {
+    return (async (...args: Parameters<THandler>) => {
+      const [ctx, req, res] = args;
       if (featureFlag !== false) {
         const { uiSettings } = await ctx.core;
         const enabled = await uiSettings.client.get(featureFlag);
@@ -73,5 +77,5 @@ export const getHandlerWrapper =
           });
         }
       }
-    };
+    }) as THandler;
   };

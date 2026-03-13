@@ -18,7 +18,9 @@ import { useAppDataView } from './use_app_data_view';
 import type { ExploratoryViewPublicPluginsStart } from '../../../..';
 import type { ExploratoryEmbeddableProps, ExploratoryEmbeddableComponentProps } from './embeddable';
 
-const Embeddable = React.lazy(() => import('./embeddable'));
+const Embeddable = React.lazy(() =>
+  import('./embeddable.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 function ExploratoryViewEmbeddable(props: ExploratoryEmbeddableComponentProps) {
   return (

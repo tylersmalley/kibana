@@ -73,6 +73,26 @@ describe('#resolve()', () => {
     `);
   });
 
+  it('resolves NodeNext-style relative .js specifiers to TypeScript source files', () => {
+    expect(resolver.resolve('./esm_target.js', Path.resolve(FIXTURES_DIR, 'src/bar')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "absolute": <absolute path>/src/platform/packages/private/kbn-import-resolver/src/__fixtures__/src/bar/esm_target.ts,
+        "pkgId": "@kbn/bar",
+        "type": "file",
+      }
+    `);
+
+    expect(resolver.resolve('./esm_component.js', Path.resolve(FIXTURES_DIR, 'src/bar')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "absolute": <absolute path>/src/platform/packages/private/kbn-import-resolver/src/__fixtures__/src/bar/esm_component.tsx,
+        "pkgId": "@kbn/bar",
+        "type": "file",
+      }
+    `);
+  });
+
   it('resolves sub-path exports (exact match)', () => {
     expect(resolver.resolve('exports-pkg/my_module', FIXTURES_DIR)).toMatchInlineSnapshot(`
       Object {

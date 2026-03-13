@@ -131,7 +131,7 @@ describe('createPromptRestApi', () => {
       connectorId: 'my-connector',
       input: {
         wrongKey: 'Invalid input',
-      } as any,
+      } as unknown as PromptOptions<typeof prompt>['input'],
       prompt,
       temperature: 0.5,
     };
@@ -162,10 +162,9 @@ describe('createPromptRestApi', () => {
 
     const response = await promptApi({
       ...params,
-      // @ts-expect-error input type doesn't match schema type
       input: {
         anotherWrongKey: 'foo',
-      },
+      } as unknown as PromptOptions<typeof prompt>['input'],
     }).catch((error) => {
       return error;
     });

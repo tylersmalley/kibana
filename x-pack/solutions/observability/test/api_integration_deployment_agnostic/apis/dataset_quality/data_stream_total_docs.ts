@@ -8,9 +8,9 @@
 import { log, timerange } from '@kbn/synthtrace-client';
 import expect from '@kbn/expect';
 
-import type { APIClientRequestParamsOf } from '@kbn/dataset-quality-plugin/common/rest';
 import type { LogsSynthtraceEsClient } from '@kbn/synthtrace';
 import type { DataStreamDocsStat } from '@kbn/dataset-quality-plugin/common/api_types';
+import type { GetDataStreamsTotalDocsQuery } from '@kbn/dataset-quality-plugin/common/data_streams_stats';
 import type { DeploymentAgnosticFtrProviderContext } from '../../ftr_provider_context';
 import type { RoleCredentials, SupertestWithRoleScopeType } from '../../services';
 import { closeDataStream, rolloverDataStream } from './utils';
@@ -33,8 +33,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
   const dataStreamName = `${dataStreamType}-${dataset}-${namespace}`;
   const syntheticsDataStreamName = `${dataStreamType}-${syntheticsDataset}-${namespace}`;
 
-  const endpoint = 'GET /internal/dataset_quality/data_streams/total_docs';
-  type ApiParams = APIClientRequestParamsOf<typeof endpoint>['params']['query'];
+  type ApiParams = GetDataStreamsTotalDocsQuery;
 
   async function callApiAs({
     roleScopedSupertestWithCookieCredentials,

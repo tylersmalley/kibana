@@ -9,7 +9,11 @@ import React, { lazy, Suspense } from 'react';
 import { EuiLoadingSpinner } from '@elastic/eui';
 import type { ObservabilityAlertSearchBarProps } from './types';
 
-const ObservabilityAlertSearchBarLazy = lazy(() => import('./alert_search_bar'));
+const ObservabilityAlertSearchBarLazy = lazy(() =>
+  import('./alert_search_bar.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function ObservabilityAlertSearchBar(props: ObservabilityAlertSearchBarProps) {
   return (

@@ -33,8 +33,10 @@ import { EditTagsFlyout } from './tags/edit_tags_flyout';
 import { IndividualTagsActionContextProvider } from '../contexts/individual_tags_action_context';
 import { useTagsAction } from './tags/use_tags_action';
 
-const AlertDetailFlyout = lazy(
-  () => import('./alert_detail_flyout')
+const AlertDetailFlyout = lazy(() =>
+  import('./alert_detail_flyout.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 ) as typeof AlertDetailFlyoutType;
 
 const defaultGridStyle: EuiDataGridStyle = {

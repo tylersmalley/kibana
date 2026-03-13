@@ -26,7 +26,9 @@ export function getConnectorType(): ConnectorTypeModel<
 > {
   return {
     id: CONNECTOR_ID,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: i18n.translate('xpack.stackConnectors.components.pagerDuty.selectMessageText', {
       defaultMessage: 'Send an event in PagerDuty.',
     }),
@@ -41,7 +43,7 @@ export function getConnectorType(): ConnectorTypeModel<
     ): Promise<
       GenericValidationResult<Pick<PagerDutyActionParams, 'summary' | 'timestamp' | 'dedupKey'>>
     > => {
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors = {
         summary: new Array<string>(),
         timestamp: new Array<string>(),
@@ -108,8 +110,16 @@ export function getConnectorType(): ConnectorTypeModel<
       }
       return validationResult;
     },
-    actionConnectorFields: lazy(() => import('./pagerduty_connectors')),
-    actionParamsFields: lazy(() => import('./pagerduty_params')),
+    actionConnectorFields: lazy(() =>
+      import('./pagerduty_connectors.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./pagerduty_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     defaultActionParams: {
       dedupKey: `{{${AlertProvidedActionVariables.ruleId}}}:{{${AlertProvidedActionVariables.alertId}}}`,
       eventAction: EventActionOptions.TRIGGER,

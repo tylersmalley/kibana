@@ -8,6 +8,7 @@
 import { lazy } from 'react';
 import { i18n } from '@kbn/i18n';
 import { type RuleTypeModel } from '@kbn/triggers-actions-ui-plugin/public';
+import type { DataView } from '@kbn/data-views-plugin/common';
 import type { DegradedDocsRuleParams } from '@kbn/response-ops-rule-params/degraded_docs';
 import { DEGRADED_DOCS_RULE_TYPE_ID } from '@kbn/rule-data-utils';
 import type { GetDescriptionFieldsFn } from '@kbn/triggers-actions-ui-plugin/public/types';
@@ -22,7 +23,11 @@ export const getDescriptionFields: GetDescriptionFieldsFn<DegradedDocsRuleParams
   return [prebuildFields.indexPattern([rule.params.searchConfiguration.index])];
 };
 
-export function getRuleType(): RuleTypeModel<DegradedDocsRuleParams> {
+interface DegradedDocsRuleMetaData {
+  adHocDataViewList: DataView[];
+}
+
+export function getRuleType(): RuleTypeModel<DegradedDocsRuleParams, DegradedDocsRuleMetaData> {
   return {
     id: DEGRADED_DOCS_RULE_TYPE_ID,
     description: i18n.translate('xpack.datasetQuality.alert.degradedDocs.descriptionText', {
@@ -30,7 +35,11 @@ export function getRuleType(): RuleTypeModel<DegradedDocsRuleParams> {
     }),
     iconClass: 'bell',
     documentationUrl: null,
-    ruleParamsExpression: lazy(() => import('./rule_form')),
+    ruleParamsExpression: lazy(() =>
+      import('./rule_form/index.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validate,
     requiresAppContext: false,
     getDescriptionFields,

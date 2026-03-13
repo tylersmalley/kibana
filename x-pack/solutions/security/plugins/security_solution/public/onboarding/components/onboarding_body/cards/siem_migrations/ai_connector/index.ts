@@ -17,12 +17,11 @@ export const aiConnectorCardConfig: OnboardingCardConfig<AIConnectorCardMetadata
   id: OnboardingCardId.siemMigrationsAiConnectors,
   title: AI_CONNECTOR_CARD_TITLE,
   icon: AssistantIcon,
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_siem_migrations_ai_connector_card" */
-        './ai_connector_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_siem_migrations_ai_connector_card" */
+      './ai_connector_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   checkComplete: checkAiConnectorsCardComplete,
 };

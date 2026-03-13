@@ -12,6 +12,8 @@ import { Subject } from 'rxjs';
 import type { Plugin, CoreSetup, ServiceStatus } from '@kbn/core/server';
 import { ServiceStatusLevels } from '@kbn/core/server';
 
+type ServiceStatusLevel = keyof typeof ServiceStatusLevels;
+
 export class StatusPluginAPlugin implements Plugin {
   private status$ = new Subject<ServiceStatus>();
 
@@ -42,7 +44,7 @@ export class StatusPluginAPlugin implements Plugin {
         },
       },
       (context, req, res) => {
-        const { level } = req.query;
+        const { level } = req.query as { level: ServiceStatusLevel };
 
         this.status$.next({
           level: ServiceStatusLevels[level],

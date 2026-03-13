@@ -8,7 +8,11 @@
 import React, { lazy, Suspense } from 'react';
 import type { AnnotationTooltipProps } from './annotation_tooltip';
 
-const AnnotationTooltipLazy = lazy(() => import('./annotation_tooltip'));
+const AnnotationTooltipLazy = lazy(() =>
+  import('./annotation_tooltip.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function AnnotationTooltip(props: AnnotationTooltipProps) {
   return (

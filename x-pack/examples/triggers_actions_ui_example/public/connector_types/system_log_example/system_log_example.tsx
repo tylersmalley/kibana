@@ -49,7 +49,11 @@ export function getConnectorType(): ConnectorTypeModel<unknown, unknown, SystemL
       return Promise.resolve(validationResult);
     },
     actionConnectorFields: null,
-    actionParamsFields: lazy(() => import('./system_log_example_params')),
+    actionParamsFields: lazy(() =>
+      import('./system_log_example_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     isSystemActionType: true,
   };
 }

@@ -5,16 +5,22 @@
  * 2.0.
  */
 
+import type { HttpResponsePayload, ResponseError } from '@kbn/core-http-server';
 import type { UMServerLibs } from '../lib/lib';
 import type { UptimeRoute, UMRestApiRouteFactory, UMRouteHandler } from './types';
 
-export const createRouteWithAuth = (
+export const createRouteWithAuth = <
+  ClientContract extends HttpResponsePayload | ResponseError = any,
+  Params = Record<string, any>,
+  Query = Record<string, any>,
+  Body = Record<string, any>
+>(
   libs: UMServerLibs,
-  routeCreator: UMRestApiRouteFactory
-): UptimeRoute => {
+  routeCreator: UMRestApiRouteFactory<ClientContract, Params, Query, Body>
+): UptimeRoute<ClientContract, Params, Query, Body> => {
   const restRoute = routeCreator(libs);
   const { handler, method, path, options, ...rest } = restRoute;
-  const licenseCheckHandler: UMRouteHandler = async ({
+  const licenseCheckHandler: UMRouteHandler<ClientContract, Params, Query, Body> = async ({
     uptimeEsClient,
     context,
     request,

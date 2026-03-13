@@ -54,7 +54,7 @@ export type MetricExpression = Omit<CustomMetricExpressionParams, 'timeSize' | '
 export interface AlertParams {
   criteria: MetricExpression[];
   groupBy?: string | string[];
-  sourceId: string;
+  sourceId?: string;
   filterQuery?: string;
   alertOnNoData?: boolean;
   alertOnGroupDisappear?: boolean;

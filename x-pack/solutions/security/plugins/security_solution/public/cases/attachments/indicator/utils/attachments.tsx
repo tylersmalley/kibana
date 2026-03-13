@@ -28,8 +28,10 @@ export interface IndicatorAttachmentMetadata {
   indicatorFeedName: string;
 }
 
-const IndicatorAttachmentChildrenLazy = React.lazy(
-  () => import('../components/attachment_children')
+const IndicatorAttachmentChildrenLazy = React.lazy(() =>
+  import('../components/attachment_children.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 
 /**

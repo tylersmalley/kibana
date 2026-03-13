@@ -11,3 +11,4 @@ declare module 'axios/lib/adapters/xhr';
 
 declare module 'find-cypress-specs';
 declare module '@cypress/grep/src/plugin';
+declare module 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneCommandsQuickAccess';

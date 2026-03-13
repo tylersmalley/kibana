@@ -12,20 +12,32 @@ import { i18n } from '@kbn/i18n';
 import type { ValidationResult } from '@kbn/triggers-actions-ui-plugin/public';
 import { isEmpty } from 'lodash';
 import { COMPARATORS } from '@kbn/alerting-comparators';
-import type {
-  CustomMetricExpressionParams,
-  CustomThresholdSearchSourceFields,
-} from '../../../../common/custom_threshold_rule/types';
+import type { CustomThresholdParams } from '@kbn/response-ops-rule-params/custom_threshold/latest';
 
 export const EQUATION_REGEX = /[^A-Z|+|\-|\s|\d+|\.|\(|\)|\/|\*|>|<|=|\?|\:|&|\!|\|]+/g;
+
+interface ValidationMetric {
+  name: string;
+  aggType?: string;
+  field?: string;
+  filter?: string;
+}
+
+interface ValidationCriterion {
+  threshold?: readonly number[];
+  comparator?: string;
+  timeSize?: number;
+  metrics?: readonly ValidationMetric[];
+  equation?: string;
+}
 
 export function validateCustomThreshold({
   criteria,
   searchConfiguration,
   uiSettings,
 }: {
-  criteria: CustomMetricExpressionParams[];
-  searchConfiguration: CustomThresholdSearchSourceFields;
+  criteria: ReadonlyArray<ValidationCriterion>;
+  searchConfiguration?: Readonly<Partial<CustomThresholdParams['searchConfiguration']>>;
   uiSettings: IUiSettingsClient;
 }): ValidationResult {
   const validationResult = { errors: {} };

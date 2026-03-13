@@ -44,14 +44,14 @@ export const registerDeleteRoute = ({
       const errors: Array<{ id: string; error: any }> = [];
 
       await Promise.all(
-        ids.map((_id) =>
+        ids.map((patternId: string) =>
           client.asCurrentUser.ccr
             .deleteAutoFollowPattern({
-              name: _id,
+              name: patternId,
             })
-            .then(() => itemsDeleted.push(_id))
+            .then(() => itemsDeleted.push(patternId))
             .catch((error: any) => {
-              errors.push({ id: _id, error: handleEsError({ error, response }) });
+              errors.push({ id: patternId, error: handleEsError({ error, response }) });
             })
         )
       );

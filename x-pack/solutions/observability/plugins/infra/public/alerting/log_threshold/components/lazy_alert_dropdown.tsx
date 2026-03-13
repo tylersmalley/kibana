@@ -7,7 +7,9 @@
 
 import React from 'react';
 
-const LazyAlertDropdown = React.lazy(() => import('./alert_dropdown'));
+const LazyAlertDropdown = React.lazy(() =>
+  import('./alert_dropdown.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export const LazyAlertDropdownWrapper = () => (
   <React.Suspense fallback={<div />}>

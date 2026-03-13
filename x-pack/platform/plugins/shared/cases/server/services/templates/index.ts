@@ -67,7 +67,7 @@ export class TemplatesService {
         ...so.attributes,
         fieldSearchMatches:
           searchLower !== '' &&
-          (so.attributes.fieldNames ?? []).some((fieldName) =>
+          (so.attributes.fieldNames ?? []).some((fieldName: string) =>
             fieldName.toLowerCase().includes(searchLower)
           ),
       })),
@@ -242,7 +242,9 @@ export class TemplatesService {
         tags: parsedDefinition.tags ?? input.tags,
         author,
         fieldCount: parsedDefinition.fields.length,
-        fieldNames: parsedDefinition.fields.map((f) => f.name),
+        fieldNames: parsedDefinition.fields.map(
+          (field: ParsedTemplate['definition']['fields'][number]) => field.name
+        ),
       } as Template,
       { refresh: true }
     );
@@ -276,7 +278,9 @@ export class TemplatesService {
         tags: parsedDefinition.tags ?? input.tags,
         author: currentTemplate.attributes.author,
         fieldCount: parsedDefinition.fields.length,
-        fieldNames: parsedDefinition.fields.map((f) => f.name),
+        fieldNames: parsedDefinition.fields.map(
+          (field: ParsedTemplate['definition']['fields'][number]) => field.name
+        ),
       },
       {
         refresh: true,

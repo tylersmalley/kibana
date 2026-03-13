@@ -16,6 +16,7 @@ import type {
   VisTypeTimeseriesRequestHandlerContext,
   VisTypeTimeseriesRequest,
 } from '../../../types';
+import { isVisTypeTimeseriesVisDataRequest } from '../../../types';
 import { UI_SETTINGS } from '../../../../common/constants';
 
 export class DefaultSearchStrategy extends AbstractSearchStrategy {
@@ -25,7 +26,9 @@ export class DefaultSearchStrategy extends AbstractSearchStrategy {
     indexPattern: FetchedIndexPattern
   ) {
     const uiSettings = (await requestContext.core).uiSettings.client;
-    const panel: Panel | undefined = req.body.panels ? req.body.panels[0] : undefined;
+    const panel: Panel | undefined = isVisTypeTimeseriesVisDataRequest(req)
+      ? req.body.panels[0]
+      : undefined;
     const timeField =
       panel &&
       indexPattern.indexPattern &&
@@ -37,7 +40,9 @@ export class DefaultSearchStrategy extends AbstractSearchStrategy {
       isViable: true,
       capabilities: new DefaultSearchCapabilities({
         panel,
-        timezone: timeField?.timeZone?.[0] || req.body.timerange?.timezone,
+        timezone:
+          timeField?.timeZone?.[0] ||
+          (isVisTypeTimeseriesVisDataRequest(req) ? req.body.timerange?.timezone : undefined),
         forceFixedInterval: Boolean(timeField?.fixedInterval?.[0]),
         maxBucketsLimit: await uiSettings.get(UI_SETTINGS.MAX_BUCKETS_SETTING),
       }),

@@ -129,13 +129,18 @@ export function getForeachItemSchema(
       // If the resolved path is a string, we return a string schema and will tell the user we will try to parse it as JSON in runtime
       return z.unknown().describe('Unable to determine foreach item type');
     } else if (iterableSchema instanceof z.ZodUnion) {
-      const arrayOption = iterableSchema.options.find((option) => option instanceof z.ZodArray);
+      const arrayOption = iterableSchema.options.find(
+        (
+          option
+        ): option is z.ZodArray<z.core.$ZodType<unknown, unknown, z.core.$ZodTypeInternals>> =>
+          option instanceof z.ZodArray
+      );
       if (arrayOption && arrayOption instanceof z.ZodArray) {
         return arrayOption.element as z.ZodType;
       } else {
         throw new InvalidForeachParameterError(
           `Expected array in union for foreach iteration, but no array type was found. Union options: [${iterableSchema.options
-            .map((opt) => getZodTypeName(opt as z.ZodType))
+            .map((option) => getZodTypeName(option))
             .join(', ')}]`,
           InvalidForeachParameterErrorCodes.INVALID_UNION
         );

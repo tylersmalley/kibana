@@ -12,26 +12,32 @@ import type { ReportingCore } from '../../core';
 import type { ReportingUser, ReportingRequestHandlerContext } from '../../types';
 import { getAuthorizedUser } from './get_authorized_user';
 
-export type RequestHandlerUser<P, Q, B> = RequestHandler<
-  P,
-  Q,
-  B,
-  ReportingRequestHandlerContext
-> extends (...a: infer U) => infer R
-  ? (user: ReportingUser, ...a: U) => R
-  : never;
+type ReportingRequestHandler = RequestHandler<
+  any,
+  any,
+  any,
+  ReportingRequestHandlerContext,
+  RouteMethod
+>;
 
-export const authorizedUserPreRouting = <P, Q, B>(
+type RequestHandlerUser<THandler extends ReportingRequestHandler> = (
+  user: ReportingUser,
+  ...args: Parameters<THandler>
+) => ReturnType<THandler>;
+
+export function authorizedUserPreRouting<THandler extends ReportingRequestHandler>(
   reporting: ReportingCore,
-  handler: RequestHandlerUser<P, Q, B>
-): RequestHandler<P, Q, B, ReportingRequestHandlerContext, RouteMethod> => {
+  handler: RequestHandlerUser<THandler>
+): THandler {
   const { logger } = reporting.getPluginSetupDeps();
 
-  return async (context, req, res) => {
+  return (async (...args: Parameters<THandler>) => {
+    const [, req, res] = args;
+
     try {
       const user = await getAuthorizedUser(reporting, req);
 
-      return handler(user, context, req, res);
+      return handler(user, ...args);
     } catch (err) {
       logger.error(err);
       if (err instanceof Boom.Boom) {
@@ -42,5 +48,5 @@ export const authorizedUserPreRouting = <P, Q, B>(
       }
       return res.custom({ statusCode: 500 });
     }
-  };
-};
+  }) as unknown as THandler;
+}

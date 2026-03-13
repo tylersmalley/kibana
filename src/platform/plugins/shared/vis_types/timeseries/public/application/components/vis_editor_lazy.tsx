@@ -11,7 +11,9 @@ import React, { lazy, Suspense } from 'react';
 import { EuiLoadingSpinner } from '@elastic/eui';
 import type { TimeseriesEditorProps } from './vis_editor';
 
-const VisEditorComponent = lazy(() => import('./vis_editor'));
+const VisEditorComponent = lazy(() =>
+  import('./vis_editor.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export const VisEditor = (props: TimeseriesEditorProps) => (
   <Suspense fallback={<EuiLoadingSpinner />}>

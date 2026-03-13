@@ -39,7 +39,11 @@ describe('CreateConnectorFlyout', () => {
   const onTestConnector = jest.fn();
 
   const actionTypeModel = actionTypeRegistryMock.createMockActionTypeModel({
-    actionConnectorFields: lazy(() => import('../connector_mock')),
+    actionConnectorFields: lazy(() =>
+      import('../connector_mock.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
   });
 
   loadActionTypes.mockResolvedValue([
@@ -598,7 +602,11 @@ describe('CreateConnectorFlyout', () => {
 
     it('runs pre submit validator correctly', async () => {
       const errorActionTypeModel = actionTypeRegistryMock.createMockActionTypeModel({
-        actionConnectorFields: lazy(() => import('../connector_error_mock')),
+        actionConnectorFields: lazy(() =>
+          import('../connector_error_mock.js').then(({ default: lazyModule }) => ({
+            default: lazyModule.default,
+          }))
+        ),
       });
       actionTypeRegistry.get.mockReturnValue(errorActionTypeModel);
 
@@ -750,7 +758,11 @@ describe('CreateConnectorFlyout', () => {
 
     const initialActionTypeModel = actionTypeRegistryMock.createMockActionTypeModel({
       id: 'initial-connector',
-      actionConnectorFields: lazy(() => import('../connector_mock')),
+      actionConnectorFields: lazy(() =>
+        import('../connector_mock.js').then(({ default: lazyModule }) => ({
+          default: lazyModule.default,
+        }))
+      ),
     });
 
     beforeEach(() => {
@@ -829,7 +841,11 @@ describe('CreateConnectorFlyout', () => {
     const specActionTypeModel = actionTypeRegistryMock.createMockActionTypeModel({
       id: 'spec-connector',
       source: 'spec',
-      actionConnectorFields: lazy(() => import('../connector_mock')),
+      actionConnectorFields: lazy(() =>
+        import('../connector_mock.js').then(({ default: lazyModule }) => ({
+          default: lazyModule.default,
+        }))
+      ),
     });
 
     beforeEach(() => {

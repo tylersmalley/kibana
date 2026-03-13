@@ -53,7 +53,9 @@ import { SearchConnectorsPageTemplateWrapper } from '../../shared/page_template'
 import { useBreadcrumbs } from '../../../utils/use_breadcrumbs';
 import { useKibanaContextForPlugin } from '../../../utils/use_kibana';
 import { connectorsBreadcrumbs } from '../connectors';
-const StartStep = lazy(() => import('./start_step'));
+const StartStep = lazy(() =>
+  import('./start_step.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export const createConnectorBreadcrumbs: ChromeBreadcrumb[] = [
   ...connectorsBreadcrumbs,
@@ -295,6 +297,7 @@ const CreateConnector: React.FC = () => {
                               css={css`
                                 margin-right: ${euiTheme.size.m};
                               `}
+                              aria-hidden={true}
                             />
                             {selectedConnector?.name}
                           </>

@@ -14,7 +14,7 @@ import { usageCollectionPluginMock } from '@kbn/usage-collection-plugin/server/m
 import type { CasesRequestHandlerContext, CasesRouter } from '../../types';
 import { createCasesRoute } from './create_cases_route';
 import { registerRoutes } from './register_routes';
-import type { CaseRoute } from './types';
+import type { AnyCaseRoute, CaseRoute } from './types';
 import { extractWarningValueFromWarningHeader } from './utils';
 
 describe('registerRoutes', () => {
@@ -66,9 +66,9 @@ describe('registerRoutes', () => {
       path: '/quux',
       handler: async () => response.ok(),
     }),
-  ] as CaseRoute[];
+  ] as AnyCaseRoute[];
 
-  const initApi = (casesRoutes: CaseRoute[]) => {
+  const initApi = (casesRoutes: ReadonlyArray<AnyCaseRoute>) => {
     registerRoutes({
       router,
       logger,

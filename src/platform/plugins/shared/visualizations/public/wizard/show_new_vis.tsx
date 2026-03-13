@@ -25,7 +25,11 @@ import {
 } from '../services';
 import type { BaseVisType } from '../vis_types';
 
-const NewVisModal = lazy(() => import('./new_vis_modal'));
+const NewVisModal = lazy(() =>
+  import('./new_vis_modal.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export interface ShowNewVisModalParams {
   editorParams?: string[];

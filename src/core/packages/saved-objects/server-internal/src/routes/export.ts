@@ -224,10 +224,12 @@ NOTE: The \`savedObjects.maxImportExportSize\` configuration setting limits the 
         },
       },
     },
-    catchAndReturnBoomErrors(async (context, request, response) => {
+    catchAndReturnBoomErrors(async (context: any, request: any, response: any) => {
       const cleaned = cleanOptions(request.body);
       const { typeRegistry, getExporter, getClient } = (await context.core).savedObjects;
-      const supportedTypes = typeRegistry.getImportableAndExportableTypes().map((t) => t.name);
+      const supportedTypes = typeRegistry
+        .getImportableAndExportableTypes()
+        .map((t: { name: string }) => t.name);
 
       let options: EitherExportOptions;
       try {
@@ -242,7 +244,7 @@ NOTE: The \`savedObjects.maxImportExportSize\` configuration setting limits the 
         });
       }
 
-      const includedHiddenTypes = supportedTypes.filter((supportedType) =>
+      const includedHiddenTypes = supportedTypes.filter((supportedType: string) =>
         typeRegistry.isHidden(supportedType)
       );
 

@@ -5,25 +5,20 @@
  * 2.0.
  */
 
-import type { KibanaResponseFactory, RequestHandler, RouteMethod } from '@kbn/core/server';
+import type { RequestHandler } from '@kbn/core/server';
 
 import type { SecurityRequestHandlerContext } from '../types';
 
-export const createLicensedRouteHandler = <
-  P,
-  Q,
-  B,
+type LicensedRouteHandlerWrapper = <
   Context extends SecurityRequestHandlerContext,
-  M extends RouteMethod,
-  R extends KibanaResponseFactory
+  THandler extends RequestHandler<any, any, any, Context, any, any>
 >(
-  handler: RequestHandler<P, Q, B, Context, M, R>
-) => {
-  const licensedRouteHandler: RequestHandler<P, Q, B, Context, M, R> = async (
-    context,
-    request,
-    responseToolkit
-  ) => {
+  handler: THandler
+) => THandler;
+
+export const createLicensedRouteHandler: LicensedRouteHandlerWrapper = (handler) => {
+  return (async (...args: Parameters<typeof handler>) => {
+    const [context, request, responseToolkit] = args;
     const { license } = await context.licensing;
     const licenseCheck = license.check('security', 'basic');
     if (licenseCheck.state === 'unavailable' || licenseCheck.state === 'invalid') {
@@ -31,7 +26,5 @@ export const createLicensedRouteHandler = <
     }
 
     return handler(context, request, responseToolkit);
-  };
-
-  return licensedRouteHandler;
+  }) as typeof handler;
 };

@@ -7,20 +7,22 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { Recognizer, RecognitionException } from 'antlr4';
-import { ErrorListener } from 'antlr4';
 import type { MonacoEditorError } from '../types';
 
-export class ANTLRErrorListener extends ErrorListener<any> {
+interface AntlrOffendingSymbol {
+  _text?: string;
+}
+
+export class ANTLRErrorListener {
   protected errors: MonacoEditorError[] = [];
 
   syntaxError(
-    recognizer: Recognizer<any>,
-    offendingSymbol: any,
+    _recognizer: unknown,
+    offendingSymbol: AntlrOffendingSymbol | undefined,
     line: number,
     column: number,
     message: string,
-    error: RecognitionException | undefined
+    _error: unknown
   ): void {
     let endColumn = column + 1;
 

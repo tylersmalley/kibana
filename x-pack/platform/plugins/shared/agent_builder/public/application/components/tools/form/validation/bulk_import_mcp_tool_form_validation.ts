@@ -71,41 +71,40 @@ export const bulkImportMcpI18nMessages = {
   },
 };
 
+const bulkImportMcpToolFormSchemaBase = z.object({
+  connectorId: z.string().min(1, { message: bulkImportMcpI18nMessages.connectorId.requiredError }),
+  tools: z
+    .array(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+      })
+    )
+    .min(1, { message: bulkImportMcpI18nMessages.tools.requiredError }),
+  namespace: z
+    .string()
+    .min(1, { message: bulkImportMcpI18nMessages.namespace.requiredError })
+    .max(toolIdMaxLength, { message: bulkImportMcpI18nMessages.namespace.tooLongError })
+    .regex(toolIdRegexp, { message: bulkImportMcpI18nMessages.namespace.formatError })
+    .superRefine((name: string, ctx: z.RefinementCtx) => {
+      if (isInProtectedNamespace(name) || hasNamespaceName(name)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: bulkImportMcpI18nMessages.namespace.protectedNamespaceError(name),
+        });
+      }
+    }),
+  labels: z.array(z.string()),
+});
+
+type BulkImportMcpToolFormData = z.output<typeof bulkImportMcpToolFormSchemaBase>;
+
 export const useBulkImportMcpToolFormValidationSchema = () => {
   const { toolsService } = useAgentBuilderServices();
   const queryClient = useQueryClient();
 
-  return z
-    .object({
-      connectorId: z
-        .string()
-        .min(1, { message: bulkImportMcpI18nMessages.connectorId.requiredError }),
-      tools: z
-        .array(
-          z.object({
-            name: z.string(),
-            description: z.string(),
-          })
-        )
-        .min(1, { message: bulkImportMcpI18nMessages.tools.requiredError }),
-      namespace: z
-        .string()
-        .min(1, { message: bulkImportMcpI18nMessages.namespace.requiredError })
-        .max(toolIdMaxLength, { message: bulkImportMcpI18nMessages.namespace.tooLongError })
-        .regex(toolIdRegexp, { message: bulkImportMcpI18nMessages.namespace.formatError })
-        .check((ctx) => {
-          const name = ctx.value as string;
-          if (isInProtectedNamespace(name) || hasNamespaceName(name)) {
-            ctx.issues.push({
-              code: 'custom',
-              message: bulkImportMcpI18nMessages.namespace.protectedNamespaceError(name),
-              input: name,
-            });
-          }
-        }),
-      labels: z.array(z.string()),
-    })
-    .superRefine(async (data, ctx) => {
+  return bulkImportMcpToolFormSchemaBase.superRefine(
+    async (data: BulkImportMcpToolFormData, ctx: z.RefinementCtx) => {
       if (data.namespace.length > 0 && data.connectorId.length > 0) {
         const { isValid } = await queryClient.fetchQuery({
           queryKey: queryKeys.tools.namespace.validate(data.namespace, data.connectorId),
@@ -124,5 +123,6 @@ export const useBulkImportMcpToolFormValidationSchema = () => {
           });
         }
       }
-    });
+    }
+  );
 };

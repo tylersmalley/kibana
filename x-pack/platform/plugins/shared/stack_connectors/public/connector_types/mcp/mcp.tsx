@@ -17,7 +17,9 @@ export const getConnectorType = (): MCPConnector => {
     id: CONNECTOR_ID,
     actionTypeTitle: CONNECTOR_NAME,
     isExperimental: true,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: i18n.translate('xpack.stackConnectors.components.mcp.selectMessageText', {
       defaultMessage: 'Connect to an MCP (Model Context Protocol) server.',
     }),
@@ -30,8 +32,12 @@ export const getConnectorType = (): MCPConnector => {
 
       return { errors: {} };
     },
-    actionConnectorFields: lazy(() => import('./connector')),
-    actionParamsFields: lazy(() => import('./params')),
+    actionConnectorFields: lazy(() =>
+      import('./connector.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./params.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     connectorForm: {
       serializer: formSerializer,
       deserializer: formDeserializer,

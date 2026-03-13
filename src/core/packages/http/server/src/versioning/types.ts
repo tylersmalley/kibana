@@ -16,6 +16,7 @@ import type {
   IKibanaResponse,
   RouteConfigOptions,
   RouteValidatorFullConfigRequest,
+  RouteValidationSpec,
   RequestHandlerContextBase,
   RouteValidationFunction,
   LazyValidator,
@@ -358,6 +359,33 @@ export interface AddVersionOpts<P, Q, B> {
   };
 }
 
+type InferValidatedValue<TSpec> = TSpec extends RouteValidationSpec<infer TValue>
+  ? TValue
+  : unknown;
+
+type InferAddVersionRequestPart<
+  TValidate,
+  TPart extends keyof RouteValidatorFullConfigRequest<any, any, any>
+> = TValidate extends false
+  ? unknown
+  : TValidate extends () => infer TResolvedValidate
+  ? InferAddVersionRequestPart<TResolvedValidate, TPart>
+  : TValidate extends { request?: infer TRequest }
+  ? TRequest extends { [K in TPart]?: infer TSpec }
+    ? InferValidatedValue<NonNullable<TSpec>>
+    : unknown
+  : unknown;
+
+interface AddVersionParams<TOptions extends AddVersionOpts<any, any, any>> {
+  params: InferAddVersionRequestPart<TOptions['validate'], 'params'>;
+  query: InferAddVersionRequestPart<TOptions['validate'], 'query'>;
+  body: InferAddVersionRequestPart<TOptions['validate'], 'body'>;
+}
+
+type VersionedRequestHandler<P, Q, B, Ctx extends RqCtx> = (
+  ...params: Parameters<RequestHandler<P, Q, B, Ctx>>
+) => MaybePromise<IKibanaResponse>;
+
 /**
  * A versioned route
  * @public
@@ -373,9 +401,18 @@ export interface VersionedRoute<
    * @returns A versioned route, allows for fluent chaining of version declarations
    * @public
    */
-  addVersion<P = unknown, Q = unknown, B = unknown>(
+  addVersion<
+    TOptions extends AddVersionOpts<any, any, any>,
+    P = AddVersionParams<TOptions>['params'],
+    Q = AddVersionParams<TOptions>['query'],
+    B = AddVersionParams<TOptions>['body']
+  >(
+    options: TOptions & AddVersionOpts<P, Q, B>,
+    handler: VersionedRequestHandler<P, Q, B, Ctx>
+  ): VersionedRoute<Method, Ctx>;
+  addVersion<P, Q, B>(
     options: AddVersionOpts<P, Q, B>,
-    handler: (...params: Parameters<RequestHandler<P, Q, B, Ctx>>) => MaybePromise<IKibanaResponse>
+    handler: VersionedRequestHandler<P, Q, B, Ctx>
   ): VersionedRoute<Method, Ctx>;
 }
 

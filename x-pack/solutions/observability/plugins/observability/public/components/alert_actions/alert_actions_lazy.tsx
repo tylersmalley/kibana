@@ -8,4 +8,6 @@
 import { lazy } from 'react';
 import type { AlertActions as AlertActionsType } from './alert_actions';
 
-export const AlertActions = lazy(() => import('./alert_actions')) as AlertActionsType;
+export const AlertActions = lazy(() =>
+  import('./alert_actions.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+) as AlertActionsType;

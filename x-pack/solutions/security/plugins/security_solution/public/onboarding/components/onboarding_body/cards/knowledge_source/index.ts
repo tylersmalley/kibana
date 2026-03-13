@@ -17,12 +17,11 @@ export const knowledgeSourceCardConfig: OnboardingCardConfig = {
   id: OnboardingCardId.knowledgeSource,
   title: KNOWLEDGE_SOURCE_CARD_TITLE,
   icon: IconRules,
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_knowledge_source_card" */
-        './knowledge_source_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_knowledge_source_card" */
+      './knowledge_source_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   checkComplete: checkKnowledgeSourceComplete,
   capabilitiesRequired: [RULES_UI_EXTERNAL_DETECTIONS_PRIVILEGE],

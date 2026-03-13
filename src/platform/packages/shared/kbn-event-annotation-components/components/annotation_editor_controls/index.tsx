@@ -10,7 +10,11 @@
 import React, { Suspense, lazy } from 'react';
 import type { Props } from './annotation_editor_controls';
 
-const AnnotationEditorControlsLazy = lazy(() => import('./annotation_editor_controls'));
+const AnnotationEditorControlsLazy = lazy(() =>
+  import('./annotation_editor_controls.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const AnnotationEditorControls = (props: Props) => (
   <Suspense fallback={null}>

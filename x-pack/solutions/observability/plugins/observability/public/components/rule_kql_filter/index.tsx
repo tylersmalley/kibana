@@ -10,7 +10,9 @@ import type { WithKueryAutocompletionLifecycleProps } from './with_kuery_autocom
 import type { AutocompleteFieldProps } from './autocomplete_field';
 import type { RuleFlyoutKueryBarProps } from './kuery_bar';
 
-const RuleFlyoutKueryBarLazy = lazy(() => import('./kuery_bar'));
+const RuleFlyoutKueryBarLazy = lazy(() =>
+  import('./kuery_bar.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export function RuleFlyoutKueryBar(props: RuleFlyoutKueryBarProps) {
   return (
@@ -20,7 +22,11 @@ export function RuleFlyoutKueryBar(props: RuleFlyoutKueryBarProps) {
   );
 }
 
-const AutocompleteFieldLazy = lazy(() => import('./autocomplete_field/autocomplete_field'));
+const AutocompleteFieldLazy = lazy(() =>
+  import('./autocomplete_field/autocomplete_field.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function AutocompleteField(props: AutocompleteFieldProps) {
   return (
@@ -30,7 +36,11 @@ export function AutocompleteField(props: AutocompleteFieldProps) {
   );
 }
 
-const WithKueryAutocompletionLazy = lazy(() => import('./with_kuery_autocompletion'));
+const WithKueryAutocompletionLazy = lazy(() =>
+  import('./with_kuery_autocompletion.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export function WithKueryAutocompletion(props: WithKueryAutocompletionLifecycleProps) {
   return (

@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { EuiSkeletonLoading } from '@elastic/eui';
+import { AvailablePackagesHook as loadAvailablePackagesHook } from '@kbn/fleet-plugin/public';
 import type { AvailablePackagesHookType } from '@kbn/fleet-plugin/public';
 import { Routes, Route } from '@kbn/shared-ux-router';
 import { Redirect } from 'react-router-dom';
@@ -80,6 +81,8 @@ export const ConfigurationsIntegrationsHome = React.memo<IntegrationsPageProps>(
 ConfigurationsIntegrationsHome.displayName = 'ConfigurationsIntegrationsHome';
 
 export const LazyConfigurationsIntegrationsHome = withLazyHook(ConfigurationsIntegrationsHome, () =>
-  import('@kbn/fleet-plugin/public').then((module) => module.AvailablePackagesHook())
+  loadAvailablePackagesHook().then(({ useAvailablePackages }) => ({
+    useAvailablePackages,
+  }))
 );
 LazyConfigurationsIntegrationsHome.displayName = 'LazyConfigurationsIntegrationsHome';

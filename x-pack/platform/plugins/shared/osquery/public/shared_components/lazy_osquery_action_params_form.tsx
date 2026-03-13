@@ -9,7 +9,11 @@ import { EuiLoadingSpinner } from '@elastic/eui';
 import React, { lazy, Suspense } from 'react';
 import type { OsqueryResponseActionsParamsFormProps } from './osquery_response_action_type';
 
-const OsqueryResponseActionParamsForm = lazy(() => import('./osquery_response_action_type'));
+const OsqueryResponseActionParamsForm = lazy(() =>
+  import('./osquery_response_action_type/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const getLazyOsqueryResponseActionTypeForm =
   // eslint-disable-next-line react/display-name

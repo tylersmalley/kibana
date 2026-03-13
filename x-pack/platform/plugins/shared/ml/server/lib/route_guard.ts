@@ -7,7 +7,6 @@
 
 import type {
   KibanaRequest,
-  KibanaResponseFactory,
   CustomRequestHandlerContext,
   IScopedClusterClient,
   RequestHandler,
@@ -35,16 +34,26 @@ type MLRequestHandlerContext = CustomRequestHandlerContext<{
   alerting?: AlertingApiRequestHandlerContext;
 }>;
 
-type Handler<P = unknown, Q = unknown, B = unknown> = (handlerParams: {
+type GuardedHandler<
+  Context extends MLRequestHandlerContext,
+  THandler extends RequestHandler<any, any, any, Context, any, any>
+> = (handlerParams: {
   client: IScopedClusterClient;
-  request: KibanaRequest<P, Q, B>;
-  response: KibanaResponseFactory;
-  context: MLRequestHandlerContext;
+  request: Parameters<THandler>[1];
+  response: Parameters<THandler>[2];
+  context: Parameters<THandler>[0];
   mlSavedObjectService: MLSavedObjectService;
   mlClient: MlClient;
   getDataViewsService(): Promise<DataViewsService>;
   auditLogger: MlAuditLogger;
-}) => ReturnType<RequestHandler<P, Q, B>>;
+}) => ReturnType<THandler>;
+
+type RouteGuardWrapper = <
+  Context extends MLRequestHandlerContext,
+  THandler extends RequestHandler<any, any, any, Context, any, any>
+>(
+  handler: GuardedHandler<Context, THandler>
+) => THandler;
 
 type GetMlSavedObjectClient = (request: KibanaRequest) => SavedObjectsClientContract | null;
 type GetInternalSavedObjectClient = () => SavedObjectsClientContract | null;
@@ -83,20 +92,21 @@ export class RouteGuard {
     this._serverless = serverless;
   }
 
-  public fullLicenseAPIGuard<P, Q, B>(handler: Handler<P, Q, B>) {
+  public fullLicenseAPIGuard: RouteGuardWrapper = (handler) => {
     return this._guard(() => this._mlLicense.isFullLicense(), handler);
-  }
+  };
 
-  public basicLicenseAPIGuard<P, Q, B>(handler: Handler<P, Q, B>) {
+  public basicLicenseAPIGuard: RouteGuardWrapper = (handler) => {
     return this._guard(() => this._mlLicense.isMinimumLicense(), handler);
-  }
+  };
 
-  private _guard<P, Q, B>(check: () => boolean, handler: Handler<P, Q, B>) {
-    return async (
-      context: MLRequestHandlerContext,
-      request: KibanaRequest<P, Q, B>,
-      response: KibanaResponseFactory
-    ) => {
+  private _guard<
+    Context extends MLRequestHandlerContext,
+    THandler extends RequestHandler<any, any, any, Context, any, any>
+  >(check: () => boolean, handler: GuardedHandler<Context, THandler>): THandler {
+    return (async (...args: Parameters<THandler>) => {
+      const [context, request, response] = args;
+
       if (check() === false) {
         return response.forbidden();
       }
@@ -151,6 +161,6 @@ export class RouteGuard {
           auditLogger,
         })
       );
-    };
+    }) as THandler;
   }
 }

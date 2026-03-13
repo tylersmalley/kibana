@@ -8,7 +8,7 @@
  */
 
 import type { Document } from 'yaml';
-import type { ZodSafeParseResult, ZodType } from '@kbn/zod/v4';
+import type { z, ZodSafeParseResult, ZodType } from '@kbn/zod/v4';
 import { ZodError } from '@kbn/zod/v4';
 import { parseYamlToJSONWithoutValidation } from './parse_workflow_yaml_to_json_without_validation';
 import { getYamlDocumentErrors } from './validate_yaml_document';
@@ -46,7 +46,7 @@ export function parseWorkflowYamlToJSON<T extends ZodType>(
   const result = schema.safeParse(parseResult.json);
   if (!result.success) {
     // Filter out validation errors for dynamic values (${{ }}), variable values ({{ }}), and Liquid tags ({% ... %})
-    const filteredIssues = result.error.issues.filter((issue) => {
+    const filteredIssues = result.error.issues.filter((issue: z.core.$ZodIssue) => {
       if (!issue.path || issue.path.length === 0) {
         return true;
       }

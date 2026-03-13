@@ -6,7 +6,6 @@
  */
 
 import type { Subject } from 'rxjs';
-import type { ObjectType } from '@kbn/config-schema';
 import type {
   RequestHandler,
   RouteConfig,
@@ -17,15 +16,16 @@ import type {
   IKibanaResponse,
   RouteSecurity,
 } from '@kbn/core/server';
+import type { HttpResponsePayload, ResponseError } from '@kbn/core-http-server';
 import type { UMServerLibs, UptimeEsClient } from '../lib/lib';
 import type { UptimeRequestHandlerContext } from '../../types';
 import type { UptimeServerSetup } from '../lib/adapters';
 
-export type SyntheticsRequest = KibanaRequest<
-  Record<string, any>,
-  Record<string, any>,
-  Record<string, any>
->;
+export type SyntheticsRequest<
+  Params = Record<string, any>,
+  Query = Record<string, any>,
+  Body = Record<string, any>
+> = KibanaRequest<Params, Query, Body>;
 
 /**
  * Defines the basic properties employed by Uptime routes.
@@ -45,8 +45,13 @@ export interface UMServerRoute<T> {
  * Merges basic uptime route properties with the route config type
  * provided by Kibana core.
  */
-export type UMRouteDefinition<T> = UMServerRoute<T> &
-  Omit<RouteConfig<ObjectType, ObjectType, ObjectType, RouteMethod>, 'security'> & {
+export type UMRouteDefinition<
+  T,
+  Params = Record<string, any>,
+  Query = Record<string, any>,
+  Body = Record<string, any>
+> = UMServerRoute<T> &
+  Omit<RouteConfig<Params, Query, Body, RouteMethod>, 'security'> & {
     security?: RouteSecurity;
   };
 /**
@@ -55,23 +60,34 @@ export type UMRouteDefinition<T> = UMServerRoute<T> &
  * to successfully interact with the Kibana platform.
  */
 export type UMKibanaRoute = UMRouteDefinition<
-  RequestHandler<ObjectType, ObjectType, ObjectType, UptimeRequestHandlerContext>
+  RequestHandler<
+    Record<string, any>,
+    Record<string, any>,
+    Record<string, any>,
+    UptimeRequestHandlerContext
+  >
 >;
 
 /**
  * This is an abstraction over the default Kibana route type. This allows us to use custom
  * arguments in our route handlers and impelement custom middleware.
  */
-export type UptimeRoute<ClientContract = unknown> = UMRouteDefinition<
-  UMRouteHandler<ClientContract>
->;
+export type UptimeRoute<
+  ClientContract extends HttpResponsePayload | ResponseError = any,
+  Params = Record<string, any>,
+  Query = Record<string, any>,
+  Body = Record<string, any>
+> = UMRouteDefinition<UMRouteHandler<ClientContract, Params, Query, Body>, Params, Query, Body>;
 
 /**
  * Functions of this type accept custom lib functions and outputs a route object.
  */
-export type UMRestApiRouteFactory<ClientContract = unknown> = (
-  libs: UMServerLibs
-) => UptimeRoute<ClientContract>;
+export type UMRestApiRouteFactory<
+  ClientContract extends HttpResponsePayload | ResponseError = any,
+  Params = Record<string, any>,
+  Query = Record<string, any>,
+  Body = Record<string, any>
+> = (libs: UMServerLibs) => UptimeRoute<ClientContract, Params, Query, Body>;
 
 /**
  * Functions of this type accept our internal route format and output a route
@@ -95,15 +111,22 @@ export interface UptimeRouteContext {
 /**
  * This is the contract we specify internally for route handling.
  */
-export type UMRouteHandler<ClientContract = unknown> = ({
+export type UMRouteHandler<
+  ClientContract extends HttpResponsePayload | ResponseError = any,
+  Params = Record<string, any>,
+  Query = Record<string, any>,
+  Body = Record<string, any>
+> = ({
   uptimeEsClient,
   context,
   request,
   response,
   server,
   savedObjectsClient,
-  subject, // @ts-expect-error upgrade typescript v4.9.5
-}: UptimeRouteContext) => Promise<IKibanaResponse<ClientContract> | ClientContract>;
+  subject,
+}: Omit<UptimeRouteContext, 'request'> & {
+  request: KibanaRequest<Params, Query, Body>;
+}) => Promise<IKibanaResponse<ClientContract> | ClientContract>;
 
 export interface RouteContext<Query = Record<string, any>> {
   uptimeEsClient: UptimeEsClient;

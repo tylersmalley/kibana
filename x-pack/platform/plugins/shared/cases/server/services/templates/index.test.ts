@@ -237,7 +237,11 @@ describe('TemplatesService', () => {
 
         const result = await service.getAllTemplates({ ...defaultFindParams });
 
-        expect(result.templates.map((t) => t.name)).toEqual(['Alpha', 'Beta', 'Gamma']);
+        expect(result.templates.map((template: { name: string }) => template.name)).toEqual([
+          'Alpha',
+          'Beta',
+          'Gamma',
+        ]);
       });
     });
 
@@ -286,7 +290,10 @@ describe('TemplatesService', () => {
         expect(result.page).toBe(2);
         expect(result.perPage).toBe(2);
         expect(result.templates).toHaveLength(2);
-        expect(result.templates.map((t) => t.name)).toEqual(['Template C', 'Template D']);
+        expect(result.templates.map((template: { name: string }) => template.name)).toEqual([
+          'Template C',
+          'Template D',
+        ]);
       });
 
       it('returns the last partial page correctly', async () => {

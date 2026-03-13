@@ -11,7 +11,9 @@ import React from 'react';
 import { withSuspense } from '@kbn/shared-ux-utility';
 import type { ContentFrameworkSectionProps } from './section/section';
 
-const LazyContentFrameworkSection = React.lazy(() => import('./section'));
+const LazyContentFrameworkSection = React.lazy(() =>
+  import('./section/index.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 export const ContentFrameworkSection = withSuspense<ContentFrameworkSectionProps>(
   LazyContentFrameworkSection,
   <></>

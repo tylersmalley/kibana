@@ -61,7 +61,7 @@ export const registerFindRoute = (
       const managementService = await managementServicePromise;
       const { getClient, typeRegistry } = (await context.core).savedObjects;
 
-      const searchTypes = Array.isArray(query.type) ? query.type : [query.type];
+      const searchTypes = (Array.isArray(query.type) ? query.type : [query.type]) as string[];
 
       const importAndExportableTypes = searchTypes.filter((type) =>
         typeRegistry.isImportableAndExportable(type)

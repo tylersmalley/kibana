@@ -46,7 +46,11 @@ import { LEARN_MORE_LINK } from './translations';
 import { useKibanaContextForPlugin } from '../../utils/use_kibana';
 import { useBreadcrumbs } from '../../utils/use_breadcrumbs';
 import { SearchConnectorsPageTemplateWrapper } from '../shared/page_template';
-const CreateConnector = lazy(() => import('./create_connector/create_connector'));
+const CreateConnector = lazy(() =>
+  import('./create_connector/create_connector.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const connectorsBreadcrumbs = [
   {

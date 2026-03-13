@@ -92,7 +92,7 @@ export const registerResolveImportErrorsRoute = (
         }),
       },
     },
-    catchAndReturnBoomErrors(async (context, req, res) => {
+    catchAndReturnBoomErrors(async (context: any, req: any, res: any) => {
       const { createNewCopies, compatibilityMode } = req.query;
 
       const usageStatsClient = coreUsageData.getClient();

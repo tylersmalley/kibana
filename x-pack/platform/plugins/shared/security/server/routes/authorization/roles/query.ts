@@ -138,13 +138,13 @@ export function defineQueryRolesRoutes({
             })
           );
 
-          return response.ok<QueryRolesResult>({
-            body: {
-              roles: transformedRoles,
-              count: queryRoles.count,
-              total: queryRoles.total,
-            },
-          });
+          const body: QueryRolesResult = {
+            roles: transformedRoles,
+            count: queryRoles.count,
+            total: queryRoles.total,
+          };
+
+          return response.ok({ body });
         } catch (error) {
           return response.customError(wrapIntoCustomErrorResponse(error));
         }

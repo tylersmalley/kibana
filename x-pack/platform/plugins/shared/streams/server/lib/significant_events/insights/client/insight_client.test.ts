@@ -10,7 +10,7 @@ import expect from 'expect';
 
 type ResponseErrorMeta = ConstructorParameters<typeof esErrors.ResponseError>[0]['meta'];
 import type {
-  IStorageClient,
+  InternalIStorageClient,
   StorageClientBulkResponse,
   StorageClientCleanResponse,
   StorageClientDeleteResponse,
@@ -20,13 +20,12 @@ import type {
 import type { Insight } from '@kbn/streams-schema';
 import { InsightClient } from './insight_client';
 import { INSIGHT_IMPACT, INSIGHT_IMPACT_LEVEL, INSIGHT_GENERATED_AT } from './fields';
-import type { InsightStorageSettings } from './storage_settings';
 import { StatusError } from '../../../streams/errors/status_error';
 
+type InsightStorageDocument = Insight & { _id?: string };
+
 describe('InsightClient', () => {
-  const createMockStorageClient = (): jest.Mocked<
-    IStorageClient<InsightStorageSettings, Insight>
-  > =>
+  const createMockStorageClient = (): jest.Mocked<InternalIStorageClient<InsightStorageDocument>> =>
     ({
       index: jest.fn(),
       get: jest.fn(),
@@ -35,7 +34,7 @@ describe('InsightClient', () => {
       bulk: jest.fn(),
       clean: jest.fn(),
       existsIndex: jest.fn(),
-    } as jest.Mocked<IStorageClient<InsightStorageSettings, Insight>>);
+    } as jest.Mocked<InternalIStorageClient<InsightStorageDocument>>);
 
   const defaultGeneratedAt = '2024-01-15T12:00:00.000Z';
 

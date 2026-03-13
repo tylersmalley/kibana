@@ -32,8 +32,16 @@ export function getConnectorType(): ConnectorTypeModel<
       defaultMessage: 'HTTP',
     }),
     getHideInUi: () => true, // hidden from the stack connectors UI, will still be available for workflows UI
-    actionConnectorFields: lazy(() => import('./http_connectors')),
-    actionParamsFields: lazy(() => import('./http_params')),
+    actionConnectorFields: lazy(() =>
+      import('./http_connectors.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./http_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validateParams: async (actionParams: ActionParamsType) => {
       return { errors: {} };
     },

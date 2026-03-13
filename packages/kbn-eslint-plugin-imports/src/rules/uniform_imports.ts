@@ -16,6 +16,22 @@ import { report } from '../helpers/report';
 import { visitAllImportStatements } from '../helpers/visit_all_import_statements';
 import { getSourcePath } from '../helpers/source';
 import { getImportResolver } from '../get_import_resolver';
+import type { Importer } from '../helpers/visit_all_import_statements';
+import { getNodeEsmExtension, isNodeEsmFile } from '../helpers/node_module_type';
+
+const ESM_IMPORT_EXT_RE = /\.(?:[cm]?jsx?|(?:d\.)?[cm]?tsx?|json)$/;
+
+const isDynamicImport = (importer: Importer): boolean =>
+  importer.type === 'ImportExpression' ||
+  (importer.type === 'CallExpression' && 'callee' in importer && importer.callee.type === 'Import');
+
+const usesNodeEsmRelativeImports = (sourcePath: string, importer: Importer): boolean => {
+  if (isDynamicImport(importer)) {
+    return true;
+  }
+
+  return isNodeEsmFile(sourcePath);
+};
 
 export const UniformImportsRule: Rule.RuleModule = {
   meta: {
@@ -31,8 +47,12 @@ export const UniformImportsRule: Rule.RuleModule = {
     const sourceDirname = Path.dirname(sourcePath);
     const ownPackageId = resolver.getPackageIdForPath(sourcePath);
 
-    return visitAllImportStatements((req, { node, type }) => {
+    return visitAllImportStatements((req, { node, type, importer }) => {
       if (!req) {
+        return;
+      }
+
+      if (type === 'esm' && req.startsWith('.') && ESM_IMPORT_EXT_RE.test(req)) {
         return;
       }
 
@@ -40,6 +60,12 @@ export const UniformImportsRule: Rule.RuleModule = {
       if (result?.type !== 'file' || result.nodeModule) {
         return;
       }
+
+      const explicitRelativeEsmImport =
+        type === 'esm' && req.startsWith('.') && usesNodeEsmRelativeImports(sourcePath, importer);
+      const emittedExtension = explicitRelativeEsmImport
+        ? getNodeEsmExtension(result.absolute)
+        : undefined;
 
       const { pkgId } = result;
 
@@ -50,6 +76,8 @@ export const UniformImportsRule: Rule.RuleModule = {
           dirname: sourceDirname,
           sourcePath,
           type,
+          emittedExtension,
+          preserveIndex: explicitRelativeEsmImport,
         });
 
         if (req !== correct) {

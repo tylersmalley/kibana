@@ -35,13 +35,28 @@ This rule validates that every import request in the repository follows a standa
  - imports across packages must reference the other package using it's module id
  - imports to code not in a package must use relative paths
  - imports to an `index` file end with the directory name, ie `/index` or `/index.{ext}` are stripped
- - unless this is a `require.resolve()`, the imports should not mention file extensions. `require.resolve()` calls will retain the extension if added manually
+ - unless this is a `require.resolve()`, the imports should not mention file extensions
+ - explicit relative ESM extensions are preserved when they are required by NodeNext resolution, such as `import()` calls and files inside `"type": "module"` packages
+ - when a relative ESM import needs an emitted extension, the fixer rewrites TypeScript sources to their runtime extension, usually `.js`
+ - `require.resolve()` calls will retain the extension if added manually
 
 This rule is not configurable, should never be skipped, and is auto-fixable.
 
 ## `@kbn/imports/require_import`
 
 This rule validates that specific imports are present in a file. This allows you to e.g. require Mocha globals in test files automatically. Currently the only supported import type is a TypeScript reference type. This rule is auto-fixable.
+
+## `@kbn/imports/react_lazy_default_interop`
+
+This rule fixes `React.lazy()` and `lazy()` loaders that import TypeScript modules emitted as CommonJS under NodeNext. In those cases the dynamic import resolves to a module namespace whose `default` contains the actual React component, so the lazy loader must return `default: lazyModule.default`.
+
+The rule is intentionally narrow:
+
+ - it only targets `lazy(() => import(...))` and `React.lazy(() => import(...))`
+ - it only rewrites imports that resolve to repo files emitted as CommonJS
+ - it also normalizes relative dynamic import paths to their emitted runtime request, including `index.js` for folder entrypoints
+
+This rule is auto-fixable.
 
 ## `@kbn/imports/exports_moved_packages`
 

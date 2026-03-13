@@ -7,7 +7,12 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { Plugin, CoreSetup, CustomRequestHandlerContext } from '@kbn/core/server';
+import type {
+  Plugin,
+  CoreSetup,
+  CustomRequestHandlerContext,
+  RouteValidationResultFactory,
+} from '@kbn/core/server';
 import { schema } from '@kbn/config-schema';
 import type { PluginAApiRequestContext } from '@kbn/core-plugin-a-plugin/server';
 
@@ -18,6 +23,11 @@ type PluginBContext = CustomRequestHandlerContext<{
 export class CorePluginBPlugin implements Plugin {
   public setup(core: CoreSetup, deps: {}) {
     const router = core.http.createRouter<PluginBContext>();
+    interface PluginBBody {
+      bar: string;
+      baz: string;
+    }
+
     router.get(
       {
         path: '/core_plugin_b',
@@ -48,7 +58,8 @@ export class CorePluginBPlugin implements Plugin {
         },
         validate: {
           query: schema.object({ id: schema.string() }),
-          body: ({ bar, baz } = {}, { ok, badRequest }) => {
+          body: (data: unknown, { ok, badRequest }: RouteValidationResultFactory) => {
+            const { bar, baz } = (data as Partial<PluginBBody>) ?? {};
             if (typeof bar === 'string' && bar === baz) {
               return ok({ bar, baz });
             } else {

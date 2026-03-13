@@ -127,10 +127,10 @@ export function registerSearchApplicationsRoutes({ log, router }: RouteDependenc
           template: schema.maybe(
             schema.object({
               script: schema.object({
-                source: schema.oneOf([schema.string(), schema.object({}, { unknowns: 'allow' })]),
                 lang: schema.string(),
-                params: schema.maybe(schema.object({}, { unknowns: 'allow' })),
                 options: schema.maybe(schema.object({}, { unknowns: 'allow' })),
+                params: schema.maybe(schema.object({}, { unknowns: 'allow' })),
+                source: schema.oneOf([schema.string(), schema.object({}, { unknowns: 'allow' })]),
               }),
             })
           ),
@@ -152,20 +152,19 @@ export function registerSearchApplicationsRoutes({ log, router }: RouteDependenc
           name: request.params.engine_name,
           search_application: {
             indices: request.body.indices,
-            // @ts-expect-error elasticsearch@9.0.0 has this parameter been renamed to analytics_collection_name?
             name: request.params.engine_name,
             template:
               script == null
                 ? undefined
                 : {
                     script: {
+                      lang: script.lang,
+                      options: script.options,
+                      params: script.params,
                       source:
                         typeof script.source === 'string'
                           ? script.source
                           : JSON.stringify(script.source),
-                      lang: script.lang,
-                      params: script.params,
-                      options: script.options,
                     },
                   },
             updated_at_millis: Date.now(),

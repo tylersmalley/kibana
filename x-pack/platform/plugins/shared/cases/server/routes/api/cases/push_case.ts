@@ -7,14 +7,13 @@
 
 import { decodeWithExcessOrThrow } from '../../../common/runtime_types';
 import { CASE_PUSH_URL } from '../../../../common/constants';
-import type { CaseRoute } from '../types';
 import { createCaseError } from '../../../common/error';
 import { createCasesRoute } from '../create_cases_route';
 import { caseApiV1 } from '../../../../common/types/api';
 import type { caseDomainV1 } from '../../../../common/types/domain';
 import { DEFAULT_CASES_ROUTE_SECURITY } from '../constants';
 
-export const pushCaseRoute: CaseRoute = createCasesRoute({
+export const pushCaseRoute = createCasesRoute({
   method: 'post',
   path: CASE_PUSH_URL,
   security: DEFAULT_CASES_ROUTE_SECURITY,

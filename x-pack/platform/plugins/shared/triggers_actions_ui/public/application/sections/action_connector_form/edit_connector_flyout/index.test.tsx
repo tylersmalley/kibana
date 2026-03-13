@@ -47,7 +47,11 @@ describe('EditConnectorFlyout', () => {
   const onConnectorUpdated = jest.fn();
 
   const actionTypeModel = actionTypeRegistryMock.createMockActionTypeModel({
-    actionConnectorFields: lazy(() => import('../connector_mock')),
+    actionConnectorFields: lazy(() =>
+      import('../connector_mock.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validateParams: (): Promise<GenericValidationResult<unknown>> => {
       const validationResult = { errors: {} };
       return Promise.resolve(validationResult);
@@ -590,7 +594,11 @@ describe('EditConnectorFlyout', () => {
 
     it('runs pre submit validator correctly', async () => {
       const errorActionTypeModel = actionTypeRegistryMock.createMockActionTypeModel({
-        actionConnectorFields: lazy(() => import('../connector_error_mock')),
+        actionConnectorFields: lazy(() =>
+          import('../connector_error_mock.js').then(({ default: lazyModule }) => ({
+            default: lazyModule.default,
+          }))
+        ),
       });
       actionTypeRegistry.get.mockReturnValue(errorActionTypeModel);
 
@@ -780,7 +788,11 @@ describe('is spec connector', () => {
   const onConnectorUpdated = jest.fn();
 
   const actionTypeModel = actionTypeRegistryMock.createMockActionTypeModel({
-    actionConnectorFields: lazy(() => import('../connector_mock')),
+    actionConnectorFields: lazy(() =>
+      import('../connector_mock.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     source: 'spec',
     validateParams: (): Promise<GenericValidationResult<unknown>> => {
       const validationResult = { errors: {} };

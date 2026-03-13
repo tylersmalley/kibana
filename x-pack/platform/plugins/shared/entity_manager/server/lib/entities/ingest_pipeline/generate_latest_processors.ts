@@ -15,6 +15,8 @@ import {
 import { generateLatestIndexName } from '../helpers/generate_component_id';
 import { isBuiltinDefinition } from '../helpers/is_builtin_definition';
 
+type EntityIdentityField = EntityDefinition['identityFields'][number];
+
 function getMetadataSourceField({ aggregation, destination, source }: MetadataField) {
   if (aggregation.type === 'terms') {
     return `ctx.entity.metadata.${destination}.keySet()`;
@@ -36,7 +38,7 @@ function createMetadataPainlessScript(definition: EntityDefinition) {
     return '';
   }
 
-  return definition.metadata.reduce((acc, metadata) => {
+  return definition.metadata.reduce((acc: string, metadata: MetadataField) => {
     const { destination, source } = metadata;
     const optionalFieldPath = destination.replaceAll('.', '?.');
 
@@ -65,7 +67,7 @@ function createMetadataPainlessScript(definition: EntityDefinition) {
 function liftIdentityFieldsToDocumentRoot(
   definition: EntityDefinition
 ): IngestProcessorContainer[] {
-  return definition.identityFields.map((key) => ({
+  return definition.identityFields.map((key: EntityIdentityField) => ({
     set: {
       if: `ctx.entity?.identity?.${key.field.replaceAll('.', '?.')} != null`,
       field: key.field,
@@ -142,16 +144,18 @@ export function generateLatestProcessors(definition: EntityDefinition): IngestPr
     {
       set: {
         field: 'entity.identity_fields',
-        value: definition.identityFields.map((identityField) => identityField.field),
+        value: definition.identityFields.map(
+          (identityField: EntityIdentityField) => identityField.field
+        ),
       },
     },
     {
       set: {
         field: 'entity.id',
         value: definition.identityFields
-          .map((identityField) => identityField.field)
+          .map((identityField: EntityIdentityField) => identityField.field)
           .sort()
-          .map((identityField) => `{{{entity.identity.${identityField}}}}`)
+          .map((identityField: string) => `{{{entity.identity.${identityField}}}}`)
           .join('-'),
       },
     },

@@ -14,8 +14,55 @@ import type { RouteAccess, RouteConfig, RouteDeprecationInfo, RouteMethod } from
 import type { RequestHandler, RequestHandlerWrapper } from './request_handler';
 import type { RequestHandlerContextBase } from './request_handler_context';
 import type { RouteConfigOptions } from './route';
-import type { RouteValidator } from './route_validator';
+import type {
+  RouteValidationSpec,
+  RouteValidator,
+  RouteValidatorFullConfigRequest,
+} from './route_validator';
 import type { InternalRouteSecurity } from './request';
+
+type InferValidatedValue<TSpec> = TSpec extends RouteValidationSpec<infer TValue>
+  ? TValue
+  : unknown;
+
+type IsUnknown<T> = unknown extends T ? ([T] extends [unknown] ? true : false) : false;
+
+type InferRouteValidatedPart<
+  TValidate,
+  TPart extends keyof RouteValidatorFullConfigRequest<any, any, any>
+> = TValidate extends false
+  ? unknown
+  : TValidate extends () => infer TResolvedValidate
+  ? InferRouteValidatedPart<TResolvedValidate, TPart>
+  : TValidate extends { request: infer TRequest }
+  ? InferRouteValidatedPart<TRequest, TPart>
+  : TValidate extends { [K in TPart]?: infer TSpec }
+  ? InferValidatedValue<NonNullable<TSpec>>
+  : unknown;
+
+type InferRouteConfigPart<
+  TRoute extends RouteConfig<any, any, any, RouteMethod>,
+  TPart extends keyof RouteValidatorFullConfigRequest<any, any, any>
+> = TPart extends 'params'
+  ? TRoute extends RouteConfig<infer P, any, any, RouteMethod>
+    ? P
+    : unknown
+  : TPart extends 'query'
+  ? TRoute extends RouteConfig<any, infer Q, any, RouteMethod>
+    ? Q
+    : unknown
+  : TPart extends 'body'
+  ? TRoute extends RouteConfig<any, any, infer B, RouteMethod>
+    ? B
+    : unknown
+  : unknown;
+
+type InferRouteRequestPart<
+  TRoute extends RouteConfig<any, any, any, RouteMethod>,
+  TPart extends keyof RouteValidatorFullConfigRequest<any, any, any>
+> = IsUnknown<InferRouteValidatedPart<TRoute['validate'], TPart>> extends true
+  ? InferRouteConfigPart<TRoute, TPart>
+  : InferRouteValidatedPart<TRoute['validate'], TPart>;
 
 /**
  * Route handler common definition
@@ -25,8 +72,13 @@ import type { InternalRouteSecurity } from './request';
 export type RouteRegistrar<
   Method extends RouteMethod,
   Context extends RequestHandlerContextBase = RequestHandlerContextBase
-> = <P, Q, B>(
-  route: RouteConfig<P, Q, B, Method>,
+> = <
+  TRoute extends RouteConfig<any, any, any, Method>,
+  P = InferRouteRequestPart<TRoute, 'params'>,
+  Q = InferRouteRequestPart<TRoute, 'query'>,
+  B = InferRouteRequestPart<TRoute, 'body'>
+>(
+  route: TRoute,
   handler: RequestHandler<P, Q, B, Context, Method>
 ) => void;
 

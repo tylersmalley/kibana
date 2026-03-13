@@ -10,6 +10,7 @@
 import type { CoreSetup } from '@kbn/core/public';
 import { i18n } from '@kbn/i18n';
 import { migrateToLatest } from '@kbn/kibana-utils-plugin/common';
+import { hashUrl } from '@kbn/kibana-utils-plugin/public';
 import type { Location } from 'history';
 import { BehaviorSubject } from 'rxjs';
 import type { UrlService } from '../../../common/url_service';
@@ -39,7 +40,7 @@ export class RedirectManager {
         const abortController = new AbortController();
         this.onMount(params.history.location, abortController.signal);
 
-        const { render } = await import('./render');
+        const { render } = await import('./render.js');
         const [start] = await core.getStartServices();
         const { chrome, uiSettings, userProfile } = start;
 
@@ -83,7 +84,6 @@ export class RedirectManager {
         let redirectUrl = (locatorState as LegacyShortUrlLocatorParams).url;
         const storeInSessionStorage = core.uiSettings.get('state:storeInSessionStorage');
         if (storeInSessionStorage) {
-          const { hashUrl } = await import('@kbn/kibana-utils-plugin/public');
           redirectUrl = hashUrl(redirectUrl);
         }
 

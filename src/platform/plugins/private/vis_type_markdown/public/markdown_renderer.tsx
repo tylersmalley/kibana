@@ -22,7 +22,11 @@ export interface MarkdownVisRendererDependencies {
 }
 
 // @ts-ignore
-const MarkdownVisComponent = lazy(() => import('./markdown_vis_controller'));
+const MarkdownVisComponent = lazy(() =>
+  import('./markdown_vis_controller.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const getMarkdownVisRenderer: ({
   getStartDeps,

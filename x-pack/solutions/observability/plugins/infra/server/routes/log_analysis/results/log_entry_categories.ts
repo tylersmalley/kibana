@@ -9,6 +9,7 @@ import Boom from '@hapi/boom';
 
 import { createRouteValidationFunction } from '@kbn/io-ts-utils';
 import { logAnalysisResultsV1 } from '../../../../common/http_api';
+import type { GetLogEntryCategoriesRequestPayload } from '../../../../common/http_api/log_analysis/results/v1/log_entry_categories';
 import type { InfraBackendLibs } from '../../../lib/infra_types';
 import { getTopLogEntryCategories } from '../../../lib/log_analysis';
 import { assertHasInfraMlPlugins } from '../../../utils/request_context';
@@ -56,12 +57,14 @@ export const initGetLogEntryCategoriesRoute = ({ framework }: InfraBackendLibs) 
             endTime,
             categoryCount,
             datasets ?? [],
-            histograms.map((histogram) => ({
-              bucketCount: histogram.bucketCount,
-              endTime: histogram.timeRange.endTime,
-              id: histogram.id,
-              startTime: histogram.timeRange.startTime,
-            })),
+            histograms.map(
+              (histogram: GetLogEntryCategoriesRequestPayload['data']['histograms'][number]) => ({
+                bucketCount: histogram.bucketCount,
+                endTime: histogram.timeRange.endTime,
+                id: histogram.id,
+                startTime: histogram.timeRange.startTime,
+              })
+            ),
             sort
           );
 

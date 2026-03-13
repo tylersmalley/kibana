@@ -7,6 +7,7 @@
 
 import { schema } from '@kbn/config-schema';
 import { SavedObjectsErrorHelpers } from '@kbn/core/server';
+import type { KibanaRequest } from '@kbn/core/server';
 
 import type { ExternalRouteDeps } from '.';
 import { API_VERSIONS } from '../../../../common';
@@ -48,20 +49,22 @@ export function initGetSpaceApi(deps: ExternalRouteDeps) {
           },
         },
       },
-      createLicensedRouteHandler(async (context, request, response) => {
-        const spaceId = request.params.id;
-        const spacesClient = getSpacesService().createSpacesClient(request);
-        try {
-          const space = await spacesClient.get(spaceId);
-          return response.ok({
-            body: space,
-          });
-        } catch (error) {
-          if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
-            return response.notFound();
+      createLicensedRouteHandler(
+        async (context, request: KibanaRequest<{ id: string }>, response) => {
+          const spaceId = request.params.id;
+          const spacesClient = getSpacesService().createSpacesClient(request);
+          try {
+            const space = await spacesClient.get(spaceId);
+            return response.ok({
+              body: space,
+            });
+          } catch (error) {
+            if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
+              return response.notFound();
+            }
+            return response.customError(wrapError(error));
           }
-          return response.customError(wrapError(error));
         }
-      })
+      )
     );
 }

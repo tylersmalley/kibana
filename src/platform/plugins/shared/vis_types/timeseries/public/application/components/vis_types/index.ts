@@ -23,12 +23,24 @@ import type { FetchedIndexPattern } from '../../../../common/types';
  * Disable typescript errors since the components are not typed yet.
  */
 
-const timeseries = lazy(() => import('./timeseries/vis'));
-const metric = lazy(() => import('./metric/vis'));
-const topN = lazy(() => import('./top_n/vis'));
-const table = lazy(() => import('./table/vis'));
-const gauge = lazy(() => import('./gauge/vis'));
-const markdown = lazy(() => import('./markdown/vis'));
+const timeseries = lazy(() =>
+  import('./timeseries/vis.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
+const metric = lazy(() =>
+  import('./metric/vis.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
+const topN = lazy(() =>
+  import('./top_n/vis.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
+const table = lazy(() =>
+  import('./table/vis.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
+const gauge = lazy(() =>
+  import('./gauge/vis.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
+const markdown = lazy(() =>
+  import('./markdown/vis.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export const TimeseriesVisTypes: Record<string, React.ComponentType<TimeseriesVisProps>> = {
   timeseries,

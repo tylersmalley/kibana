@@ -75,13 +75,6 @@ export type RequestHandler<
  * ```
  * @public
  */
-export type RequestHandlerWrapper = <
-  P,
-  Q,
-  B,
-  Context extends RequestHandlerContextBase = RequestHandlerContextBase,
-  Method extends RouteMethod = any,
-  ResponseFactory extends KibanaResponseFactory = KibanaResponseFactory
->(
-  handler: RequestHandler<P, Q, B, Context, Method, ResponseFactory>
-) => RequestHandler<P, Q, B, Context, Method, ResponseFactory>;
+export type RequestHandlerWrapper = <THandler extends RequestHandler<any, any, any, any, any, any>>(
+  handler: THandler
+) => THandler;

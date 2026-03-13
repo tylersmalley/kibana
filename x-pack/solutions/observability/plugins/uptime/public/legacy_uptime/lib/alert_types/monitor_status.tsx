@@ -25,7 +25,11 @@ import { CLIENT_ALERT_TYPES } from '../../../../common/constants/uptime_alerts';
 
 const { defaultActionMessage, defaultRecoveryMessage, description } = MonitorStatusTranslations;
 
-const MonitorStatusAlert = React.lazy(() => import('./lazy_wrapper/monitor_status'));
+const MonitorStatusAlert = React.lazy(() =>
+  import('./lazy_wrapper/monitor_status.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 let validateFunc: (ruleParams: any) => ValidationResult;
 
@@ -48,7 +52,7 @@ export const initMonitorStatusAlertType: AlertTypeInitializer = ({
     if (!validateFunc) {
       (async function loadValidate() {
         const { validateMonitorStatusParams } = await import(
-          './lazy_wrapper/validate_monitor_status'
+          './lazy_wrapper/validate_monitor_status.js'
         );
         validateFunc = validateMonitorStatusParams;
       })();

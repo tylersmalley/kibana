@@ -228,17 +228,3 @@ export default ObservabilityPageTemplate;
 const sideNavTitle = i18n.translate('xpack.observabilityShared.pageLayout.sideNavTitle', {
   defaultMessage: 'Observability',
 });
-
-export const LazyObservabilityPageTemplate = React.lazy(() => import('./page_template'));
-
-export type LazyObservabilityPageTemplateProps = WrappedPageTemplateProps;
-
-export function createLazyObservabilityPageTemplate(
-  injectedDeps: ObservabilityPageTemplateDependencies
-) {
-  return (pageTemplateProps: LazyObservabilityPageTemplateProps) => (
-    <React.Suspense fallback={null}>
-      <LazyObservabilityPageTemplate {...pageTemplateProps} {...injectedDeps} />
-    </React.Suspense>
-  );
-}

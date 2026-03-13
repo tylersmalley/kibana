@@ -45,7 +45,7 @@ export function getConnectorType(): InferenceConnector {
       actionParams: InferenceActionParams
     ): Promise<GenericValidationResult<ValidationErrors>> => {
       const { subAction, subActionParams } = actionParams;
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors: ValidationErrors = {
         input: [],
         body: [],
@@ -122,9 +122,17 @@ export function getConnectorType(): InferenceConnector {
       }
       return { errors };
     },
-    actionConnectorFields: lazy(() => import('./connector')),
-    actionParamsFields: lazy(() => import('./params')),
-    actionReadOnlyExtraComponent: lazy(() => import('./usage_cost_message')),
+    actionConnectorFields: lazy(() =>
+      import('./connector.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./params.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
+    actionReadOnlyExtraComponent: lazy(() =>
+      import('./usage_cost_message.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     connectorForm: {
       serializer: formSerializer,
       deserializer: formDeserializer,

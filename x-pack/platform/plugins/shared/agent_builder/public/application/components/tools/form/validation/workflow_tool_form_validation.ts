@@ -35,7 +35,7 @@ export const createWorkflowFormValidationSchema = (toolsService: ToolsService) =
       .string()
       .min(1, { message: workflowI18nMessages.workflowId.requiredError })
       .refine(
-        async (workflowId) => {
+        async (workflowId: string) => {
           if (!workflowId || !workflowId.trim()) {
             return true;
           }

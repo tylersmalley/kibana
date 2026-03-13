@@ -32,11 +32,15 @@ interface ErrorWithData {
  * }
  * ```
  */
-export const handleErrors =
-  <P, Q, B, Context extends RequestHandlerContext, Method extends RouteMethod>(
-    handler: RequestHandler<P, Q, B, Context, Method>
-  ): RequestHandler<P, Q, B, Context, Method> =>
-  async (context, request, response) => {
+export const handleErrors = <
+  Context extends RequestHandlerContext,
+  Method extends RouteMethod,
+  THandler extends RequestHandler<any, any, any, Context, Method>
+>(
+  handler: THandler
+): THandler =>
+  (async (...args: Parameters<THandler>) => {
+    const [context, request, response] = args;
     try {
       return await handler(context, request, response);
     } catch (error) {
@@ -73,4 +77,4 @@ export const handleErrors =
 
       throw error;
     }
-  };
+  }) as THandler;

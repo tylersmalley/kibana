@@ -5,13 +5,12 @@
  * 2.0.
  */
 
-import { EuiSkeletonRectangle } from '@elastic/eui';
+import { EuiSkeletonRectangle, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 import React, { lazy, Suspense } from 'react';
 
 import type { CoreStart } from '@kbn/core/public';
 import { QueryClient, QueryClientProvider } from '@kbn/react-query';
-import { euiThemeVars } from '@kbn/ui-theme';
 
 import { initTour } from './solution_view_tour';
 import type { EventTracker } from '../analytics';
@@ -19,7 +18,7 @@ import type { ConfigType } from '../config';
 import type { SpacesManager } from '../spaces_manager';
 
 const LazyNavControlPopover = lazy(() =>
-  import('./nav_control_popover').then(({ NavControlPopover }) => ({
+  import('./nav_control_popover.js').then(({ NavControlPopover }) => ({
     default: NavControlPopover,
   }))
 );
@@ -42,6 +41,8 @@ export function initSpacesNavControl(
   });
 
   const SpacesNavControl = () => {
+    const { euiTheme } = useEuiTheme();
+
     if (core.http.anonymousPaths.isAnonymous(window.location.pathname)) {
       return null;
     }
@@ -52,7 +53,7 @@ export function initSpacesNavControl(
           fallback={
             <EuiSkeletonRectangle
               css={css`
-                margin-inline: ${euiThemeVars.euiSizeS};
+                margin-inline: ${euiTheme.size.s};
               `}
               borderRadius="m"
               contentAriaLabel="Loading navigation"

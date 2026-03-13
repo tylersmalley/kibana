@@ -20,9 +20,13 @@ describe('StatusHandler', () => {
   let kibanaConfig: KibanaConfig;
   let logger: MockedLogger;
   let server: Server;
+  let nodeFetchModule: typeof import('node-fetch') & { default: typeof fetch };
 
   beforeAll(async () => {
-    jest.spyOn(await import('node-fetch'), 'default');
+    nodeFetchModule = (await import('node-fetch')) as unknown as typeof import('node-fetch') & {
+      default: typeof fetch;
+    };
+    jest.spyOn(nodeFetchModule, 'default');
   });
 
   beforeEach(async () => {

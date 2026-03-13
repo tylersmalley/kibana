@@ -15,8 +15,10 @@ import type {
   UnifiedFieldListSidebarContainerApi,
 } from './field_list_sidebar_container';
 
-const LazyUnifiedFieldListSidebarContainer = React.lazy(
-  () => import('./field_list_sidebar_container')
+const LazyUnifiedFieldListSidebarContainer = React.lazy(() =>
+  import('./field_list_sidebar_container.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 
 export const UnifiedFieldListSidebarContainer = withSuspense<

@@ -5,8 +5,7 @@
  * 2.0.
  */
 
-import type { Logger, RequestHandlerContext } from '@kbn/core/server';
-import type { KibanaRequest, KibanaResponseFactory, RequestHandler } from '@kbn/core/server';
+import type { Logger, RequestHandler, RequestHandlerContext, RouteMethod } from '@kbn/core/server';
 
 import type { LicensingPluginSetup } from '@kbn/licensing-plugin/server';
 import type { LicenseType } from '@kbn/licensing-types';
@@ -56,15 +55,14 @@ export class License {
     });
   }
 
-  guardApiRoute<P, Q, B>(handler: RequestHandler<P, Q, B>) {
-    const license = this;
-
-    return function licenseCheck(
-      ctx: RequestHandlerContext,
-      request: KibanaRequest<P, Q, B>,
-      response: KibanaResponseFactory
-    ) {
-      const licenseStatus = license.getStatus();
+  guardApiRoute<
+    Context extends RequestHandlerContext,
+    Method extends RouteMethod,
+    THandler extends RequestHandler<any, any, any, Context, Method, any>
+  >(handler: THandler): THandler {
+    return ((...args: Parameters<THandler>) => {
+      const [ctx, request, response] = args;
+      const licenseStatus = this.getStatus();
 
       if (!licenseStatus.isValid) {
         return response.customError({
@@ -76,7 +74,7 @@ export class License {
       }
 
       return handler(ctx, request, response);
-    };
+    }) as THandler;
   }
 
   getStatus() {

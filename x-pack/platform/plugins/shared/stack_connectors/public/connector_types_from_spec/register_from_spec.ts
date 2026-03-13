@@ -47,7 +47,7 @@ export function registerConnectorTypesFromSpecs({
     ),
     import(
       /* webpackChunkName: "generateSchema" */
-      './generate_schema'
+      './generate_schema.js'
     ),
   ]).then(([{ connectorsSpecs }, { generateFormFields }, { generateSchema }]) => {
     for (const spec of Object.values(connectorsSpecs)) {

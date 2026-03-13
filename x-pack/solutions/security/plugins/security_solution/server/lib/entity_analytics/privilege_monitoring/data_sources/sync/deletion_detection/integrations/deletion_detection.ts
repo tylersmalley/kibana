@@ -7,7 +7,7 @@
 
 import type { SavedObjectsClientContract } from '@kbn/core/server';
 
-import type { ErrorCause } from 'elasticsearch-8.x/lib/api/types';
+import type { estypes } from 'elasticsearch-8.x';
 import type { MonitoringEntitySource } from '../../../../../../../../common/api/entity_analytics';
 import type { PrivilegeMonitoringDataClient } from '../../../../engine/data_client';
 import { createSyncMarkersService } from '../../sync_markers';
@@ -31,7 +31,7 @@ export const createDeletionDetectionService = (
 
   const deletionDetection = async (source: MonitoringEntitySource) => {
     const doFullSync = await syncMarkerService.detectNewFullSync(source);
-    const failures: ErrorCause[] = [];
+    const failures: estypes.ErrorCause[] = [];
     if (!doFullSync) {
       dataClient.log(
         'debug',

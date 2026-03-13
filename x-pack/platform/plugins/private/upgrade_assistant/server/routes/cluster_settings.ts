@@ -10,6 +10,11 @@ import { versionCheckHandlerWrapper } from '@kbn/upgrade-assistant-pkg-server';
 import { API_BASE_PATH } from '../../common/constants';
 import type { RouteDependencies } from '../types';
 
+interface ClusterSettingsToDelete {
+  persistent: Record<string, null>;
+  transient: Record<string, null>;
+}
+
 export function registerClusterSettingsRoute({
   router,
   lib: { handleEsError },
@@ -44,7 +49,7 @@ export function registerClusterSettingsRoute({
         });
 
         const settingsToDelete = settings.reduce(
-          (settingsBody, currentSetting) => {
+          (settingsBody: ClusterSettingsToDelete, currentSetting: string) => {
             if (
               Object.keys(currentClusterSettings.persistent).find((key) => key === currentSetting)
             ) {
@@ -59,10 +64,7 @@ export function registerClusterSettingsRoute({
 
             return settingsBody;
           },
-          { persistent: {}, transient: {} } as {
-            persistent: { [key: string]: null };
-            transient: { [key: string]: null };
-          }
+          { persistent: {}, transient: {} } as ClusterSettingsToDelete
         );
 
         const settingsResponse = await client.asCurrentUser.cluster.putSettings({

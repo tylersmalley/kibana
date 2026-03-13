@@ -365,10 +365,12 @@ export class WorkflowsExecutionEnginePlugin
 
               // Check for RRule triggers and log details
               const scheduledTriggers =
-                workflow.definition?.triggers?.filter((trigger) => trigger.type === 'scheduled') ||
-                [];
+                workflow.definition?.triggers?.filter(
+                  (trigger: { type: string }) => trigger.type === 'scheduled'
+                ) || [];
               const rruleTriggers = scheduledTriggers.filter(
-                (trigger) => trigger.type === 'scheduled' && 'rrule' in (trigger.with || {})
+                (trigger: { type: string; with?: Record<string, unknown> }) =>
+                  trigger.type === 'scheduled' && 'rrule' in (trigger.with || {})
               );
 
               // Create workflow execution record

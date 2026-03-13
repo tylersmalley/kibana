@@ -6,7 +6,7 @@
  */
 
 import { castArray } from 'lodash';
-import type { TemplatesFindRequest } from '../../../../common/types/api';
+import type { templateApiV1 } from '../../../../common/types/api';
 import { INTERNAL_TEMPLATES_URL } from '../../../../common/constants';
 import { createCaseError } from '../../../common/error';
 import { createCasesRoute } from '../create_cases_route';
@@ -17,7 +17,7 @@ import { parseTemplate } from './parse_template';
  * GET /internal/cases/templates
  * List all templates (excluding soft-deleted ones by default)
  */
-export const getTemplatesRoute = createCasesRoute<{}, TemplatesFindRequest, {}>({
+export const getTemplatesRoute = createCasesRoute<{}, templateApiV1.TemplatesFindRequest, {}>({
   method: 'get',
   path: INTERNAL_TEMPLATES_URL,
   security: DEFAULT_CASES_ROUTE_SECURITY,
@@ -32,19 +32,20 @@ export const getTemplatesRoute = createCasesRoute<{}, TemplatesFindRequest, {}>(
 
       const { page, perPage, sortField, sortOrder, search, tags, author, isDeleted } =
         request.query;
-      const { templates, ...pagination } = await casesClient.templates.getAllTemplates({
-        page: Number(page),
-        perPage: Number(perPage),
-        sortField,
-        sortOrder,
-        search,
-        tags: tags ? castArray(tags).filter(Boolean) : [],
-        author: author ? castArray(author).filter(Boolean) : [],
-        isDeleted: String(isDeleted) === 'true',
-      });
+      const { templates, ...pagination }: templateApiV1.TemplatesFindResponse =
+        await casesClient.templates.getAllTemplates({
+          page: Number(page),
+          perPage: Number(perPage),
+          sortField,
+          sortOrder,
+          search,
+          tags: tags ? castArray(tags).filter(Boolean) : [],
+          author: author ? castArray(author).filter(Boolean) : [],
+          isDeleted: String(isDeleted) === 'true',
+        });
 
       const parsedTemplates = templates
-        .map((template) => {
+        .map((template: templateApiV1.TemplateListItem) => {
           try {
             return {
               ...parseTemplate(template),
@@ -57,7 +58,11 @@ export const getTemplatesRoute = createCasesRoute<{}, TemplatesFindRequest, {}>(
             return null;
           }
         })
-        .filter((template): template is NonNullable<typeof template> => template !== null);
+        .filter(
+          (
+            template: ReturnType<typeof parseTemplate> | null
+          ): template is ReturnType<typeof parseTemplate> => template !== null
+        );
 
       return response.ok({
         body: {

@@ -38,9 +38,21 @@ import { RuleAlertActionsCell } from './rule_alert_actions_cell';
 import { RuleAlertSearchBar } from './rule_alert_search_bar';
 import { AlertSummaryWidget } from '../../alert_summary_widget';
 
-const RuleEventLogList = lazy(() => import('./rule_event_log_list'));
-const RuleDefinition = lazy(() => import('./rule_definition'));
-const AlertsTable = lazy(() => import('@kbn/response-ops-alerts-table')) as AlertsTableType;
+const RuleEventLogList = lazy(() =>
+  import('./rule_event_log_list.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
+const RuleDefinition = lazy(() =>
+  import('./rule_definition.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
+const AlertsTable = lazy(() =>
+  import('@kbn/response-ops-alerts-table').then(({ AlertsTable: LazyAlertsTable }) => ({
+    default: LazyAlertsTable,
+  }))
+) as AlertsTableType;
 
 export type RuleComponentProps = {
   rule: Rule;

@@ -128,7 +128,7 @@ describe('WorkflowsManagementApi', () => {
 
       // Verify no duplicate name keys
       const lines = yamlString.split('\n');
-      const nameLines = lines.filter((line) => line.trim().startsWith('name:'));
+      const nameLines = lines.filter((line: string) => line.trim().startsWith('name:'));
       expect(nameLines.length).toBe(1);
       expect(nameLines[0]).toContain('Original Workflow Copy');
     });

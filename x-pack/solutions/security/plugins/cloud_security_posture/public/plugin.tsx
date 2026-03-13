@@ -34,53 +34,67 @@ import {
 } from '../common/experimental_features';
 import { ExperimentalFeaturesService } from './common/experimental_features_service';
 
-const LazyCspPolicyTemplateForm = lazy(
-  () => import('./components/fleet_extensions/policy_template_form')
+const LazyCspPolicyTemplateForm = lazy(() =>
+  import('./components/fleet_extensions/policy_template_form.js').then(
+    ({ default: lazyModule }) => ({ default: lazyModule.default })
+  )
 );
 
-const LazyCspCustomAssets = lazy(
-  () => import('./components/fleet_extensions/custom_assets_extension')
+const LazyCspCustomAssets = lazy(() =>
+  import('./components/fleet_extensions/custom_assets_extension.js').then(
+    ({ default: lazyModule }) => ({ default: lazyModule.default })
+  )
 );
 
 // Misconfiguration Flyout Components
-export const LazyCspFindingsMisconfigurationFlyout = lazy(
-  () => import('./pages/configurations/findings_flyout/findings_flyout')
+export const LazyCspFindingsMisconfigurationFlyout = lazy(() =>
+  import('./pages/configurations/findings_flyout/findings_flyout.js').then(
+    ({ default: lazyModule }) => ({ default: lazyModule.default })
+  )
 );
-export const LazyCspFindingsMisconfigurationFlyoutHeader = lazy(
-  () => import('./pages/configurations/findings_flyout/findings_right/header')
+export const LazyCspFindingsMisconfigurationFlyoutHeader = lazy(() =>
+  import('./pages/configurations/findings_flyout/findings_right/header.js').then(
+    ({ default: lazyModule }) => ({ default: lazyModule.default })
+  )
 );
-export const LazyCspFindingsMisconfigurationFlyoutBody = lazy(
-  () => import('./pages/configurations/findings_flyout/findings_right/content')
+export const LazyCspFindingsMisconfigurationFlyoutBody = lazy(() =>
+  import('./pages/configurations/findings_flyout/findings_right/content.js').then(
+    ({ default: lazyModule }) => ({ default: lazyModule.default })
+  )
 );
-export const LazyCspFindingsMisconfigurationFlyoutFooter = lazy(
-  () => import('./pages/configurations/findings_flyout/findings_right/footer')
+export const LazyCspFindingsMisconfigurationFlyoutFooter = lazy(() =>
+  import('./pages/configurations/findings_flyout/findings_right/footer.js').then(
+    ({ default: lazyModule }) => ({ default: lazyModule.default })
+  )
 );
 
 // Vulnerability Flyout Components
-export const LazyCspFindingsVulnerabilityFlyout = lazy(
-  () =>
-    import('./pages/vulnerabilities/vulnerabilities_finding_flyout/vulnerability_finding_flyout')
+export const LazyCspFindingsVulnerabilityFlyout = lazy(() =>
+  import(
+    './pages/vulnerabilities/vulnerabilities_finding_flyout/vulnerability_finding_flyout.js'
+  ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
 );
-export const LazyCspFindingsVulnerabilityFlyoutHeader = lazy(
-  () =>
-    import(
-      './pages/vulnerabilities/vulnerabilities_finding_flyout/vulnerability_finding_right/header'
-    )
+export const LazyCspFindingsVulnerabilityFlyoutHeader = lazy(() =>
+  import(
+    './pages/vulnerabilities/vulnerabilities_finding_flyout/vulnerability_finding_right/header.js'
+  ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
 );
-export const LazyCspFindingsVulnerabilityFlyoutBody = lazy(
-  () =>
-    import(
-      './pages/vulnerabilities/vulnerabilities_finding_flyout/vulnerability_finding_right/content'
-    )
+export const LazyCspFindingsVulnerabilityFlyoutBody = lazy(() =>
+  import(
+    './pages/vulnerabilities/vulnerabilities_finding_flyout/vulnerability_finding_right/content.js'
+  ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
 );
-export const LazyCspFindingsVulnerabilityFlyoutFooter = lazy(
-  () =>
-    import(
-      './pages/vulnerabilities/vulnerabilities_finding_flyout/vulnerability_finding_right/footer'
-    )
+export const LazyCspFindingsVulnerabilityFlyoutFooter = lazy(() =>
+  import(
+    './pages/vulnerabilities/vulnerabilities_finding_flyout/vulnerability_finding_right/footer.js'
+  ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
 );
 
-const CspRouterLazy = lazy(() => import('./application/csp_router'));
+const CspRouterLazy = lazy(() =>
+  import('./application/csp_router.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 const CspRouter = (props: CspRouterProps) => (
   <Suspense fallback={<CspLoadingState />}>
     <CspRouterLazy {...props} />

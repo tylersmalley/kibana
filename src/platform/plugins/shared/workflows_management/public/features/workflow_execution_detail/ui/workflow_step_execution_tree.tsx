@@ -185,7 +185,7 @@ export const WorkflowStepExecutionTree = ({
     return (
       <EuiEmptyPrompt
         {...emptyPromptCommonProps}
-        icon={<EuiIcon type="error" size="l" />}
+        icon={<EuiIcon type="error" size="l" aria-hidden={true} />}
         title={
           <h2>
             <FormattedMessage
@@ -201,7 +201,7 @@ export const WorkflowStepExecutionTree = ({
     return (
       <EuiEmptyPrompt
         {...emptyPromptCommonProps}
-        icon={<EuiIcon type="list" size="l" />}
+        icon={<EuiIcon type="list" size="l" aria-hidden={true} />}
         title={
           <h2>
             <FormattedMessage
@@ -223,9 +223,9 @@ export const WorkflowStepExecutionTree = ({
 
     if (!isTerminalStatus(execution.status)) {
       definition.steps
-        .filter((step) => !stepExecutionNameMap.has(step.name)) // we put skeletons only for steps without execution
-        .filter((step) => !execution.stepId || step.name === execution.stepId) // we create skeletons only for the executed step and its children
-        .map((step, index) => ({
+        .filter((step: { name: string }) => !stepExecutionNameMap.has(step.name)) // we put skeletons only for steps without execution
+        .filter((step: { name: string }) => !execution.stepId || step.name === execution.stepId) // we create skeletons only for the executed step and its children
+        .map((step: { name: string; type: string }, index: number) => ({
           stepId: step.name,
           stepType: step.type,
           status: 'pending' as WorkflowStepExecutionDto['status'],
@@ -240,7 +240,7 @@ export const WorkflowStepExecutionTree = ({
           stepExecutionIndex: 0,
           topologicalIndex: 0,
         }))
-        .forEach((skeletonStepExecution) =>
+        .forEach((skeletonStepExecution: WorkflowStepExecutionDto) =>
           stepExecutionMap.set(skeletonStepExecution.id, skeletonStepExecution)
         );
     }
@@ -330,7 +330,7 @@ export const WorkflowStepExecutionTree = ({
   return (
     <EuiEmptyPrompt
       {...emptyPromptCommonProps}
-      icon={<EuiIcon type="error" size="l" />}
+      icon={<EuiIcon type="error" size="l" aria-hidden={true} />}
       title={
         <h2>
           <FormattedMessage

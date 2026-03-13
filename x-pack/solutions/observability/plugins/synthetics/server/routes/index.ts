@@ -68,7 +68,9 @@ import { addSyntheticsParamsRoute } from './settings/params/add_param';
 import { deleteSyntheticsParamsRoute } from './settings/params/delete_param';
 import { createOverviewTrendsRoute } from './overview_trends/overview_trends';
 
-export const syntheticsAppRestApiRoutes: SyntheticsRestApiRouteFactory[] = [
+type AnySyntheticsRestApiRouteFactory = SyntheticsRestApiRouteFactory<any, any, any, any>;
+
+export const syntheticsAppRestApiRoutes: AnySyntheticsRestApiRouteFactory[] = [
   addSyntheticsProjectMonitorRoute,
   getSyntheticsEnablementRoute,
   deleteSyntheticsMonitorProjectRoute,
@@ -113,7 +115,7 @@ export const syntheticsAppRestApiRoutes: SyntheticsRestApiRouteFactory[] = [
   syncParamsSettingsParamsRoute,
 ];
 
-export const syntheticsAppPublicRestApiRoutes: SyntheticsRestApiRouteFactory[] = [
+export const syntheticsAppPublicRestApiRoutes: AnySyntheticsRestApiRouteFactory[] = [
   getSyntheticsParamsRoute,
   editSyntheticsParamsRoute,
   addSyntheticsParamsRoute,

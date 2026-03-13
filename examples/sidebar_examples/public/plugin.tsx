@@ -10,11 +10,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import type { AppMountParameters, CoreSetup, CoreStart, Plugin } from '@kbn/core/public';
-import type { SidebarAppUpdater } from '@kbn/core-chrome-sidebar';
+import type { SidebarAppUpdater, SidebarComponentType } from '@kbn/core-chrome-sidebar';
 import type { DeveloperExamplesSetup } from '@kbn/developer-examples-plugin/public';
 import { counterAppId } from './counter_app';
-import { tabSelectionAppId, tabSelectionStore } from './tab_selection_app';
-import { textInputAppId, textInputStore } from './text_input_app';
+import {
+  tabSelectionAppId,
+  tabSelectionStore,
+  type TabSelectionActions,
+  type TabSelectionState,
+} from './tab_selection_app';
+import {
+  textInputAppId,
+  textInputStore,
+  type TextInputActions,
+  type TextInputState,
+} from './text_input_app';
 
 interface SetupDeps {
   developerExamples: DeveloperExamplesSetup;
@@ -24,24 +34,33 @@ export class SidebarExamplesPlugin implements Plugin<void, void, SetupDeps> {
   private updateTabSelectionApp?: SidebarAppUpdater;
 
   public setup(core: CoreSetup, deps: SetupDeps) {
-    core.chrome.sidebar.registerApp({
+    core.chrome.sidebar.registerApp<TextInputState, TextInputActions>({
       appId: textInputAppId,
       store: textInputStore,
-      loadComponent: () => import('./text_input_app').then((m) => m.TextInputApp),
+      loadComponent: () =>
+        import('./text_input_app.js').then(
+          (m) => m.TextInputApp as SidebarComponentType<TextInputState, TextInputActions>
+        ),
     });
 
     core.chrome.sidebar.registerApp({
       appId: counterAppId,
       restoreOnReload: false, // Uses internal React state, not persisted store state
-      loadComponent: () => import('./counter_app').then((m) => m.CounterApp),
+      loadComponent: () => import('./counter_app.js').then((m) => m.CounterApp),
     });
 
     // Register tab selection app as initially pending (simulating permission check)
-    this.updateTabSelectionApp = core.chrome.sidebar.registerApp({
+    this.updateTabSelectionApp = core.chrome.sidebar.registerApp<
+      TabSelectionState,
+      TabSelectionActions
+    >({
       appId: tabSelectionAppId,
       status: 'pending', // Initially pending async check
       store: tabSelectionStore,
-      loadComponent: () => import('./tab_selection_app').then((m) => m.TabSelectionApp),
+      loadComponent: () =>
+        import('./tab_selection_app.js').then(
+          (m) => m.TabSelectionApp as SidebarComponentType<TabSelectionState, TabSelectionActions>
+        ),
     });
 
     core.application.register({
@@ -49,7 +68,7 @@ export class SidebarExamplesPlugin implements Plugin<void, void, SetupDeps> {
       title: 'Sidebar Examples',
       async mount({ element }: AppMountParameters) {
         const [coreStart] = await core.getStartServices();
-        const { App } = await import('./app');
+        const { App } = await import('./app.js');
 
         ReactDOM.render(coreStart.rendering.addContext(<App />), element);
         return () => ReactDOM.unmountComponentAtNode(element);

@@ -59,8 +59,8 @@ export function getConnectorType(
       };
     },
     actionParamsFields: lazy(() =>
-      import('./ai_assistant_params').then(({ default: ActionParamsFields }) => ({
-        default: (props) => <ActionParamsFields {...props} service={service} />,
+      import('./ai_assistant_params.js').then(({ default: lazyModule }) => ({
+        default: (props) => <lazyModule.default {...props} service={service} />,
       }))
     ),
     actionConnectorFields: null,

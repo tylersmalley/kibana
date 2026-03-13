@@ -39,12 +39,18 @@ export const getConnectorType = (): ConnectorTypeModel<
 > => {
   return {
     id: CONNECTOR_ID,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: SELECT_MESSAGE,
     actionTypeTitle: CONNECTOR_NAME,
     validateParams,
-    actionConnectorFields: lazy(() => import('./connector')),
-    actionParamsFields: lazy(() => import('./params')),
+    actionConnectorFields: lazy(() =>
+      import('./connector.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./params.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     defaultActionParams: {
       subAction: SUB_ACTION.CreateAlert,
       subActionParams: {
@@ -64,7 +70,7 @@ export const getConnectorType = (): ConnectorTypeModel<
 const validateParams = async (
   actionParams: ValidationParams
 ): Promise<GenericValidationResult<unknown>> => {
-  const translations = await import('./translations');
+  const translations = await import('./translations.js');
   const errors = {
     'subActionParams.message': new Array<string>(),
     'subActionParams.alias': new Array<string>(),

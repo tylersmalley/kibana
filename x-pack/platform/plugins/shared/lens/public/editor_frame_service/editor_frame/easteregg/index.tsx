@@ -9,7 +9,9 @@ import type { AggregateQuery, Query } from '@kbn/es-query';
 import { isOfAggregateQueryType } from '@kbn/es-query';
 import { EuiErrorBoundary } from '@elastic/eui';
 
-const Bee = React.lazy(() => import('./bee'));
+const Bee = React.lazy(() =>
+  import('./bee.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 const ELK_BEE_REGEX = /^What\'s (an|(\d+)) elk bees?\?$/;
 

@@ -43,7 +43,7 @@ export const createIndexSearchFormValidationSchema = (toolsService: ToolsService
       .string()
       .min(1, { message: indexSearchI18nMessages.pattern.requiredError })
       .refine(
-        async (pattern) => {
+        async (pattern: string) => {
           if (!pattern || !pattern.trim()) {
             return true;
           }

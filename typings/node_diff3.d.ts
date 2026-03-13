@@ -7,6 +7,21 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-declare module '@a2a-js/sdk/server' {
-  export * from '@a2a-js/sdk/dist/server';
+declare module 'node-diff3' {
+  export interface MergeResult {
+    conflict: boolean;
+    result: string[];
+  }
+
+  export interface IMergeOptions {
+    excludeFalseConflicts?: boolean;
+    stringSeparator?: string | RegExp;
+  }
+
+  export function merge<T>(
+    a: string | T[],
+    o: string | T[],
+    b: string | T[],
+    options?: IMergeOptions
+  ): MergeResult;
 }

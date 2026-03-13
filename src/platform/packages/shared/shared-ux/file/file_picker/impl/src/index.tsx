@@ -13,7 +13,9 @@ import type { Props } from './file_picker';
 
 export type { Props as FilePickerProps };
 
-const FilePickerContainer = lazy(() => import('./file_picker'));
+const FilePickerContainer = lazy(() =>
+  import('./file_picker.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export const FilePicker = (props: Props) => (
   <Suspense fallback={<EuiLoadingSpinner size="xl" />}>

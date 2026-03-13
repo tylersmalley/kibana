@@ -13,7 +13,11 @@ import type { ChangePointDetectionSharedComponent } from './change_point_detecti
 import type { PatternAnalysisSharedComponent } from './pattern_analysis';
 import type { LogRateAnalysisEmbeddableWrapper } from './log_rate_analysis_embeddable_wrapper';
 
-const ChangePointDetectionLazy = dynamic(async () => import('./change_point_detection'));
+const ChangePointDetectionLazy = dynamic(() =>
+  import('./change_point_detection.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const getChangePointDetectionComponent = (
   coreStart: CoreStart,
@@ -26,7 +30,11 @@ export const getChangePointDetectionComponent = (
 
 export type { ChangePointDetectionSharedComponent } from './change_point_detection';
 
-const PatternAnalysisLazy = dynamic(async () => import('./pattern_analysis'));
+const PatternAnalysisLazy = dynamic(() =>
+  import('./pattern_analysis.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const getPatternAnalysisComponent = (
   coreStart: CoreStart,
@@ -39,8 +47,10 @@ export const getPatternAnalysisComponent = (
 
 export type { PatternAnalysisSharedComponent } from './pattern_analysis';
 
-const LogRateAnalysisEmbeddableWrapperLazy = dynamic(
-  async () => import('./log_rate_analysis_embeddable_wrapper')
+const LogRateAnalysisEmbeddableWrapperLazy = dynamic(() =>
+  import('./log_rate_analysis_embeddable_wrapper.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 
 export const getLogRateAnalysisEmbeddableWrapperComponent = (

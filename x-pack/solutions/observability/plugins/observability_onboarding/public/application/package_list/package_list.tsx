@@ -5,13 +5,12 @@
  * 2.0.
  */
 
+import { PackageList as loadPackageList } from '@kbn/fleet-plugin/public';
 import type { IntegrationCardItem } from '@kbn/fleet-plugin/public';
 import React, { Suspense, lazy } from 'react';
 
 export const LazyPackageList = lazy(async () => ({
-  default: await import('@kbn/fleet-plugin/public')
-    .then((module) => module.PackageList())
-    .then((pkg) => pkg.PackageListGrid),
+  default: await loadPackageList().then(({ PackageListGrid }) => PackageListGrid),
 }));
 
 interface Props {

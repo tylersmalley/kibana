@@ -22,7 +22,9 @@ export function getConnectorType(): ConnectorTypeModel<
 > {
   return {
     id: CONNECTOR_ID,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: i18n.translate('xpack.stackConnectors.components.xmatters.selectMessageText', {
       defaultMessage: 'Trigger an xMatters workflow.',
     }),
@@ -45,8 +47,16 @@ export function getConnectorType(): ConnectorTypeModel<
       validationResult.errors = errors;
       return validationResult;
     },
-    actionConnectorFields: lazy(() => import('./xmatters_connectors')),
-    actionParamsFields: lazy(() => import('./xmatters_params')),
+    actionConnectorFields: lazy(() =>
+      import('./xmatters_connectors.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./xmatters_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     defaultActionParams: {
       alertActionGroupName: `{{${AlertProvidedActionVariables.alertActionGroupName}}}`,
       signalId: `{{${AlertProvidedActionVariables.ruleId}}}:{{${AlertProvidedActionVariables.alertId}}}`,

@@ -15,15 +15,14 @@ import {
   ALERT_START,
   OBSERVABILITY_THRESHOLD_RULE_TYPE_ID,
 } from '@kbn/rule-data-utils';
+import type { CustomThresholdParams } from '@kbn/response-ops-rule-params/custom_threshold/latest';
 import type { LocatorPublic } from '@kbn/share-plugin/common';
 import type { DiscoverAppLocatorParams } from '@kbn/discover-plugin/common';
 import type { IUiSettingsClient } from '@kbn/core-ui-settings-browser';
 import type { CoreStart } from '@kbn/core/public';
 import type { ObservabilityPublicPluginsStart } from '../plugin';
 import type {
-  CustomMetricExpressionParams,
   CustomThresholdExpressionMetric,
-  CustomThresholdSearchSourceFields,
   SearchConfigurationWithExtractedReferenceType,
 } from '../../common/custom_threshold_rule/types';
 import type { MetricExpression } from '../components/custom_threshold/types';
@@ -71,10 +70,8 @@ export const registerObservabilityRuleTypes = (
   const validateCustomThresholdWithUiSettings = ({
     criteria,
     searchConfiguration,
-  }: {
-    criteria: CustomMetricExpressionParams[];
-    searchConfiguration: CustomThresholdSearchSourceFields;
-  }) => validateCustomThreshold({ criteria, searchConfiguration, uiSettings });
+  }: CustomThresholdParams) =>
+    validateCustomThreshold({ criteria, searchConfiguration, uiSettings });
 
   observabilityRuleTypeRegistry.register({
     id: OBSERVABILITY_THRESHOLD_RULE_TYPE_ID,
@@ -117,11 +114,10 @@ export const registerObservabilityRuleTypes = (
         hasBasePath: true,
       };
     },
-    alertDetailsAppSection: lazy(
-      () =>
-        import(
-          '../components/custom_threshold/components/alert_details_app_section/alert_details_app_section'
-        )
+    alertDetailsAppSection: lazy(() =>
+      import(
+        '../components/custom_threshold/components/alert_details_app_section/alert_details_app_section.js'
+      ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
     ),
     priority: 110,
     getDescriptionFields,

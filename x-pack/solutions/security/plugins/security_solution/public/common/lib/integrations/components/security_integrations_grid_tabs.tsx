@@ -7,6 +7,7 @@
 import React, { lazy, Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { EuiButtonGroupOptionProps } from '@elastic/eui';
 import { EuiButtonGroup, EuiFlexGroup, EuiFlexItem, EuiSkeletonText } from '@elastic/eui';
+import { PackageList as loadPackageList } from '@kbn/fleet-plugin/public';
 import type { IntegrationCardItem } from '@kbn/fleet-plugin/public';
 import { noop } from 'lodash';
 
@@ -43,9 +44,9 @@ export interface SecurityIntegrationsGridTabsProps {
 const emptyStateStyles = { paddingTop: '16px' };
 
 export const PackageListGrid = lazy(async () => ({
-  default: await import('@kbn/fleet-plugin/public')
-    .then((module) => module.PackageList())
-    .then((pkg) => pkg.PackageListGrid),
+  default: await loadPackageList().then(({ PackageListGrid: FleetPackageListGrid }) => {
+    return FleetPackageListGrid;
+  }),
 }));
 
 // beware if local storage, need to add project id to the key

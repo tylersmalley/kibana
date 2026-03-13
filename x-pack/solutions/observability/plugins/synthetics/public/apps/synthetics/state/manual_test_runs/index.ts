@@ -7,8 +7,7 @@
 
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createReducer } from '@reduxjs/toolkit';
-
-import type { WritableDraft } from 'immer/dist/types/types-external';
+import type { Draft } from 'immer';
 import type { IHttpFetchError } from '@kbn/core-http-browser';
 
 import type { ActionPayload } from '../utils/actions';
@@ -47,20 +46,21 @@ export interface ManualTestRunsState {
 
 const initialState: ManualTestRunsState = {};
 
+const closeAllTestNowFlyouts = (state: Draft<ManualTestRunsState>) => {
+  Object.values(state).forEach((manualTestRun) => {
+    state[manualTestRun.configId] = {
+      ...manualTestRun,
+      isTestNowFlyoutOpen: false,
+    };
+  });
+};
+
 export const manualTestRunsReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(
       String(manualTestMonitorAction.get),
-      (state: WritableDraft<ManualTestRunsState>, action: PayloadAction<TestNowPayload>) => {
-        state = Object.values(state).reduce((acc, curr) => {
-          acc[curr.configId] = {
-            ...curr,
-            isTestNowFlyoutOpen: false,
-          };
-
-          return acc;
-        }, state);
-
+      (state: Draft<ManualTestRunsState>, action: PayloadAction<TestNowPayload>) => {
+        closeAllTestNowFlyouts(state);
         state[action.payload.configId] = {
           configId: action.payload.configId,
           status: TestRunStatus.LOADING,
@@ -70,10 +70,7 @@ export const manualTestRunsReducer = createReducer(initialState, (builder) => {
     )
     .addCase(
       String(manualTestMonitorAction.success),
-      (
-        state: WritableDraft<ManualTestRunsState>,
-        { payload }: PayloadAction<EnrichedTestNowResponse>
-      ) => {
+      (state: Draft<ManualTestRunsState>, { payload }: PayloadAction<EnrichedTestNowResponse>) => {
         state[payload.configId] = {
           configId: payload.configId,
           testRunId: payload.testRunId,
@@ -86,15 +83,16 @@ export const manualTestRunsReducer = createReducer(initialState, (builder) => {
     .addCase(
       String(manualTestMonitorAction.fail),
       (
-        state: WritableDraft<ManualTestRunsState>,
+        state: Draft<ManualTestRunsState>,
         action: ActionPayload<EnrichedTestNowResponse, TestNowPayload>
       ) => {
         const fetchError = action.payload as unknown as IHttpFetchError;
         if (fetchError?.request?.url) {
           const { name, message } = fetchError;
-
-          const [, errorMonitor] =
-            Object.entries(state).find(([key]) => fetchError.request.url.indexOf(key) > -1) ?? [];
+          const errorMonitorEntry = Object.entries(state).find(
+            ([key]) => fetchError.request.url.indexOf(key) > -1
+          ) as [string, ManualTestRun] | undefined;
+          const errorMonitor = errorMonitorEntry?.[1];
 
           if (errorMonitor) {
             state[errorMonitor.configId] = {
@@ -118,7 +116,7 @@ export const manualTestRunsReducer = createReducer(initialState, (builder) => {
         return state;
       }
     )
-    .addCase(manualTestRunUpdateAction, (state: WritableDraft<ManualTestRunsState>, action) => {
+    .addCase(manualTestRunUpdateAction, (state: Draft<ManualTestRunsState>, action) => {
       const { testRunId, ...rest } = action.payload;
       const configId = Object.keys(state).find((key) => state[key].testRunId === testRunId);
       if (configId) {
@@ -128,35 +126,20 @@ export const manualTestRunsReducer = createReducer(initialState, (builder) => {
         };
       }
     })
-    .addCase(toggleTestNowFlyoutAction, (state: WritableDraft<ManualTestRunsState>, action) => {
-      state = Object.values(state).reduce((acc, curr) => {
-        acc[curr.configId] = {
-          ...curr,
-          isTestNowFlyoutOpen: false,
-        };
-
-        return acc;
-      }, state);
-
+    .addCase(toggleTestNowFlyoutAction, (state: Draft<ManualTestRunsState>, action) => {
+      closeAllTestNowFlyouts(state);
       state[action.payload] = {
         ...state[action.payload],
         isTestNowFlyoutOpen: !state[action.payload].isTestNowFlyoutOpen,
       };
     })
-    .addCase(hideTestNowFlyoutAction, (state: WritableDraft<ManualTestRunsState>) => {
-      state = Object.values(state).reduce((acc, curr) => {
-        acc[curr.configId] = {
-          ...curr,
-          isTestNowFlyoutOpen: false,
-        };
-
-        return acc;
-      }, state);
+    .addCase(hideTestNowFlyoutAction, (state: Draft<ManualTestRunsState>) => {
+      closeAllTestNowFlyouts(state);
       return state;
     })
     .addCase(
       String(clearTestNowMonitorAction),
-      (state: WritableDraft<ManualTestRunsState>, action: PayloadAction<string>) => {
+      (state: Draft<ManualTestRunsState>, action: PayloadAction<string>) => {
         delete state[action.payload];
       }
     );

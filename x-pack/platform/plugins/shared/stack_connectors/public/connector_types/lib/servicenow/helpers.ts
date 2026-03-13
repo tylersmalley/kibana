@@ -45,6 +45,10 @@ export const getSelectedConnectorIcon = (
   actionConnector: ActionConnector
 ): React.LazyExoticComponent<ComponentType<{ actionConnector: ActionConnector }>> | undefined => {
   if (actionConnector.isDeprecated) {
-    return lazy(() => import('./selection_row'));
+    return lazy(() =>
+      import('./selection_row.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    );
   }
 };

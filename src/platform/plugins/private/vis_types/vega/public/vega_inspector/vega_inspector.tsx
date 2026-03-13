@@ -18,7 +18,11 @@ import { RequestAdapter } from '@kbn/inspector-plugin/public';
 import { VegaAdapter } from './vega_adapter';
 import type { VegaDataInspectorProps } from './vega_data_inspector';
 
-const VegaDataInspector = lazy(() => import('./vega_data_inspector'));
+const VegaDataInspector = lazy(() =>
+  import('./vega_data_inspector.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export interface VegaInspectorAdapters extends Adapters {
   requests: RequestAdapter;

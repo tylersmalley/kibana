@@ -6,7 +6,6 @@
  */
 
 import type { Subject } from 'rxjs';
-import type { ObjectType } from '@kbn/config-schema';
 import type {
   RequestHandler,
   RouteConfig,
@@ -54,8 +53,13 @@ export interface UMServerRoute<T> {
  * Merges basic uptime route properties with the route config type
  * provided by Kibana core.
  */
-export type UMRouteDefinition<T> = UMServerRoute<T> &
-  Omit<RouteConfig<ObjectType, ObjectType, ObjectType, RouteMethod>, 'security'> & {
+export type UMRouteDefinition<
+  T,
+  Params = Record<string, any>,
+  Query = Record<string, any>,
+  Body = Record<string, any>
+> = UMServerRoute<T> &
+  Omit<RouteConfig<Params, Query, Body, RouteMethod>, 'security'> & {
     security?: RouteSecurity;
   };
 
@@ -65,22 +69,32 @@ export type UMRouteDefinition<T> = UMServerRoute<T> &
  * to successfully interact with the Kibana platform.
  */
 export type UMKibanaRoute = UMRouteDefinition<
-  RequestHandler<ObjectType, ObjectType, ObjectType, UptimeRequestHandlerContext>
+  RequestHandler<
+    Record<string, any>,
+    Record<string, any>,
+    Record<string, any>,
+    UptimeRequestHandlerContext
+  >
 >;
 
 export type SyntheticsRestApiRouteFactory<
   ClientContract extends HttpResponsePayload | ResponseError = any,
-  Params = any,
+  Params = Record<string, any>,
   Query = Record<string, any>,
-  Body = any
+  Body = Record<string, any>
 > = () => SyntheticsRoute<ClientContract, Params, Query, Body>;
 
 export type SyntheticsRoute<
   ClientContract extends HttpResponsePayload | ResponseError = any,
   Params = Record<string, any>,
   Query = Record<string, any>,
-  Body = any
-> = UMRouteDefinition<SyntheticsRouteHandler<ClientContract, Params, Query, Body>>;
+  Body = Record<string, any>
+> = UMRouteDefinition<
+  SyntheticsRouteHandler<ClientContract, Params, Query, Body>,
+  Params,
+  Query,
+  Body
+>;
 
 export type SyntheticsRouteWrapper = (
   uptimeRoute: SyntheticsRoute<Record<string, unknown>>,

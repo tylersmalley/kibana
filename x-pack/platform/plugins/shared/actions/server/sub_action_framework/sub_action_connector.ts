@@ -10,13 +10,12 @@ import type { Logger } from '@kbn/logging';
 import type {
   AxiosBasicCredentials,
   AxiosError,
-  AxiosHeaders,
   AxiosHeaderValue,
   AxiosInstance,
-  AxiosRequestHeaders,
+  AxiosRequestConfig,
   AxiosResponse,
 } from 'axios';
-import axios from 'axios';
+import axios, { AxiosHeaders } from 'axios';
 import type { SavedObjectsClientContract } from '@kbn/core-saved-objects-api-server';
 import type { ElasticsearchClient } from '@kbn/core-elasticsearch-server';
 import { finished } from 'stream/promises';
@@ -93,12 +92,17 @@ export abstract class SubActionConnector<Config, Secrets> {
 
   private getHeaders(
     auth?: AxiosBasicCredentials,
-    headers?: AxiosRequestHeaders
+    headers?: AxiosRequestConfig['headers']
   ): Record<string, AxiosHeaderValue> {
+    const normalizedHeaders =
+      headers instanceof AxiosHeaders
+        ? headers.toJSON()
+        : (headers as Record<string, AxiosHeaderValue> | undefined);
+
     const headersWithBasicAuth = combineHeadersWithBasicAuthHeader({
       username: auth?.username,
       password: auth?.password,
-      headers,
+      headers: normalizedHeaders,
     });
 
     return { 'Content-Type': 'application/json', ...headersWithBasicAuth };
@@ -166,7 +170,7 @@ export abstract class SubActionConnector<Config, Secrets> {
         method,
         data: this.normalizeData(data),
         configurationUtilities: this.configurationUtilities,
-        headers: this.getHeaders(auth, headers as AxiosHeaders),
+        headers: this.getHeaders(auth, headers),
         timeout,
         connectorUsageCollector,
       });

@@ -25,7 +25,7 @@ export const registerMigrateRoute = (
         },
       },
     },
-    catchAndReturnBoomErrors(async (context, req, res) => {
+    catchAndReturnBoomErrors(async (context: any, req: any, res: any) => {
       const migrator = await migratorPromise;
       await migrator.runMigrations({ rerun: true, skipVersionCheck: true });
       return res.ok({

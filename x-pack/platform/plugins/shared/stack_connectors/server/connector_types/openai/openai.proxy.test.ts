@@ -14,6 +14,7 @@ import {
 } from '@kbn/connector-schemas/openai';
 import { actionsMock } from '@kbn/actions-plugin/server/mocks';
 import { actionsConfigMock } from '@kbn/actions-plugin/server/actions_config.mock';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { OpenAIConnector } from './openai';
 import { loggingSystemMock } from '@kbn/core/server/mocks';
 import { ConnectorUsageCollector } from '@kbn/actions-plugin/server/types';
@@ -108,10 +109,13 @@ describe('OpenAI with proxy config', () => {
 
     // Verify the client was initialized with the custom agent configuration
     expect(openAIClient).toBeDefined();
-    expect(openAIClient.httpAgent).toBeDefined();
-    expect(openAIClient.httpAgent.proxy).toBeDefined();
-    expect(openAIClient.httpAgent.proxy.host).toBe(PROXY_HOST);
-    expect(openAIClient.httpAgent.proxy.port).toBe(80);
+    expect(openAIClient.httpAgent).toBeInstanceOf(HttpsProxyAgent);
+
+    const proxy = Reflect.get(openAIClient.httpAgent as object, 'proxy') as URL;
+
+    expect(proxy).toBeDefined();
+    expect(proxy.hostname).toBe(PROXY_HOST);
+    expect(Number(proxy.port)).toBe(80);
   });
 
   it('verifies that requests use the configured HTTP agent', async () => {

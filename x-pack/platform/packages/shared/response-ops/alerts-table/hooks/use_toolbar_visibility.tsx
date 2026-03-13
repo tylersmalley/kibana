@@ -24,7 +24,11 @@ import { LastUpdatedAt } from '../components/last_updated_at';
 import { AlertsQueryInspector } from '../components/alerts_query_inspector';
 import { ALERTS_TABLE_TITLE } from '../translations';
 
-const BulkActionsToolbar = lazy(() => import('../components/bulk_actions_toolbar_control'));
+const BulkActionsToolbar = lazy(() =>
+  import('../components/bulk_actions_toolbar_control.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 const RightControl = memo(
   ({

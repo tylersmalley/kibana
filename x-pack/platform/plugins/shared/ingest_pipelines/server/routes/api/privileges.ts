@@ -10,7 +10,7 @@ import { schema } from '@kbn/config-schema';
 import type { RouteDependencies } from '../../types';
 import { API_BASE_PATH, APP_CLUSTER_REQUIRED_PRIVILEGES } from '../../../common/constants';
 
-const requiredPrivilegesMap = {
+const requiredPrivilegesMap: Record<'ingest_pipelines' | 'manage_processors', string[]> = {
   ingest_pipelines: APP_CLUSTER_REQUIRED_PRIVILEGES,
   manage_processors: ['manage'],
 };
@@ -42,7 +42,7 @@ export const registerPrivilegesRoute = ({ router, config }: RouteDependencies) =
       },
     },
     async (ctx, req, res) => {
-      const permissionsType = req.params.permissions_type;
+      const permissionsType = req.params.permissions_type as keyof typeof requiredPrivilegesMap;
       const privilegesResult: Privileges = {
         hasAllPrivileges: true,
         missingPrivileges: {

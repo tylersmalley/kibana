@@ -27,7 +27,7 @@ export const SelectBasic = ({
       componentProps={{
         label,
         euiFieldProps: {
-          options: metadata.options.map((option) => ({
+          options: metadata.options.map((option: string) => ({
             value: option,
             text: option,
           })),

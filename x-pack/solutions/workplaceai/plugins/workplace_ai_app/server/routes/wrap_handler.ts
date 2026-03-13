@@ -10,8 +10,9 @@ import { isWorkplaceAIError } from '../errors';
 
 export const getHandlerWrapper =
   ({ logger }: { logger: Logger }) =>
-  <P, Q, B>(handler: RequestHandler<P, Q, B>): RequestHandler<P, Q, B> => {
-    return (ctx, req, res) => {
+  <THandler extends RequestHandler<any, any, any>>(handler: THandler): THandler => {
+    return ((...args: Parameters<THandler>) => {
+      const [ctx, req, res] = args;
       try {
         return handler(ctx, req, res);
       } catch (e) {
@@ -25,5 +26,5 @@ export const getHandlerWrapper =
           throw e;
         }
       }
-    };
+    }) as THandler;
   };

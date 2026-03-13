@@ -274,7 +274,7 @@ export const useTemplatesColumns = ({
                 position="top"
                 content={
                   <div data-test-subj="template-column-fields-tooltip">
-                    {fieldNames.map((name, idx) => (
+                    {fieldNames.map((name: string, idx: number) => (
                       <div key={`${name}-${idx}`}>{name}</div>
                     ))}
                   </div>

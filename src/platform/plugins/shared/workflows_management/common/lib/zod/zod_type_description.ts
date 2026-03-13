@@ -104,8 +104,8 @@ function handleZodUnion(
   descriptionSuffix: string
 ): string {
   const { maxDepth, showOptional, includeDescriptions, indentSpacesNumber, singleLine } = opts;
-  const unionTypes = schema.options.map((option: z.ZodType) =>
-    generateDetailedDescription(option, currentDepth, {
+  const unionTypes = schema.options.map((option) =>
+    generateDetailedDescription(option as unknown as z.ZodType, currentDepth, {
       maxDepth,
       showOptional,
       includeDescriptions,
@@ -122,8 +122,8 @@ function handleZodIntersection(
   opts: TypeDescriptionOptions,
   descriptionSuffix: string
 ): string {
-  const intersectionTypes = [schema.def.left, schema.def.right].map((option: z.ZodType) =>
-    generateDetailedDescription(option, currentDepth, opts)
+  const intersectionTypes = [schema.def.left, schema.def.right].map((option) =>
+    generateDetailedDescription(option as unknown as z.ZodType, currentDepth, opts)
   );
   return `(${intersectionTypes.join(' & ')})${descriptionSuffix}`;
 }

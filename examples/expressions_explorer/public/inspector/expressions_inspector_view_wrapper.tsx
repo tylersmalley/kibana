@@ -9,7 +9,11 @@
 
 import React, { lazy } from 'react';
 
-const ExpressionsInspectorViewComponent = lazy(() => import('./expressions_inspector_view'));
+const ExpressionsInspectorViewComponent = lazy(() =>
+  import('./expressions_inspector_view.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const getExpressionsInspectorViewComponentWrapper = () => {
   return (props: any) => {

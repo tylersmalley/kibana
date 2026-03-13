@@ -15,10 +15,16 @@ import type { LogCategorizationAppStateProps } from './components/log_categoriza
 import type { LogCategorizationEmbeddableWrapperProps } from './components/log_categorization/log_categorization_for_embeddable/log_categorization_for_discover_wrapper';
 import type { ChangePointDetectionAppStateProps } from './components/change_point_detection';
 
-const LogRateAnalysisAppStateLazy = React.lazy(() => import('./components/log_rate_analysis'));
+const LogRateAnalysisAppStateLazy = React.lazy(() =>
+  import('./components/log_rate_analysis/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
-const LogRateAnalysisContentWrapperLazy = React.lazy(
-  () => import('./components/log_rate_analysis/log_rate_analysis_content')
+const LogRateAnalysisContentWrapperLazy = React.lazy(() =>
+  import('./components/log_rate_analysis/log_rate_analysis_content/index.js').then(
+    ({ default: lazyModule }) => ({ default: lazyModule.default })
+  )
 );
 
 const LazyWrapper: FC<PropsWithChildren<unknown>> = ({ children }) => (
@@ -47,7 +53,11 @@ export const LogRateAnalysisContent: FC<LogRateAnalysisContentWrapperProps> = (p
   </LazyWrapper>
 );
 
-const LogCategorizationAppStateLazy = React.lazy(() => import('./components/log_categorization'));
+const LogCategorizationAppStateLazy = React.lazy(() =>
+  import('./components/log_categorization/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 /**
  * Lazy-wrapped LogCategorizationAppStateProps React component
@@ -59,11 +69,10 @@ export const LogCategorization: FC<LogCategorizationAppStateProps> = (props) => 
   </LazyWrapper>
 );
 
-const LogCategorizationForDiscoverLazy = React.lazy(
-  () =>
-    import(
-      './components/log_categorization/log_categorization_for_embeddable/log_categorization_for_discover_wrapper'
-    )
+const LogCategorizationForDiscoverLazy = React.lazy(() =>
+  import(
+    './components/log_categorization/log_categorization_for_embeddable/log_categorization_for_discover_wrapper.js'
+  ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
 );
 
 /**
@@ -78,7 +87,11 @@ export const LogCategorizationForDiscover: FC<LogCategorizationEmbeddableWrapper
   </LazyWrapper>
 );
 
-const ChangePointDetectionLazy = React.lazy(() => import('./components/change_point_detection'));
+const ChangePointDetectionLazy = React.lazy(() =>
+  import('./components/change_point_detection/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 /**
  * Lazy-wrapped ChangePointDetectionAppStateProps React component
  * @param {ChangePointDetectionAppStateProps}  props - properties specifying the data on which to run the analysis.

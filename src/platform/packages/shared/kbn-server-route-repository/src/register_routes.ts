@@ -177,19 +177,84 @@ export function registerRoutes<TDependencies extends Record<string, any>>({
     const access = options?.access ?? (pathname.startsWith('/internal/') ? 'internal' : 'public');
 
     if (!version) {
-      router[method](
-        {
-          path: pathname,
-          // @ts-expect-error we are essentially calling multiple methods at the same type so TS gets confused
-          options: {
+      switch (method) {
+        case 'get': {
+          const { body, xsrfRequired, timeout, ...routeOptions } = {
             ...options,
             access,
-          },
-          security,
-          validate: validationObject,
-        },
-        wrappedHandler
-      );
+          };
+
+          router.get(
+            {
+              path: pathname,
+              options: {
+                ...routeOptions,
+                ...(timeout ? { timeout: { idleSocket: timeout.idleSocket } } : {}),
+              },
+              security,
+              validate: validationObject,
+            },
+            wrappedHandler
+          );
+          break;
+        }
+        case 'post':
+          router.post(
+            {
+              path: pathname,
+              options: {
+                ...options,
+                access,
+              },
+              security,
+              validate: validationObject,
+            },
+            wrappedHandler
+          );
+          break;
+        case 'put':
+          router.put(
+            {
+              path: pathname,
+              options: {
+                ...options,
+                access,
+              },
+              security,
+              validate: validationObject,
+            },
+            wrappedHandler
+          );
+          break;
+        case 'patch':
+          router.patch(
+            {
+              path: pathname,
+              options: {
+                ...options,
+                access,
+              },
+              security,
+              validate: validationObject,
+            },
+            wrappedHandler
+          );
+          break;
+        case 'delete':
+          router.delete(
+            {
+              path: pathname,
+              options: {
+                ...options,
+                access,
+              },
+              security,
+              validate: validationObject,
+            },
+            wrappedHandler
+          );
+          break;
+      }
     } else {
       router.versioned[method]({
         path: pathname,

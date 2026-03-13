@@ -9,6 +9,7 @@ import { AuthzDisabled } from '@kbn/core-security-server';
 
 import { roleGrantsSubFeaturePrivileges } from './lib';
 import {
+  type BulkCreateOrUpdateRolesPayloadSchemaType,
   getBulkCreateOrUpdatePayloadSchema,
   transformPutPayloadToElasticsearchRole,
 } from './model';
@@ -79,7 +80,7 @@ export function defineBulkCreateOrUpdateRolesRoutes({
           const esClient = (await context.core).elasticsearch.client;
           const features = await getFeatures();
 
-          const { roles } = request.body;
+          const { roles } = request.body as BulkCreateOrUpdateRolesPayloadSchemaType;
           const validatedRolesNames = [];
           const kibanaErrors: RolesErrorsDetails = {};
 

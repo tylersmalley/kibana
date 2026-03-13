@@ -19,9 +19,21 @@ import { MAINTENANCE_WINDOW_PATHS } from '../common';
 import { useLicense } from './hooks/use_license';
 import type { MaintenanceWindowsPublicStartDependencies } from './types';
 
-const MaintenanceWindowsLazy: React.FC = React.lazy(() => import('./components/home'));
-const MaintenanceWindowsCreateLazy: React.FC = React.lazy(() => import('./components/create_page'));
-const MaintenanceWindowsEditLazy: React.FC = React.lazy(() => import('./components/edit_page'));
+const MaintenanceWindowsLazy: React.FC = React.lazy(() =>
+  import('./components/home.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
+const MaintenanceWindowsCreateLazy: React.FC = React.lazy(() =>
+  import('./components/create_page.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
+const MaintenanceWindowsEditLazy: React.FC = React.lazy(() =>
+  import('./components/edit_page.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 const App = React.memo(() => {
   const { isAtLeastPlatinum } = useLicense();

@@ -30,10 +30,14 @@ export function registerPostTestWorkflowRoute({ router, api, logger, spaces }: R
               workflowYaml: z.string().optional(),
               inputs: z.record(z.string(), z.any()),
             })
-            .refine((data) => data.workflowId || data.workflowYaml, {
-              message: "Either 'workflowId' or 'workflowYaml' or both must be provided",
-              path: ['workflowId', 'workflowYaml'],
-            })
+            .refine(
+              (data: { workflowId?: string; workflowYaml?: string }) =>
+                data.workflowId || data.workflowYaml,
+              {
+                message: "Either 'workflowId' or 'workflowYaml' or both must be provided",
+                path: ['workflowId', 'workflowYaml'],
+              }
+            )
         ),
       },
     },

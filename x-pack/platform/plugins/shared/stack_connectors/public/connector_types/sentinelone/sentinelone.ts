@@ -34,7 +34,9 @@ export function getConnectorType(): ConnectorTypeModel<
   return {
     id: CONNECTOR_ID,
     actionTypeTitle: CONNECTOR_NAME,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     isExperimental: false,
     selectMessage: i18n.translate(
       'xpack.stackConnectors.security.sentinelone.config.selectMessageText',
@@ -45,7 +47,7 @@ export function getConnectorType(): ConnectorTypeModel<
     validateParams: async (
       actionParams: SentinelOneActionParams
     ): Promise<GenericValidationResult<ValidationErrors>> => {
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors: ValidationErrors = {
         subAction: [],
       };
@@ -59,8 +61,16 @@ export function getConnectorType(): ConnectorTypeModel<
       }
       return { errors };
     },
-    actionConnectorFields: lazy(() => import('./sentinelone_connector')),
-    actionParamsFields: lazy(() => import('./sentinelone_params')),
+    actionConnectorFields: lazy(() =>
+      import('./sentinelone_connector.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./sentinelone_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     subFeature: 'endpointSecurity',
   };
 }

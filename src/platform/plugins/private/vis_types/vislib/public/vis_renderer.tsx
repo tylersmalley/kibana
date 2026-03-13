@@ -20,7 +20,9 @@ import type { VislibRenderValue } from './vis_type_vislib_vis_fn';
 import { vislibVisName } from './vis_type_vislib_vis_fn';
 import type { VislibChartType } from './types';
 
-const VislibWrapper = lazy(() => import('./vis_wrapper'));
+const VislibWrapper = lazy(() =>
+  import('./vis_wrapper.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 function shouldShowNoResultsMessage(visData: any, visType: VislibChartType): boolean {
   if (['goal', 'gauge'].includes(visType as string)) {

@@ -10,10 +10,10 @@
 import type { z } from '@kbn/zod/v4';
 
 export interface MockZodIssue {
-  code: 'invalid_literal' | 'unknown';
+  code: 'invalid_literal' | 'invalid_value' | 'invalid_union' | 'invalid_type' | 'unknown';
   message: string;
-  path: string[];
-  received: string;
+  path: PropertyKey[];
+  received?: unknown;
 }
 
 export interface MockZodError {

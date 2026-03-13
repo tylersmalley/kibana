@@ -73,7 +73,7 @@ export class CloudFullStoryPlugin implements Plugin {
     }
 
     // Keep this import async so that we do not load any FullStory code into the browser when it is disabled.
-    const { FullStoryShipper } = await import('@elastic/ebt/shippers/fullstory');
+    const { FullStoryShipper } = await import('@elastic/ebt/shippers/fullstory/index.js');
     analytics.registerShipper(FullStoryShipper, {
       eventTypesAllowlist,
       fullStoryOrgId,

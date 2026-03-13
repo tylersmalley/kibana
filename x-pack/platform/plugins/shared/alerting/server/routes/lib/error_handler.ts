@@ -9,7 +9,8 @@ import { i18n } from '@kbn/i18n';
 import type { RequestHandlerWrapper } from '@kbn/core/server';
 
 export const handleDisabledApiKeysError: RequestHandlerWrapper = (handler) => {
-  return async (context, request, response) => {
+  return (async (...args: Parameters<typeof handler>) => {
+    const [context, request, response] = args;
     try {
       return await handler(context, request, response);
     } catch (e) {
@@ -24,7 +25,7 @@ export const handleDisabledApiKeysError: RequestHandlerWrapper = (handler) => {
       }
       throw e;
     }
-  };
+  }) as typeof handler;
 };
 
 export function isApiKeyDisabledError(e: Error) {

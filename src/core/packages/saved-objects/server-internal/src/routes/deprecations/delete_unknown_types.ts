@@ -31,7 +31,7 @@ export const registerDeleteUnknownTypesRoute = (
         },
       },
     },
-    catchAndReturnBoomErrors(async (context, req, res) => {
+    catchAndReturnBoomErrors(async (context: any, req: any, res: any) => {
       const { elasticsearch, savedObjects } = await context.core;
       await deleteUnknownTypeObjects({
         esClient: elasticsearch.client,

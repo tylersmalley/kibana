@@ -99,8 +99,12 @@ const WorkflowsParamsFields: React.FunctionComponent<ActionParamsProps<Workflows
               const enabledDiff = Number(!!b.enabled) - Number(!!a.enabled);
               if (enabledDiff !== 0) return enabledDiff;
 
-              const aHasAlert = a.definition?.triggers?.some((t) => t.type === 'alert');
-              const bHasAlert = b.definition?.triggers?.some((t) => t.type === 'alert');
+              const aHasAlert = a.definition?.triggers?.some(
+                (trigger: { type: string }) => trigger.type === 'alert'
+              );
+              const bHasAlert = b.definition?.triggers?.some(
+                (trigger: { type: string }) => trigger.type === 'alert'
+              );
               if (aHasAlert && !bHasAlert) return -1;
               if (!aHasAlert && bHasAlert) return 1;
               return 0;

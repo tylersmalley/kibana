@@ -6,6 +6,7 @@
  */
 
 import { httpServerMock } from '@kbn/core/server/mocks';
+import type { RequestHandler } from '@kbn/core/server';
 
 import type { CheckLicense } from './wrap_route_with_license_check';
 import { wrapRouteWithLicenseCheck } from './wrap_route_with_license_check';
@@ -20,7 +21,7 @@ const request = httpServerMock.createKibanaRequest();
 describe('wrapRouteWithLicenseCheck', () => {
   it('calls route handler if checkLicense returns "valid": true', async () => {
     const checkLicense: CheckLicense = () => ({ valid: true, message: null });
-    const routeHandler = jest.fn();
+    const routeHandler: RequestHandler<any, any, any, typeof context> = jest.fn();
     const wrapper = wrapRouteWithLicenseCheck(checkLicense, routeHandler);
     const response = httpServerMock.createResponseFactory();
 
@@ -32,7 +33,7 @@ describe('wrapRouteWithLicenseCheck', () => {
 
   it('does not call route handler if checkLicense returns "valid": false', async () => {
     const checkLicense: CheckLicense = () => ({ valid: false, message: 'reason' });
-    const routeHandler = jest.fn();
+    const routeHandler: RequestHandler<any, any, any, typeof context> = jest.fn();
     const wrapper = wrapRouteWithLicenseCheck(checkLicense, routeHandler);
     const response = httpServerMock.createResponseFactory();
 
@@ -45,7 +46,7 @@ describe('wrapRouteWithLicenseCheck', () => {
 
   it('allows an exception to bubble up if handler throws', async () => {
     const checkLicense: CheckLicense = () => ({ valid: true, message: null });
-    const routeHandler = () => {
+    const routeHandler: RequestHandler<any, any, any, typeof context> = () => {
       throw new Error('reason');
     };
     const wrapper = wrapRouteWithLicenseCheck(checkLicense, routeHandler);
@@ -60,7 +61,7 @@ describe('wrapRouteWithLicenseCheck', () => {
     const checkLicense: CheckLicense = () => {
       throw new Error('reason');
     };
-    const routeHandler = jest.fn();
+    const routeHandler: RequestHandler<any, any, any, typeof context> = jest.fn();
     const wrapper = wrapRouteWithLicenseCheck(checkLicense, routeHandler);
     const response = httpServerMock.createResponseFactory();
 

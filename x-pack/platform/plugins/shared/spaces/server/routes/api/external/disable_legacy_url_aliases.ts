@@ -6,10 +6,15 @@
  */
 
 import { schema } from '@kbn/config-schema';
+import type { KibanaRequest } from '@kbn/core/server';
 
 import type { ExternalRouteDeps } from '.';
 import { wrapError } from '../../../lib/errors';
 import { createLicensedRouteHandler } from '../../lib';
+
+interface DisableLegacyUrlAliasesRequestBody {
+  aliases: Array<{ targetSpace: string; targetType: string; sourceId: string }>;
+}
 
 export function initDisableLegacyUrlAliasesApi(deps: ExternalRouteDeps) {
   const { router, getSpacesService, usageStatsServicePromise, log, isServerless } = deps;
@@ -52,25 +57,31 @@ export function initDisableLegacyUrlAliasesApi(deps: ExternalRouteDeps) {
         }),
       },
     },
-    createLicensedRouteHandler(async (_context, request, response) => {
-      const spacesClient = getSpacesService().createSpacesClient(request);
+    createLicensedRouteHandler(
+      async (
+        _context,
+        request: KibanaRequest<unknown, unknown, DisableLegacyUrlAliasesRequestBody>,
+        response
+      ) => {
+        const spacesClient = getSpacesService().createSpacesClient(request);
 
-      const { aliases } = request.body;
+        const { aliases } = request.body;
 
-      usageStatsClientPromise
-        .then((usageStatsClient) => usageStatsClient.incrementDisableLegacyUrlAliases())
-        .catch((err) => {
-          log.error(
-            `Failed to report usage statistics for the disable legacy URL aliases route: ${err.message}`
-          );
-        });
+        usageStatsClientPromise
+          .then((usageStatsClient) => usageStatsClient.incrementDisableLegacyUrlAliases())
+          .catch((err) => {
+            log.error(
+              `Failed to report usage statistics for the disable legacy URL aliases route: ${err.message}`
+            );
+          });
 
-      try {
-        await spacesClient.disableLegacyUrlAliases(aliases);
-        return response.noContent();
-      } catch (error) {
-        return response.customError(wrapError(error));
+        try {
+          await spacesClient.disableLegacyUrlAliases(aliases);
+          return response.noContent();
+        } catch (error) {
+          return response.customError(wrapError(error));
+        }
       }
-    })
+    )
   );
 }

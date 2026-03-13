@@ -11,4 +11,10 @@ import { withSuspense } from '@kbn/shared-ux-utility';
 import { lazy } from 'react';
 export type { DiscoverGridFlyoutProps } from './discover_grid_flyout';
 
-export const DiscoverGridFlyout = withSuspense(lazy(() => import('./discover_grid_flyout')));
+export const DiscoverGridFlyout = withSuspense(
+  lazy(() =>
+    import('./discover_grid_flyout.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
+);

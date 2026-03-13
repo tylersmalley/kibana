@@ -6,5 +6,11 @@
  */
 
 declare module 'ink' {
-  export * from 'ink/build';
+  export type { Props as BoxProps } from '../../../../../node_modules/ink/build/components/Box';
+  export { default as Box } from '../../../../../node_modules/ink/build/components/Box';
+  export type { Props as TextProps } from '../../../../../node_modules/ink/build/components/Text';
+  export { default as Text } from '../../../../../node_modules/ink/build/components/Text';
+  export type { Key } from '../../../../../node_modules/ink/build/hooks/use-input';
+  export { default as useInput } from '../../../../../node_modules/ink/build/hooks/use-input';
+  export { default as useApp } from '../../../../../node_modules/ink/build/hooks/use-app';
 }

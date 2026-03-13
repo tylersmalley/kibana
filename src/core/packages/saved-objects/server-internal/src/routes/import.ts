@@ -117,7 +117,7 @@ NOTE: The exported saved objects include \`coreMigrationVersion\` and \`typeMigr
         },
       },
     },
-    catchAndReturnBoomErrors(async (context, request, response) => {
+    catchAndReturnBoomErrors(async (context: any, request: any, response: any) => {
       const { overwrite, createNewCopies, compatibilityMode } = request.query;
       const { getClient, getImporter, typeRegistry } = (await context.core).savedObjects;
 
@@ -146,9 +146,11 @@ NOTE: The exported saved objects include \`coreMigrationVersion\` and \`typeMigr
         });
       }
 
-      const supportedTypes = typeRegistry.getImportableAndExportableTypes().map((t) => t.name);
+      const supportedTypes = typeRegistry
+        .getImportableAndExportableTypes()
+        .map((t: { name: string }) => t.name);
 
-      const includedHiddenTypes = supportedTypes.filter((supportedType) =>
+      const includedHiddenTypes = supportedTypes.filter((supportedType: string) =>
         typeRegistry.isHidden(supportedType)
       );
 

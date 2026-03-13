@@ -6,15 +6,19 @@
  */
 import type { EvaluationResult } from 'langsmith/evaluation';
 import type { RunnableConfig } from '@langchain/core/runnables';
-import type { Run, Example } from 'langsmith/schemas';
+import type { AttachmentInfo, Example, KVMap, Run } from 'langsmith/schemas';
 import { evaluate } from 'langsmith/evaluation';
 import { isLangSmithEnabled } from '@kbn/langchain/server/tracers/langsmith';
 import { Client } from 'langsmith';
 import type { Logger } from '@kbn/logging';
-import type { TargetConfigT } from 'langsmith/dist/evaluation/_runner';
 import type { LangSmithEvaluationOptions } from '../../../../../common/siem_migrations/model/common.gen';
 import type { SiemMigrationTaskRunner } from './siem_migrations_task_runner';
 import type { MigrationDocument, ItemDocument, SiemMigrationsClientDependencies } from '../types';
+
+type LangSmithTargetConfig = KVMap & {
+  attachments?: Record<string, AttachmentInfo>;
+  callbacks?: unknown;
+};
 
 export interface EvaluateParams {
   connectorId: string;
@@ -84,7 +88,7 @@ export abstract class SiemMigrationsBaseEvaluator<
 
     // create the migration task after setup
     const evaluators = this.getEvaluators();
-    const executeMigrationTask = (params: P, config?: TargetConfigT) =>
+    const executeMigrationTask = (params: P, config?: LangSmithTargetConfig) =>
       this.taskRunner.executeTask(params, config as RunnableConfig<C>);
 
     evaluate(executeMigrationTask, {

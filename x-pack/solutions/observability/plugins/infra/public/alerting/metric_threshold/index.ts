@@ -72,13 +72,21 @@ export function createMetricThresholdRuleType({
     documentationUrl(docLinks) {
       return `${docLinks.links.observability.metricsThreshold}`;
     },
-    ruleParamsExpression: lazy(() => import('./components/expression')),
+    ruleParamsExpression: lazy(() =>
+      import('./components/expression.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validate: validateMetricThreshold,
     defaultActionMessage: metricThresholdDefaultActionMessage,
     defaultRecoveryMessage: metricThresholdDefaultRecoveryMessage,
     requiresAppContext: false,
     format: getRuleFormat({ assetDetailsLocator, metricsExplorerLocator }),
-    alertDetailsAppSection: lazy(() => import('./components/alert_details_app_section')),
+    alertDetailsAppSection: lazy(() =>
+      import('./components/alert_details_app_section.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     priority: 10,
     getDescriptionFields,
   };

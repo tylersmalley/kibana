@@ -13,6 +13,9 @@ import { storeUiReport, reportSchema } from '../report';
 import type { UsageCountersServiceSetup } from '../usage_counters';
 import type { UiCounters } from '../../common/types';
 
+const uiCountersRequestBodySchema = schema.object({
+  report: reportSchema,
+});
 export function registerUiCountersRoute(
   router: IRouter,
   getSavedObjects: () => ISavedObjectsRepository | undefined,
@@ -28,9 +31,7 @@ export function registerUiCountersRoute(
         },
       },
       validate: {
-        body: schema.object({
-          report: reportSchema,
-        }),
+        body: uiCountersRequestBodySchema,
       },
     },
     async (context, req, res) => {

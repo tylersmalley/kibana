@@ -8,11 +8,7 @@
  */
 
 import { Client, HttpConnection } from 'elasticsearch-8.x'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
-import type {
-  QueryDslQueryContainer,
-  SearchRequest,
-  MsearchRequestItem,
-} from 'elasticsearch-8.x/lib/api/types'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
+import type { estypes } from 'elasticsearch-8.x'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
 import type { ToolingLog } from '@kbn/tooling-log';
 
 interface ClientOptions {
@@ -73,7 +69,10 @@ export interface TransactionDocument extends Omit<Document, 'service'> {
   };
 }
 
-const addBooleanFilter = (filter: { field: string; value: string }): QueryDslQueryContainer => {
+const addBooleanFilter = (filter: {
+  field: string;
+  value: string;
+}): estypes.QueryDslQueryContainer => {
   return {
     bool: {
       should: [
@@ -88,7 +87,10 @@ const addBooleanFilter = (filter: { field: string; value: string }): QueryDslQue
   };
 };
 
-const addRangeFilter = (range: { startTime: string; endTime: string }): QueryDslQueryContainer => {
+const addRangeFilter = (range: {
+  startTime: string;
+  endTime: string;
+}): estypes.QueryDslQueryContainer => {
   return {
     range: {
       '@timestamp': {
@@ -118,8 +120,8 @@ export class ESClient {
     this.log = log;
   }
 
-  async getTransactions<T>(queryFilters: QueryDslQueryContainer[]) {
-    const searchRequest: SearchRequest = {
+  async getTransactions<T>(queryFilters: estypes.QueryDslQueryContainer[]) {
+    const searchRequest: estypes.SearchRequest = {
       index: this.tracesIndex,
       sort: [
         {
@@ -179,7 +181,9 @@ export class ESClient {
     return await this.getTransactions<TransactionDocument>(queryFilters);
   }
 
-  getMsearchRequestItem = (queryFilters: QueryDslQueryContainer[]): MsearchRequestItem => {
+  getMsearchRequestItem = (
+    queryFilters: estypes.QueryDslQueryContainer[]
+  ): estypes.MsearchRequestItem => {
     return {
       query: {
         bool: {
@@ -196,7 +200,7 @@ export class ESClient {
   };
 
   async getSpans(transactionIds: string[]) {
-    const searches = new Array<MsearchRequestItem>();
+    const searches = new Array<estypes.MsearchRequestItem>();
 
     for (const transactionId of transactionIds) {
       const filters = [{ field: 'parent.id', value: transactionId }];

@@ -15,8 +15,10 @@ import { UnifiedDocViewerPublicPlugin } from './plugin';
 
 export type { UnifiedDocViewerSetup, UnifiedDocViewerStart } from './plugin';
 
-const LazyJsonCodeEditor = React.lazy(
-  () => import('./components/json_code_editor/json_code_editor')
+const LazyJsonCodeEditor = React.lazy(() =>
+  import('./components/json_code_editor/json_code_editor.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 
 export const JsonCodeEditor = withSuspense<JsonCodeEditorProps>(

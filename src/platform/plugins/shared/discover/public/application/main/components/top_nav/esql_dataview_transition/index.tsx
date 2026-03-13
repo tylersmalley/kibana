@@ -12,8 +12,10 @@ import type { ESQLToDataViewTransitionModalProps } from './esql_dataview_transit
 
 const Fallback = () => <div />;
 
-const LazyESQLToDataViewTransitionModal = React.lazy(
-  () => import('./esql_dataview_transition_modal')
+const LazyESQLToDataViewTransitionModal = React.lazy(() =>
+  import('./esql_dataview_transition_modal.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 export const ESQLToDataViewTransitionModal = (props: ESQLToDataViewTransitionModalProps) => (
   <React.Suspense fallback={<Fallback />}>

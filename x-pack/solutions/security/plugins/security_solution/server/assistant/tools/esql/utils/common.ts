@@ -7,9 +7,10 @@
 
 import type { BaseMessage } from '@langchain/core/messages';
 import { AIMessage } from '@langchain/core/messages';
-import type { ToolCall } from '@langchain/core/dist/messages/tool';
 import type { AssistantToolParams } from '@kbn/elastic-assistant-plugin/server';
 import { toolDetails } from '../tools/inspect_index_mapping_tool/inspect_index_mapping_tool';
+
+type ToolCall = NonNullable<AIMessage['tool_calls']>[number];
 
 export const getPromptSuffixForOssModel = (toolName: string) => `
   When using ${toolName} tool ALWAYS pass the user's questions directly as input into the tool.

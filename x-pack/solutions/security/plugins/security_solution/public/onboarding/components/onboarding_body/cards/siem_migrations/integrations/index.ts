@@ -17,12 +17,11 @@ export const siemMigrationIntegrationsCardConfig: OnboardingCardConfig<Integrati
   id: OnboardingCardId.siemMigrationIntegrations,
   title: START_MIGRATION_INTEGRATIONS_CARD_TITLE,
   icon: IconIntegrations,
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_siem_migrations_integrations_card" */
-        './integrations_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_siem_migrations_integrations_card" */
+      './integrations_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   checkComplete: checkIntegrationsCardComplete,
   capabilitiesRequired: 'fleet.read',

@@ -22,7 +22,9 @@ export type FileUploadProps = Props & {
   lazyLoadFallback?: ReactNode;
 };
 
-const FileUploadContainer = lazy(() => import('./file_upload'));
+const FileUploadContainer = lazy(() =>
+  import('./file_upload.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export const FileUpload = (props: FileUploadProps) => (
   <Suspense fallback={props.lazyLoadFallback ?? <EuiLoadingSpinner size="xl" />}>

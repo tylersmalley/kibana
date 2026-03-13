@@ -17,10 +17,11 @@ import { RollupSearchCapabilities } from '../capabilities/rollup_search_capabili
 import type { FetchedIndexPattern, TrackedEsSearches } from '../../../../common/types';
 import type { CachedIndexPatternFetcher } from '../lib/cached_index_pattern_fetcher';
 import type {
-  VisTypeTimeseriesRequest,
   VisTypeTimeseriesRequestHandlerContext,
+  VisTypeTimeseriesRequest,
   VisTypeTimeseriesVisDataRequest,
 } from '../../../types';
+import { isVisTypeTimeseriesVisDataRequest } from '../../../types';
 import { UI_SETTINGS } from '../../../../common/constants';
 
 const getRollupIndices = (rollupData: { [key: string]: any }) => Object.keys(rollupData);
@@ -78,7 +79,7 @@ export class RollupSearchStrategy extends AbstractSearchStrategy {
         capabilities = new RollupSearchCapabilities(
           {
             maxBucketsLimit: await uiSettings.get(UI_SETTINGS.MAX_BUCKETS_SETTING),
-            panel: req.body.panels ? req.body.panels[0] : null,
+            panel: isVisTypeTimeseriesVisDataRequest(req) ? req.body.panels[0] : undefined,
           },
           fieldsCapabilities,
           rollupIndex

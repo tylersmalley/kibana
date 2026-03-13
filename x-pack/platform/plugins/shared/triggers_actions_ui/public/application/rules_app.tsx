@@ -57,11 +57,23 @@ import { ConnectorProvider } from './context/connector_context';
 import { ALERTS_PAGE_ID, CONNECTORS_PLUGIN_ID } from '../common/constants';
 import { queryClient } from './query_client';
 
-const TriggersActionsUIHome = lazy(() => import('./home'));
-const RuleDetailsRoute = lazy(
-  () => import('./sections/rule_details/components/rule_details_route')
+const TriggersActionsUIHome = lazy(() =>
+  import('./home.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
-const RuleFormRoute = lazy(() => import('./sections/rule_form/rule_form_route'));
+const RuleDetailsRoute = lazy(() =>
+  import('./sections/rule_details/components/rule_details_route.js').then(
+    ({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    })
+  )
+);
+const RuleFormRoute = lazy(() =>
+  import('./sections/rule_form/rule_form_route.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export interface TriggersAndActionsUiServices extends CoreStart {
   actions: ActionsPublicPluginSetup;

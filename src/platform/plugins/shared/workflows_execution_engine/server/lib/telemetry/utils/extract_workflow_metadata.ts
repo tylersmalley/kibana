@@ -181,8 +181,12 @@ export function extractWorkflowMetadata(
 
   // Check triggers
   const triggers = workflow.triggers || [];
-  const hasScheduledTriggersValue = triggers.some((trigger) => trigger?.type === 'scheduled');
-  const hasAlertTriggers = triggers.some((trigger) => trigger?.type === 'alert');
+  const hasScheduledTriggersValue = triggers.some(
+    (trigger: { type?: string } | null | undefined) => trigger?.type === 'scheduled'
+  );
+  const hasAlertTriggers = triggers.some(
+    (trigger: { type?: string } | null | undefined) => trigger?.type === 'alert'
+  );
 
   // Count inputs
   const inputCount = Array.isArray(workflow.inputs) ? workflow.inputs.length : 0;

@@ -7,9 +7,9 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { RequestHandler, RouteMethod } from '@kbn/core/server';
+import type { RequestHandler } from '@kbn/core/server';
 import { i18n } from '@kbn/i18n';
-import { type CheckLicense, wrapRouteWithLicenseCheck } from '@kbn/licensing-plugin/server';
+import type { CheckLicense } from '@kbn/licensing-plugin/server';
 import type { LicenseType } from '@kbn/licensing-types';
 import type { WorkflowsRequestHandlerContext } from '../../types';
 
@@ -44,12 +44,27 @@ const checkLicense: CheckLicense = (license) => {
  * Wraps a request handler with a license check.
  * If the license is not valid, it will return a 403 error with a message.
  */
-export const withLicenseCheck = <
-  P = unknown,
-  Q = unknown,
-  B = unknown,
-  Method extends RouteMethod = never
+type WorkflowsRequestHandlerWrapper = <
+  P,
+  Q,
+  B,
+  Context extends WorkflowsRequestHandlerContext,
+  THandler extends RequestHandler<P, Q, B, Context>
 >(
-  handler: RequestHandler<P, Q, B, WorkflowsRequestHandlerContext, Method>
-): RequestHandler<P, Q, B, WorkflowsRequestHandlerContext, Method> =>
-  wrapRouteWithLicenseCheck(checkLicense, handler);
+  handler: THandler
+) => THandler;
+
+export const withLicenseCheck: WorkflowsRequestHandlerWrapper = (handler) =>
+  (async (...args: Parameters<typeof handler>) => {
+    const [context, request, response] = args;
+    const { license } = await context.licensing;
+    const licenseCheckResult = checkLicense(license);
+
+    if (licenseCheckResult.valid) {
+      return handler(context, request, response);
+    }
+
+    return response.forbidden({
+      body: licenseCheckResult.message,
+    });
+  }) as typeof handler;

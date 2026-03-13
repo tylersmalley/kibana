@@ -21,6 +21,38 @@ interface FormatZodErrorResult {
   formattedError: FormattedZodError;
 }
 
+type WorkflowIssue = z.core.$ZodIssue | MockZodError['issues'][number];
+
+const isConnectorTypeValueIssue = (
+  issue: WorkflowIssue
+): issue is WorkflowIssue & { path: PropertyKey[] } =>
+  (issue.code === 'invalid_value' || issue.code === 'invalid_literal') &&
+  issue.path?.includes('type');
+
+const getIssueInputValue = (issue: WorkflowIssue): string | undefined => {
+  if ('received' in issue && typeof issue.received === 'string') {
+    return issue.received;
+  }
+
+  if ('input' in issue && typeof issue.input === 'string') {
+    return issue.input;
+  }
+
+  return undefined;
+};
+
+const getInvalidValueLabel = (issue: WorkflowIssue): string | undefined => {
+  if ('values' in issue && Array.isArray(issue.values) && issue.values.length > 0) {
+    return String(issue.values[0]);
+  }
+
+  if ('expected' in issue && issue.expected != null) {
+    return String(issue.expected);
+  }
+
+  return undefined;
+};
+
 export function formatZodError(
   error: ZodError | MockZodError,
   schema?: z.ZodType,
@@ -60,8 +92,8 @@ export function formatZodError(
           formattedMessage = genericUnionMessage;
         }
         // Handle literal type errors for type field (avoid listing all 1000+ options)
-        else if (issue.code === 'invalid_literal' && issue.path?.includes('type')) {
-          const receivedValue = issue.received as string;
+        else if (isConnectorTypeValueIssue(issue)) {
+          const receivedValue = getIssueInputValue(issue);
           if (receivedValue?.startsWith?.('elasticsearch.')) {
             formattedMessage = `Unknown Elasticsearch API: "${receivedValue}". Use autocomplete to see valid elasticsearch.* APIs.`;
           } else if (receivedValue?.startsWith?.('kibana.')) {
@@ -107,8 +139,8 @@ export function formatZodError(
         formattedMessage = genericUnionMessage;
       }
       // Handle literal type errors for type field (avoid listing all 1000+ options)
-      else if (issue.code === 'invalid_literal' && issue.path?.includes('type')) {
-        const receivedValue = issue.received as string;
+      else if (isConnectorTypeValueIssue(issue)) {
+        const receivedValue = getIssueInputValue(issue);
         if (receivedValue?.startsWith?.('elasticsearch.')) {
           formattedMessage = `Unknown Elasticsearch API: "${receivedValue}". Use autocomplete to see valid elasticsearch.* APIs.`;
         } else if (receivedValue?.startsWith?.('kibana.')) {
@@ -465,9 +497,13 @@ function analyzeUnionErrorForOption(issues: any[]): { name: string; description:
   let discriminatorInfo: { key: string; value: any } | null = null;
 
   for (const issue of issues) {
-    if (issue.code === 'invalid_literal' && issue.path && issue.path.length > 0) {
+    if (
+      (issue.code === 'invalid_literal' || issue.code === 'invalid_value') &&
+      issue.path &&
+      issue.path.length > 0
+    ) {
       const fieldName = issue.path[issue.path.length - 1];
-      const expectedValue = issue.expected;
+      const expectedValue = getInvalidValueLabel(issue);
       discriminatorInfo = { key: fieldName, value: expectedValue };
     } else if (issue.code === 'invalid_type' && issue.path && issue.path.length > 0) {
       const fieldName = issue.path[issue.path.length - 1];

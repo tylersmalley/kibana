@@ -11,7 +11,11 @@ import type { SolutionSideNavProps } from './solution_side_nav';
 
 export type { SolutionSideNavProps };
 
-const SolutionSideNavLazy = lazy(() => import('./solution_side_nav'));
+const SolutionSideNavLazy = lazy(() =>
+  import('./solution_side_nav.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const SolutionSideNav = (props: SolutionSideNavProps) => (
   <Suspense fallback={<EuiLoadingSpinner size="xl" />}>

@@ -23,11 +23,18 @@ export type ConfigObservable = Observable<SharedGlobalConfig>;
 
 export type VisTypeTimeseriesRequestHandlerContext = DataRequestHandlerContext;
 export type VisTypeTimeseriesRouter = IRouter<VisTypeTimeseriesRequestHandlerContext>;
-export type VisTypeTimeseriesVisDataRequest = KibanaRequest<{}, {}, VisPayload>;
-export type VisTypeTimeseriesFieldsRequest = KibanaRequest<{}, { index: string }, any>;
+export type VisTypeTimeseriesVisDataRequest = KibanaRequest<unknown, unknown, VisPayload>;
+export type VisTypeTimeseriesFieldsRequest = KibanaRequest<unknown, { index: string }, unknown>;
 export type VisTypeTimeseriesRequest =
   | VisTypeTimeseriesFieldsRequest
   | VisTypeTimeseriesVisDataRequest;
+
+export const isVisTypeTimeseriesVisDataRequest = (
+  request: VisTypeTimeseriesRequest
+): request is VisTypeTimeseriesVisDataRequest => {
+  const body = request.body as { panels?: unknown } | undefined;
+  return Array.isArray(body?.panels);
+};
 
 export interface VisTypeTimeseriesRequestServices {
   esShardTimeout: number;

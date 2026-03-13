@@ -6,7 +6,7 @@
  */
 
 import type { SavedObjectsClientContract } from '@kbn/core/server';
-import type { ErrorCause } from 'elasticsearch-8.x/lib/api/types';
+import type { estypes } from 'elasticsearch-8.x';
 import type { MonitoringEntitySource } from '../../../../../../../../common/api/entity_analytics/monitoring/monitoring_entity_source/monitoring_entity_source.gen';
 import type { PrivilegeMonitoringDataClient } from '../../../../engine/data_client';
 import { buildFindUsersSearchBody, getAllUserNamesInAggregation } from '../queries';
@@ -24,7 +24,7 @@ export const createIndexDeletionDetectionService = (
   const bulkUtilsService = createBulkUtilsService(dataClient);
 
   const deletionDetection = async (source: MonitoringEntitySource) => {
-    const failures: ErrorCause[] = [];
+    const failures: estypes.ErrorCause[] = [];
     const allIndexUserNames = await getAllUserNamesInAggregation({
       dataClient,
       indexPattern: source.indexPattern,

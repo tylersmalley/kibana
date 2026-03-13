@@ -8,7 +8,7 @@
 import type { IRouter } from '@kbn/core/server';
 import type { Logger } from '@kbn/logging';
 import { GET_STATS_ROUTE } from '../../common/routes';
-import type { RouterContextData, StatsResponse } from '../types';
+import type { RouterContextData } from '../types';
 import { fetchSizeStats } from '../lib/size_stats';
 
 export const registerStatsRoutes = (
@@ -16,7 +16,7 @@ export const registerStatsRoutes = (
   _logger: Logger,
   { isServerless }: RouterContextData
 ): void => {
-  router.get<unknown, unknown, StatsResponse>(
+  router.get(
     {
       path: GET_STATS_ROUTE,
       security: {

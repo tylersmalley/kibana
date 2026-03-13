@@ -37,18 +37,28 @@ import type { CreateTemplatePageProps } from '../templates_v2/pages/create_templ
 import type { EditTemplatePageProps } from '../templates_v2/pages/edit_template/page';
 import { KibanaServices } from '../../common/lib/kibana/services';
 
-const CaseViewLazy: FC<CaseViewProps> = lazy(() => import('../case_view'));
-
-const CreateTemplateLazy: FC<CreateTemplatePageProps> = lazy(
-  () => import('../templates_v2/pages/create_template/page')
+const CaseViewLazy: FC<CaseViewProps> = lazy(() =>
+  import('../case_view/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 
-const EditTemplateLazy: FC<EditTemplatePageProps> = lazy(
-  () => import('../templates_v2/pages/edit_template/page')
+const CreateTemplateLazy: FC<CreateTemplatePageProps> = lazy(() =>
+  import('../templates_v2/pages/create_template/page.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 
-const AllCasesTemplatesLazy: React.FC = lazy(
-  () => import('../templates_v2/pages/all_templates_page')
+const EditTemplateLazy: FC<EditTemplatePageProps> = lazy(() =>
+  import('../templates_v2/pages/edit_template/page.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
+
+const AllCasesTemplatesLazy: React.FC = lazy(() =>
+  import('../templates_v2/pages/all_templates_page.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 
 const CasesRoutesComponent: React.FC<CasesRoutesProps> = ({

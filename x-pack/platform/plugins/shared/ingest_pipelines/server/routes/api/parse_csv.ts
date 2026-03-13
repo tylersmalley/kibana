@@ -21,7 +21,7 @@ const bodySchema = schema.object({
 type ReqBody = TypeOf<typeof bodySchema>;
 
 export const registerParseCsvRoute = ({ router }: RouteDependencies): void => {
-  router.post<void, void, ReqBody>(
+  router.post(
     {
       path: `${API_BASE_PATH}/parse_csv`,
       security: {
@@ -35,7 +35,7 @@ export const registerParseCsvRoute = ({ router }: RouteDependencies): void => {
       },
     },
     async (contxt, req, res) => {
-      const { file, copyAction } = req.body;
+      const { file, copyAction } = req.body as ReqBody;
       const privResult = await (
         await contxt.core
       ).elasticsearch.client.asCurrentUser.security.hasPrivileges({

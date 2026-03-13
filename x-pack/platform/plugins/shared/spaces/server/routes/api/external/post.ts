@@ -8,9 +8,10 @@
 import Boom from '@hapi/boom';
 
 import { SavedObjectsErrorHelpers } from '@kbn/core/server';
+import type { KibanaRequest } from '@kbn/core/server';
 
 import type { ExternalRouteDeps } from '.';
-import { API_VERSIONS } from '../../../../common';
+import { API_VERSIONS, type Space } from '../../../../common';
 import { wrapError } from '../../../lib/errors';
 import { getSpaceSchema } from '../../../lib/space_schema';
 import { createLicensedRouteHandler } from '../../lib';
@@ -48,24 +49,26 @@ export function initPostSpacesApi(deps: ExternalRouteDeps) {
           },
         },
       },
-      createLicensedRouteHandler(async (context, request, response) => {
-        log.debug(`Inside POST /api/spaces/space`);
-        const spacesClient = getSpacesService().createSpacesClient(request);
-        const space = request.body;
-        try {
-          log.debug(`Attempting to create space`);
-          const createdSpace = await spacesClient.create(space);
-          return response.ok({ body: createdSpace });
-        } catch (error) {
-          if (SavedObjectsErrorHelpers.isConflictError(error)) {
-            const { body } = wrapError(
-              Boom.conflict(`A space with the identifier ${space.id} already exists.`)
-            );
-            return response.conflict({ body });
+      createLicensedRouteHandler(
+        async (context, request: KibanaRequest<unknown, unknown, Space>, response) => {
+          log.debug(`Inside POST /api/spaces/space`);
+          const spacesClient = getSpacesService().createSpacesClient(request);
+          const space = request.body;
+          try {
+            log.debug(`Attempting to create space`);
+            const createdSpace = await spacesClient.create(space);
+            return response.ok({ body: createdSpace });
+          } catch (error) {
+            if (SavedObjectsErrorHelpers.isConflictError(error)) {
+              const { body } = wrapError(
+                Boom.conflict(`A space with the identifier ${space.id} already exists.`)
+              );
+              return response.conflict({ body });
+            }
+            log.debug(`Error creating space: ${error}`);
+            return response.customError(wrapError(error));
           }
-          log.debug(`Error creating space: ${error}`);
-          return response.customError(wrapError(error));
         }
-      })
+      )
     );
 }

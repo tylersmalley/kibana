@@ -11,7 +11,9 @@ import React, { lazy } from 'react';
 import type { VisEditorOptionsProps } from '@kbn/visualizations-plugin/public';
 import type { HeatmapVisParams, HeatmapTypeProps } from '../../types';
 
-const HeatmapOptionsLazy = lazy(() => import('./heatmap'));
+const HeatmapOptionsLazy = lazy(() =>
+  import('./heatmap.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export const getHeatmapOptions =
   ({ showElasticChartsOptions, palettes }: HeatmapTypeProps) =>

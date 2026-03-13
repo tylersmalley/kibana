@@ -8,6 +8,7 @@ import { capitalize, sortBy } from 'lodash';
 
 import { schema } from '@kbn/config-schema';
 import { SavedObjectsErrorHelpers } from '@kbn/core/server';
+import type { KibanaRequest } from '@kbn/core/server';
 
 import type { InternalRouteDeps } from '.';
 import { wrapError } from '../../../lib/errors';
@@ -56,62 +57,66 @@ export function initGetSpaceContentSummaryApi(deps: InternalRouteDeps) {
         }),
       },
     },
-    createLicensedRouteHandler(async (context, request, response) => {
-      try {
-        const spaceId = request.params.spaceId;
-        const spacesClient = getSpacesService().createSpacesClient(request);
+    createLicensedRouteHandler(
+      async (context, request: KibanaRequest<{ spaceId: string }>, response) => {
+        try {
+          const spaceId = request.params.spaceId;
+          const spacesClient = getSpacesService().createSpacesClient(request);
 
-        await spacesClient.get(spaceId);
+          await spacesClient.get(spaceId);
 
-        const { getClient, typeRegistry } = (await context.core).savedObjects;
-        const client = getClient();
+          const { getClient, typeRegistry } = (await context.core).savedObjects;
+          const client = getClient();
 
-        const types = typeRegistry
-          .getImportableAndExportableTypes()
-          .filter((type) => !typeRegistry.isNamespaceAgnostic(type.name));
+          const types = typeRegistry
+            .getImportableAndExportableTypes()
+            .filter((type) => !typeRegistry.isNamespaceAgnostic(type.name));
 
-        const searchTypeNames = types.map((type) => type.name);
+          const searchTypeNames = types.map((type) => type.name);
 
-        const data = await client.find<unknown, TypesAggregation>({
-          type: searchTypeNames,
-          perPage: 0,
-          namespaces: [spaceId],
-          aggs: {
-            typesAggregation: {
-              terms: {
-                field: 'type',
-                size: types.length,
+          const data = await client.find<unknown, TypesAggregation>({
+            type: searchTypeNames,
+            perPage: 0,
+            namespaces: [spaceId],
+            aggs: {
+              typesAggregation: {
+                terms: {
+                  field: 'type',
+                  size: types.length,
+                },
               },
             },
-          },
-        });
+          });
 
-        const typesMetaInfo = types.reduce<SpaceContentTypesMetaData>((acc, currentType) => {
-          acc[currentType.name] = {
-            displayName: currentType.management?.displayName ?? capitalize(currentType.name),
-            icon: currentType.management?.icon,
-          };
+          const typesMetaInfo = types.reduce<SpaceContentTypesMetaData>((acc, currentType) => {
+            acc[currentType.name] = {
+              displayName: currentType.management?.displayName ?? capitalize(currentType.name),
+              icon: currentType.management?.icon,
+            };
 
-          return acc;
-        }, {});
+            return acc;
+          }, {});
 
-        const summary = sortBy(
-          data.aggregations?.typesAggregation.buckets.map<SpaceContentTypeSummaryItem>((item) => ({
-            count: item.doc_count,
-            type: item.key,
-            ...typesMetaInfo[item.key],
-          })),
-          (item) => item.displayName.toLowerCase()
-        );
+          const summary = sortBy(
+            data.aggregations?.typesAggregation.buckets.map<SpaceContentTypeSummaryItem>(
+              (item) => ({
+                count: item.doc_count,
+                type: item.key,
+                ...typesMetaInfo[item.key],
+              })
+            ),
+            (item) => item.displayName.toLowerCase()
+          );
 
-        return response.ok({ body: { summary, total: data.total } });
-      } catch (error) {
-        if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
-          return response.notFound();
+          return response.ok({ body: { summary, total: data.total } });
+        } catch (error) {
+          if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
+            return response.notFound();
+          }
+
+          return response.customError(wrapError(error));
         }
-
-        return response.customError(wrapError(error));
       }
-    })
+    )
   );
 }

@@ -16,11 +16,11 @@ import type { EnterpriseSearchError } from './create_error';
 import { createError } from './create_error';
 import { isUnauthorizedException } from './identify_exceptions';
 
-export function elasticsearchErrorHandler<ContextType, RequestType, ResponseType>(
-  log: Logger,
-  requestHandler: RequestHandler<ContextType, RequestType, ResponseType>
-): RequestHandler<ContextType, RequestType, ResponseType> {
-  return async (context, request, response) => {
+export function elasticsearchErrorHandler<
+  THandler extends RequestHandler<any, any, any, any, any, any>
+>(log: Logger, requestHandler: THandler): THandler {
+  return (async (...args: Parameters<THandler>) => {
+    const [context, request, response] = args;
     try {
       return await requestHandler(context, request, response);
     } catch (error) {
@@ -70,5 +70,5 @@ export function elasticsearchErrorHandler<ContextType, RequestType, ResponseType
 
       throw error;
     }
-  };
+  }) as THandler;
 }

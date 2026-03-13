@@ -6,6 +6,7 @@
  */
 import React from 'react';
 import { EuiSkeletonText } from '@elastic/eui';
+import { AvailablePackagesHook as loadAvailablePackagesHook } from '@kbn/fleet-plugin/public';
 import type { AvailablePackagesHookType } from '@kbn/fleet-plugin/public';
 import { withLazyHook } from '../../../components/with_lazy_hook';
 import { LOADING_SKELETON_TEXT_LINES } from '../constants';
@@ -35,7 +36,10 @@ export const withAvailablePackages = <T extends { availablePackages: AvailablePa
         return <Component {...({ ...props, availablePackages } as T)} />;
       }
     ),
-    () => import('@kbn/fleet-plugin/public').then((module) => module.AvailablePackagesHook()),
+    () =>
+      loadAvailablePackagesHook().then(({ useAvailablePackages }) => ({
+        useAvailablePackages,
+      })),
     <EuiSkeletonText
       data-test-subj="loadingPackages"
       isLoading={true}

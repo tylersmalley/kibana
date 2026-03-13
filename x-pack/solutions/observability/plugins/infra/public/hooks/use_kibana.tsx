@@ -34,6 +34,20 @@ export const createKibanaContextForPlugin = (
 
 export const KibanaEnvironmentContext = createContext<KibanaEnvContext>({});
 
+interface LazyComponentModule<T extends React.ComponentType<any>> {
+  default: T;
+}
+
+interface LazyInteropModule<T extends React.ComponentType<any>> {
+  default: LazyComponentModule<T>;
+}
+
+const isLazyInteropModule = <T extends React.ComponentType<any>>(
+  value: T | LazyComponentModule<T>
+): value is LazyComponentModule<T> => {
+  return typeof value === 'object' && value !== null && 'default' in value;
+};
+
 export const useKibanaContextForPlugin =
   useKibana as () => KibanaReactContextValue<PluginKibanaContextValue>;
 
@@ -80,11 +94,14 @@ export function useKibanaEnvironmentContext() {
 
 export const createLazyComponentWithKibanaContext = <T extends React.ComponentType<any>>(
   coreSetup: InfraClientCoreSetup,
-  lazyComponentFactory: () => Promise<{ default: T }>
+  lazyComponentFactory: () => Promise<LazyComponentModule<T> | LazyInteropModule<T>>
 ) =>
   React.lazy(() =>
     Promise.all([lazyComponentFactory(), coreSetup.getStartServices()]).then(
-      ([{ default: LazilyLoadedComponent }, [core, plugins, pluginStart]]) => {
+      ([lazyModule, [core, plugins, pluginStart]]) => {
+        const LazilyLoadedComponent = isLazyInteropModule(lazyModule.default)
+          ? lazyModule.default.default
+          : lazyModule.default;
         const { Provider } = createKibanaContextForPlugin(core, plugins, pluginStart);
 
         return {

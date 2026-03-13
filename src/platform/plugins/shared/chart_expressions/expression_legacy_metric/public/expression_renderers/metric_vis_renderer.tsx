@@ -28,7 +28,11 @@ import type { MetricVisRenderConfig, VisParams } from '../../common';
 import { EXPRESSION_METRIC_NAME } from '../../common';
 
 // @ts-ignore
-const MetricVisComponent = lazy(() => import('../components/metric_component'));
+const MetricVisComponent = lazy(() =>
+  import('../components/metric_component.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 async function metricFilterable(
   dimensions: VisParams['dimensions'],

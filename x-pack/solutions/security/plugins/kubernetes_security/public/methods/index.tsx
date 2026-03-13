@@ -21,7 +21,11 @@ const queryClient = new QueryClient({
   },
 });
 
-const KubernetesSecurityLazy = lazy(() => import('../components/kubernetes_security_routes'));
+const KubernetesSecurityLazy = lazy(() =>
+  import('../components/kubernetes_security_routes/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const getKubernetesSecurityLazy = (props: KubernetesSecurityDeps) => {
   return (

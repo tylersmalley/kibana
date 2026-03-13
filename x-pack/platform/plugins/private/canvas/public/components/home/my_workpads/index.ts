@@ -7,4 +7,6 @@
 
 import React from 'react';
 
-export const LazyMyWorkpads = React.lazy(() => import('./my_workpads'));
+export const LazyMyWorkpads = React.lazy(() =>
+  import('./my_workpads.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);

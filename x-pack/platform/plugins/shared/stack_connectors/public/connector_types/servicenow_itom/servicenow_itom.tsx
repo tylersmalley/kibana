@@ -29,14 +29,20 @@ export function getServiceNowITOMConnectorType(): ConnectorTypeModel<
 > {
   return {
     id: CONNECTOR_ID,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: SERVICENOW_ITOM_DESC,
     actionTypeTitle: CONNECTOR_NAME,
-    actionConnectorFields: lazy(() => import('../lib/servicenow/servicenow_connectors_no_app')),
+    actionConnectorFields: lazy(() =>
+      import('../lib/servicenow/servicenow_connectors_no_app.js').then(
+        ({ default: lazyModule }) => ({ default: lazyModule.default })
+      )
+    ),
     validateParams: async (
       actionParams: ServiceNowITOMActionParams
     ): Promise<GenericValidationResult<unknown>> => {
-      const translations = await import('../lib/servicenow/translations');
+      const translations = await import('../lib/servicenow/translations.js');
       const errors = {
         severity: new Array<string>(),
         additional_info: new Array<string>(),
@@ -54,6 +60,10 @@ export function getServiceNowITOMConnectorType(): ConnectorTypeModel<
 
       return { errors };
     },
-    actionParamsFields: lazy(() => import('./servicenow_itom_params')),
+    actionParamsFields: lazy(() =>
+      import('./servicenow_itom_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
   };
 }

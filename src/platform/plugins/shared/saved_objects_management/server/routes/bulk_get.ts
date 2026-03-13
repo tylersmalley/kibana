@@ -39,10 +39,14 @@ export const registerBulkGetRoute = (
       const managementService = await managementServicePromise;
       const { getClient, typeRegistry } = (await context.core).savedObjects;
 
-      const objects = req.body;
-      const uniqueTypes = objects.reduce((acc, { type }) => acc.add(type), new Set<string>());
+      const objects = req.body as Array<{ type: string; id: string }>;
+      const uniqueTypes = objects.reduce(
+        (acc, { type }: { type: string }) => acc.add(type),
+        new Set<string>()
+      );
       const includedHiddenTypes = Array.from(uniqueTypes).filter(
-        (type) => typeRegistry.isHidden(type) && typeRegistry.isImportableAndExportable(type)
+        (type: string) =>
+          typeRegistry.isHidden(type) && typeRegistry.isImportableAndExportable(type)
       );
 
       const client = getClient({ includedHiddenTypes });

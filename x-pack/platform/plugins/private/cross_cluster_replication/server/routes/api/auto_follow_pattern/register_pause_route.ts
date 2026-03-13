@@ -43,14 +43,14 @@ export const registerPauseRoute = ({
       const errors: Array<{ id: string; error: any }> = [];
 
       await Promise.all(
-        ids.map((_id) =>
+        ids.map((patternId: string) =>
           client.asCurrentUser.ccr
             .pauseAutoFollowPattern({
-              name: _id,
+              name: patternId,
             })
-            .then(() => itemsPaused.push(_id))
+            .then(() => itemsPaused.push(patternId))
             .catch((error) => {
-              errors.push({ id: _id, error: handleEsError({ error, response }) });
+              errors.push({ id: patternId, error: handleEsError({ error, response }) });
             })
         )
       );

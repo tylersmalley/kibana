@@ -11,10 +11,16 @@ import React from 'react';
 import { EuiDelayRender, EuiSkeletonText } from '@elastic/eui';
 import { dynamic } from '@kbn/shared-ux-utility';
 
-export const LazyUnifiedMetricsExperienceGrid = dynamic(() => import('.'), {
-  fallback: (
-    <EuiDelayRender delay={300}>
-      <EuiSkeletonText />
-    </EuiDelayRender>
-  ),
-});
+export const LazyUnifiedMetricsExperienceGrid = dynamic(
+  () =>
+    import('./index.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    })),
+  {
+    fallback: (
+      <EuiDelayRender delay={300}>
+        <EuiSkeletonText />
+      </EuiDelayRender>
+    ),
+  }
+);

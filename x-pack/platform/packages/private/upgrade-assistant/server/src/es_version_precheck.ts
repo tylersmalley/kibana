@@ -9,11 +9,11 @@ import { uniq } from 'lodash';
 import { SemVer } from 'semver';
 import type {
   IScopedClusterClient,
-  KibanaRequest,
-  KibanaResponseFactory,
   RequestHandler,
   RequestHandlerContext,
+  RouteMethod,
 } from '@kbn/core/server';
+import type { KibanaResponseFactory } from '@kbn/core/server';
 
 /**
  * Returns an array of all the unique Elasticsearch Node Versions in the Elasticsearch cluster.
@@ -95,15 +95,18 @@ export const esVersionCheck = async (
 
 export const versionCheckHandlerWrapper =
   (kibanaMajorVersion: number) =>
-  <P, Q, B>(handler: RequestHandler<P, Q, B>) =>
-  async (
-    ctx: RequestHandlerContext,
-    request: KibanaRequest<P, Q, B>,
-    response: KibanaResponseFactory
-  ) => {
-    const errorResponse = await esVersionCheck(ctx, response, kibanaMajorVersion);
-    if (errorResponse) {
-      return errorResponse;
-    }
-    return handler(ctx, request, response);
-  };
+  <
+    Context extends RequestHandlerContext,
+    Method extends RouteMethod,
+    THandler extends RequestHandler<any, any, any, Context, Method, any>
+  >(
+    handler: THandler
+  ): THandler =>
+    (async (...args: Parameters<THandler>) => {
+      const [ctx, request, response] = args;
+      const errorResponse = await esVersionCheck(ctx, response, kibanaMajorVersion);
+      if (errorResponse) {
+        return errorResponse;
+      }
+      return handler(ctx, request, response);
+    }) as THandler;

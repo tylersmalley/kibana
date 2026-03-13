@@ -14,11 +14,13 @@ import { Sidebar as SidebarComponent } from '@kbn/core-chrome-sidebar-components
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface SidebarProps {}
 
-// eslint-disable-next-line import/no-default-export
-export default function Sidebar(props: SidebarProps) {
+export function Sidebar(props: SidebarProps) {
   return (
     <KibanaSectionErrorBoundary sectionName={'Sidebar'}>
       <SidebarComponent />
     </KibanaSectionErrorBoundary>
   );
 }
+
+// eslint-disable-next-line import/no-default-export
+export default Sidebar;

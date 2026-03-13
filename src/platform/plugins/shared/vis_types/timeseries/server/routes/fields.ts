@@ -15,7 +15,7 @@ import { ROUTES } from '../../common/constants';
 import type { VisTypeTimeseriesRouter } from '../types';
 
 export const fieldsRoutes = (router: VisTypeTimeseriesRouter, framework: Framework) => {
-  router.get<{}, { index: string }, {}>(
+  router.get(
     {
       path: ROUTES.FIELDS,
       security: {

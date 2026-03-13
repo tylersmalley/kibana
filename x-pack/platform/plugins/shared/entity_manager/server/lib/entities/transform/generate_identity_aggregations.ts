@@ -7,9 +7,11 @@
 
 import type { EntityDefinition } from '@kbn/entities-schema';
 
+type EntityIdentityField = EntityDefinition['identityFields'][number];
+
 export function generateIdentityAggregations(definition: EntityDefinition) {
-  return definition.identityFields.reduce(
-    (aggs, identityField) => ({
+  return definition.identityFields.reduce<Record<string, unknown>>(
+    (aggs: Record<string, unknown>, identityField: EntityIdentityField) => ({
       ...aggs,
       [`entity.identity.${identityField.field}`]: {
         filter: {

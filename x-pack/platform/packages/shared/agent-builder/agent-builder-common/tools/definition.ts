@@ -5,8 +5,7 @@
  * 2.0.
  */
 
-// eslint-disable-next-line @kbn/eslint/module_migration
-import type { JSONSchema } from 'zod/v4/core/json-schema';
+import type { z } from '@kbn/zod/v4';
 
 /**
  * Possible types of tools
@@ -76,5 +75,5 @@ export interface ToolDefinitionWithSchema<
   /**
    * the JSON schema associated with this tool's input parameters.
    */
-  schema: JSONSchema;
+  schema: z.core.JSONSchema.JSONSchema;
 }

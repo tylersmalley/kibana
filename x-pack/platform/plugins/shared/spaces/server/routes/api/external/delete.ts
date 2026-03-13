@@ -9,6 +9,7 @@ import Boom from '@hapi/boom';
 
 import { schema } from '@kbn/config-schema';
 import { SavedObjectsErrorHelpers } from '@kbn/core/server';
+import type { KibanaRequest } from '@kbn/core/server';
 
 import type { ExternalRouteDeps } from '.';
 import { API_VERSIONS } from '../../../../common';
@@ -56,28 +57,30 @@ export function initDeleteSpacesApi(deps: ExternalRouteDeps) {
           },
         },
       },
-      createLicensedRouteHandler(async (context, request, response) => {
-        const spacesClient = getSpacesService().createSpacesClient(request);
+      createLicensedRouteHandler(
+        async (context, request: KibanaRequest<{ id: string }>, response) => {
+          const spacesClient = getSpacesService().createSpacesClient(request);
 
-        const id = request.params.id;
+          const id = request.params.id;
 
-        try {
-          await spacesClient.delete(id);
-        } catch (error) {
-          if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
-            return response.notFound();
-          } else if (SavedObjectsErrorHelpers.isEsCannotExecuteScriptError(error)) {
-            log.error(
-              `Failed to delete space '${id}', cannot execute script in Elasticsearch query: ${error.message}`
-            );
-            return response.customError(
-              wrapError(Boom.badRequest('Cannot execute script in Elasticsearch query'))
-            );
+          try {
+            await spacesClient.delete(id);
+          } catch (error) {
+            if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
+              return response.notFound();
+            } else if (SavedObjectsErrorHelpers.isEsCannotExecuteScriptError(error)) {
+              log.error(
+                `Failed to delete space '${id}', cannot execute script in Elasticsearch query: ${error.message}`
+              );
+              return response.customError(
+                wrapError(Boom.badRequest('Cannot execute script in Elasticsearch query'))
+              );
+            }
+            return response.customError(wrapError(error));
           }
-          return response.customError(wrapError(error));
-        }
 
-        return response.noContent();
-      })
+          return response.noContent();
+        }
+      )
     );
 }

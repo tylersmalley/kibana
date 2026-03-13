@@ -8,7 +8,7 @@
 import _ from 'lodash';
 
 import { schema } from '@kbn/config-schema';
-import type { SavedObject } from '@kbn/core/server';
+import type { KibanaRequest, SavedObject } from '@kbn/core/server';
 
 import type { ExternalRouteDeps } from '.';
 import {
@@ -19,6 +19,31 @@ import { SPACE_ID_REGEX } from '../../../lib/space_schema';
 import { createLicensedRouteHandler } from '../../lib';
 
 type SavedObjectIdentifier = Pick<SavedObject, 'id' | 'type'>;
+interface CopyToSpaceRequestBody {
+  spaces: string[];
+  objects: SavedObjectIdentifier[];
+  includeReferences: boolean;
+  overwrite: boolean;
+  createNewCopies: boolean;
+  compatibilityMode: boolean;
+}
+interface ResolveCopyToSpaceErrorsRequestBody {
+  retries: Record<
+    string,
+    Array<{
+      type: string;
+      id: string;
+      overwrite: boolean;
+      destinationId?: string;
+      createNewCopy?: boolean;
+      ignoreMissingReferences?: boolean;
+    }>
+  >;
+  objects: SavedObjectIdentifier[];
+  includeReferences: boolean;
+  createNewCopies: boolean;
+  compatibilityMode: boolean;
+}
 
 const areObjectsUnique = (objects: SavedObjectIdentifier[]) =>
   _.uniqBy(objects, (o: SavedObjectIdentifier) => `${o.type}:${o.id}`).length === objects.length;
@@ -133,63 +158,69 @@ export function initCopyToSpacesApi(deps: ExternalRouteDeps) {
         ),
       },
     },
-    createLicensedRouteHandler(async (context, request, response) => {
-      const [startServices] = await getStartServices();
-      const {
-        spaces: destinationSpaceIds,
-        objects,
-        includeReferences,
-        overwrite,
-        createNewCopies,
-        compatibilityMode,
-      } = request.body;
-
-      const { headers } = request;
-      usageStatsClientPromise
-        .then((usageStatsClient) =>
-          usageStatsClient.incrementCopySavedObjects({
-            headers,
-            createNewCopies,
-            overwrite,
-            compatibilityMode,
-          })
-        )
-        .catch((err) => {
-          log.error(
-            `Failed to report usage statistics for the copy saved objects route: ${err.message}`
-          );
-        });
-
-      try {
-        const copySavedObjectsToSpaces = copySavedObjectsToSpacesFactory(
-          startServices.savedObjects,
-          request
-        );
-        const sourceSpaceId = getSpacesService().getSpaceId(request);
-        const copyResponse = await copySavedObjectsToSpaces(sourceSpaceId, destinationSpaceIds, {
+    createLicensedRouteHandler(
+      async (
+        context,
+        request: KibanaRequest<unknown, unknown, CopyToSpaceRequestBody>,
+        response
+      ) => {
+        const [startServices] = await getStartServices();
+        const {
+          spaces: destinationSpaceIds,
           objects,
           includeReferences,
           overwrite,
           createNewCopies,
           compatibilityMode,
-        });
-        return response.ok({ body: copyResponse });
-      } catch (e) {
-        if (e.type === 'object-fetch-error' && e.attributes?.objects) {
-          return response.notFound({
-            body: {
-              message: 'Saved objects not found',
-              attributes: {
-                objects: e.attributes?.objects.map((obj: SavedObjectIdentifier) => ({
-                  id: obj.id,
-                  type: obj.type,
-                })),
-              },
-            },
+        } = request.body;
+
+        const { headers } = request;
+        usageStatsClientPromise
+          .then((usageStatsClient) =>
+            usageStatsClient.incrementCopySavedObjects({
+              headers,
+              createNewCopies,
+              overwrite,
+              compatibilityMode,
+            })
+          )
+          .catch((err) => {
+            log.error(
+              `Failed to report usage statistics for the copy saved objects route: ${err.message}`
+            );
           });
-        } else throw e;
+
+        try {
+          const copySavedObjectsToSpaces = copySavedObjectsToSpacesFactory(
+            startServices.savedObjects,
+            request
+          );
+          const sourceSpaceId = getSpacesService().getSpaceId(request);
+          const copyResponse = await copySavedObjectsToSpaces(sourceSpaceId, destinationSpaceIds, {
+            objects,
+            includeReferences,
+            overwrite,
+            createNewCopies,
+            compatibilityMode,
+          });
+          return response.ok({ body: copyResponse });
+        } catch (e) {
+          if (e.type === 'object-fetch-error' && e.attributes?.objects) {
+            return response.notFound({
+              body: {
+                message: 'Saved objects not found',
+                attributes: {
+                  objects: e.attributes?.objects.map((obj: SavedObjectIdentifier) => ({
+                    id: obj.id,
+                    type: obj.type,
+                  })),
+                },
+              },
+            });
+          } else throw e;
+        }
       }
-    })
+    )
   );
 
   router.post(
@@ -288,40 +319,46 @@ export function initCopyToSpacesApi(deps: ExternalRouteDeps) {
         ),
       },
     },
-    createLicensedRouteHandler(async (context, request, response) => {
-      const [startServices] = await getStartServices();
-      const { objects, includeReferences, retries, createNewCopies, compatibilityMode } =
-        request.body;
+    createLicensedRouteHandler(
+      async (
+        context,
+        request: KibanaRequest<unknown, unknown, ResolveCopyToSpaceErrorsRequestBody>,
+        response
+      ) => {
+        const [startServices] = await getStartServices();
+        const { objects, includeReferences, retries, createNewCopies, compatibilityMode } =
+          request.body;
 
-      const { headers } = request;
-      usageStatsClientPromise
-        .then((usageStatsClient) =>
-          usageStatsClient.incrementResolveCopySavedObjectsErrors({
-            headers,
+        const { headers } = request;
+        usageStatsClientPromise
+          .then((usageStatsClient) =>
+            usageStatsClient.incrementResolveCopySavedObjectsErrors({
+              headers,
+              createNewCopies,
+              compatibilityMode,
+            })
+          )
+          .catch((err) => {
+            log.error(
+              `Failed to report usage statistics for the resolve copy saved objects errors route: ${err.message}`
+            );
+          });
+
+        const resolveCopySavedObjectsToSpacesConflicts =
+          resolveCopySavedObjectsToSpacesConflictsFactory(startServices.savedObjects, request);
+        const sourceSpaceId = getSpacesService().getSpaceId(request);
+        const resolveConflictsResponse = await resolveCopySavedObjectsToSpacesConflicts(
+          sourceSpaceId,
+          {
+            objects,
+            includeReferences,
+            retries,
             createNewCopies,
             compatibilityMode,
-          })
-        )
-        .catch((err) => {
-          log.error(
-            `Failed to report usage statistics for the resolve copy saved objects errors route: ${err.message}`
-          );
-        });
-
-      const resolveCopySavedObjectsToSpacesConflicts =
-        resolveCopySavedObjectsToSpacesConflictsFactory(startServices.savedObjects, request);
-      const sourceSpaceId = getSpacesService().getSpaceId(request);
-      const resolveConflictsResponse = await resolveCopySavedObjectsToSpacesConflicts(
-        sourceSpaceId,
-        {
-          objects,
-          includeReferences,
-          retries,
-          createNewCopies,
-          compatibilityMode,
-        }
-      );
-      return response.ok({ body: resolveConflictsResponse });
-    })
+          }
+        );
+        return response.ok({ body: resolveConflictsResponse });
+      }
+    )
   );
 }

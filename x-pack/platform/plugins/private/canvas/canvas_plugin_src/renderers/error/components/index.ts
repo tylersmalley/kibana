@@ -7,5 +7,11 @@
 
 import { lazy } from 'react';
 
-export const LazyErrorComponent = lazy(() => import('./error'));
-export const LazyErrorRenderComponent = lazy(() => import('./error_component'));
+export const LazyErrorComponent = lazy(() =>
+  import('./error/index.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
+export const LazyErrorRenderComponent = lazy(() =>
+  import('./error_component.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);

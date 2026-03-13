@@ -6,9 +6,9 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
-import type { PropertyName, MappingProperty } from 'elasticsearch-8.x/lib/api/types'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
+import type { estypes } from 'elasticsearch-8.x'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
 
-export const buildkiteProperties: Record<PropertyName, MappingProperty> = {
+export const buildkiteProperties: Record<estypes.PropertyName, estypes.MappingProperty> = {
   branch: {
     type: 'keyword',
   },
@@ -106,7 +106,7 @@ export const buildkiteProperties: Record<PropertyName, MappingProperty> = {
   },
 };
 
-export const fileInfoProperties: Record<PropertyName, MappingProperty> = {
+export const fileInfoProperties: Record<estypes.PropertyName, estypes.MappingProperty> = {
   path: {
     type: 'keyword',
   },
@@ -118,7 +118,7 @@ export const fileInfoProperties: Record<PropertyName, MappingProperty> = {
   },
 };
 
-export const reporterProperties: Record<PropertyName, MappingProperty> = {
+export const reporterProperties: Record<estypes.PropertyName, estypes.MappingProperty> = {
   name: {
     type: 'text',
   },
@@ -127,7 +127,7 @@ export const reporterProperties: Record<PropertyName, MappingProperty> = {
   },
 };
 
-export const testRunProperties: Record<PropertyName, MappingProperty> = {
+export const testRunProperties: Record<estypes.PropertyName, estypes.MappingProperty> = {
   id: {
     type: 'wildcard',
   },
@@ -182,7 +182,7 @@ export const testRunProperties: Record<PropertyName, MappingProperty> = {
   },
 };
 
-export const suiteProperties: Record<PropertyName, MappingProperty> = {
+export const suiteProperties: Record<estypes.PropertyName, estypes.MappingProperty> = {
   title: {
     type: 'text',
   },
@@ -191,7 +191,7 @@ export const suiteProperties: Record<PropertyName, MappingProperty> = {
   },
 };
 
-export const testProperties: Record<PropertyName, MappingProperty> = {
+export const testProperties: Record<estypes.PropertyName, estypes.MappingProperty> = {
   id: {
     type: 'wildcard',
   },

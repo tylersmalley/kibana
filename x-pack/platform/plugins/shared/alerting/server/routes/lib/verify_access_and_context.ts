@@ -10,13 +10,20 @@ import type { ILicenseState } from '../../lib';
 import { isErrorThatHandlesItsOwnResponse, verifyApiAccess } from '../../lib';
 import type { AlertingRequestHandlerContext } from '../../types';
 
-type AlertingRequestHandlerWrapper = <P, Q, B>(
+type AlertingRequestHandlerWrapper = <
+  P,
+  Q,
+  B,
+  Context extends AlertingRequestHandlerContext,
+  THandler extends RequestHandler<P, Q, B, Context>
+>(
   licenseState: ILicenseState,
-  handler: RequestHandler<P, Q, B, AlertingRequestHandlerContext>
-) => RequestHandler<P, Q, B, AlertingRequestHandlerContext>;
+  handler: THandler
+) => THandler;
 
 export const verifyAccessAndContext: AlertingRequestHandlerWrapper = (licenseState, handler) => {
-  return async (context, request, response) => {
+  return (async (...args: Parameters<typeof handler>) => {
+    const [context, request, response] = args;
     verifyApiAccess(licenseState);
 
     if (!context.alerting) {
@@ -31,5 +38,5 @@ export const verifyAccessAndContext: AlertingRequestHandlerWrapper = (licenseSta
       }
       throw e;
     }
-  };
+  }) as typeof handler;
 };

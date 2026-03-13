@@ -76,7 +76,11 @@ export function getConnectorType(): ConnectorTypeModel<{}, {}, CasesActionParams
 
       return validationResult;
     },
-    actionParamsFields: lazy(() => import('./cases_params')),
+    actionParamsFields: lazy(() =>
+      import('./cases_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     isSystemActionType: true,
   };
 }

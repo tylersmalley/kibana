@@ -81,17 +81,19 @@ export class DataVisualizerPlugin
       getIndexDataVisualizerComponent,
       getDataDriftComponent,
       getMaxBytesFormatted,
-      FieldStatsUnavailableMessage: dynamic(
-        async () =>
-          import(
-            './application/index_data_visualizer/embeddables/grid_embeddable/embeddable_error_msg'
-          )
+      FieldStatsUnavailableMessage: dynamic(async () =>
+        import(
+          './application/index_data_visualizer/embeddables/grid_embeddable/embeddable_error_msg.js'
+        ).then(({ default: lazyModule }) => ({
+          default: lazyModule.default,
+        }))
       ),
-      FieldStatisticsTable: dynamic(
-        async () =>
-          import(
-            './application/index_data_visualizer/embeddables/grid_embeddable/field_stats_wrapper'
-          )
+      FieldStatisticsTable: dynamic(async () =>
+        import(
+          './application/index_data_visualizer/embeddables/grid_embeddable/field_stats_wrapper.js'
+        ).then(({ default: lazyModule }) => ({
+          default: lazyModule.default,
+        }))
       ),
     };
   }

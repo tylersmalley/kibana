@@ -44,7 +44,7 @@ export class SearchInferenceEndpointsPlugin
       title: PLUGIN_TITLE,
       order: 2,
       async mount({ element, history }: ManagementAppMountParams) {
-        const { renderInferenceEndpointsMgmtApp } = await import('./application');
+        const { renderInferenceEndpointsMgmtApp } = await import('./application.js');
         const [coreStart, depsStart] = await core.getStartServices();
         const startDeps: AppPluginStartDependencies = {
           ...depsStart,

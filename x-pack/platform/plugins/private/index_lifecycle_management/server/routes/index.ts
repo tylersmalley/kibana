@@ -7,7 +7,7 @@
 
 import type { RouteDependencies } from '../types';
 
-import { registerIndexRoutes } from './api/index/index';
+import { registerIndexRoutes } from './api/index';
 import { registerNodesRoutes } from './api/nodes';
 import { registerPoliciesRoutes } from './api/policies';
 import { registerTemplatesRoutes } from './api/templates';

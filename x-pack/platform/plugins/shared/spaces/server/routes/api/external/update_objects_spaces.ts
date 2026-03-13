@@ -6,12 +6,19 @@
  */
 
 import { schema } from '@kbn/config-schema';
+import type { KibanaRequest } from '@kbn/core/server';
 
 import type { ExternalRouteDeps } from '.';
 import { ALL_SPACES_ID } from '../../../../common/constants';
 import { wrapError } from '../../../lib/errors';
 import { SPACE_ID_REGEX } from '../../../lib/space_schema';
 import { createLicensedRouteHandler } from '../../lib';
+
+interface UpdateObjectsSpacesRequestBody {
+  objects: Array<{ type: string; id: string }>;
+  spacesToAdd: string[];
+  spacesToRemove: string[];
+}
 
 export function initUpdateObjectsSpacesApi(deps: ExternalRouteDeps) {
   const { router, getStartServices, isServerless } = deps;
@@ -72,23 +79,29 @@ export function initUpdateObjectsSpacesApi(deps: ExternalRouteDeps) {
         }),
       },
     },
-    createLicensedRouteHandler(async (_context, request, response) => {
-      const [startServices] = await getStartServices();
-      const scopedClient = startServices.savedObjects.getScopedClient(request);
+    createLicensedRouteHandler(
+      async (
+        _context,
+        request: KibanaRequest<unknown, unknown, UpdateObjectsSpacesRequestBody>,
+        response
+      ) => {
+        const [startServices] = await getStartServices();
+        const scopedClient = startServices.savedObjects.getScopedClient(request);
 
-      const { objects, spacesToAdd, spacesToRemove } = request.body;
+        const { objects, spacesToAdd, spacesToRemove } = request.body;
 
-      try {
-        const updateObjectsSpacesResponse = await scopedClient.updateObjectsSpaces(
-          objects,
-          spacesToAdd,
-          spacesToRemove
-        );
-        return response.ok({ body: updateObjectsSpacesResponse });
-      } catch (error) {
-        return response.customError(wrapError(error));
+        try {
+          const updateObjectsSpacesResponse = await scopedClient.updateObjectsSpaces(
+            objects,
+            spacesToAdd,
+            spacesToRemove
+          );
+          return response.ok({ body: updateObjectsSpacesResponse });
+        } catch (error) {
+          return response.customError(wrapError(error));
+        }
       }
-    })
+    )
   );
 }
 

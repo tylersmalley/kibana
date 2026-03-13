@@ -13,7 +13,11 @@ import { EuiLoadingSpinner } from '@elastic/eui';
 import type { VisEditorOptionsProps } from '@kbn/visualizations-plugin/public';
 import type { TableVisParams } from '../../common';
 
-const TableOptionsComponent = lazy(() => import('./table_vis_options'));
+const TableOptionsComponent = lazy(() =>
+  import('./table_vis_options.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const TableOptions = (props: VisEditorOptionsProps<TableVisParams>) => (
   <Suspense fallback={<EuiLoadingSpinner />}>

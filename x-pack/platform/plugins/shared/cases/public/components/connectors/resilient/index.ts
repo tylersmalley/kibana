@@ -15,6 +15,14 @@ export type * from './types';
 
 export const getCaseConnector = (): CaseConnector<ResilientFieldsType> => ({
   id: ConnectorTypes.resilient,
-  fieldsComponent: lazy(() => import('./case_fields')),
-  previewComponent: lazy(() => import('./case_fields_preview')),
+  fieldsComponent: lazy(() =>
+    import('./case_fields.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  ),
+  previewComponent: lazy(() =>
+    import('./case_fields_preview.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  ),
 });

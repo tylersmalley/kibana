@@ -22,7 +22,11 @@ interface ExtraProps {
  * You want to be careful of not directly importing/exporting things from exception_items_renderer
  * unless you use a import type, and/or a export type to ensure full type erasure
  */
-const ExceptionBuilderComponentLazy = lazy(() => import('./exception_items_renderer'));
+const ExceptionBuilderComponentLazy = lazy(() =>
+  import('./exception_items_renderer.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 export const getExceptionBuilderComponentLazy = (
   props: ExceptionBuilderProps & ExtraProps
 ): JSX.Element => (

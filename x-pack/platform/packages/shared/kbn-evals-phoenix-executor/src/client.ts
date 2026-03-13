@@ -5,13 +5,14 @@
  * 2.0.
  */
 
+import { createRequire } from 'node:module';
 import type { PhoenixClient } from '@arizeai/phoenix-client';
 import { createClient } from '@arizeai/phoenix-client';
-import type { DatasetInfo } from '@arizeai/phoenix-client/dist/esm/types/datasets';
+import type { DatasetInfo } from '@arizeai/phoenix-client/types/datasets';
 import type {
   ExperimentRun,
   ExperimentEvaluationRun,
-} from '@arizeai/phoenix-client/dist/esm/types/experiments';
+} from '@arizeai/phoenix-client/types/experiments';
 import type { SomeDevLog } from '@kbn/some-dev-log';
 import type { Model } from '@kbn/inference-common';
 import { withInferenceContext } from '@kbn/inference-tracing';
@@ -25,6 +26,15 @@ import type {
 } from '@kbn/evals';
 import { upsertDataset } from './upsert_dataset';
 import type { PhoenixConfig } from './get_phoenix_config';
+
+type PhoenixDatasetsApi = typeof import('@arizeai/phoenix-client/datasets');
+type PhoenixExperimentsApi = typeof import('@arizeai/phoenix-client/experiments');
+
+const phoenixRequire = createRequire(__filename);
+const datasetsApi = phoenixRequire('@arizeai/phoenix-client/datasets') as PhoenixDatasetsApi;
+const experimentsApi = phoenixRequire(
+  '@arizeai/phoenix-client/experiments'
+) as PhoenixExperimentsApi;
 
 /**
  * Phoenix-backed eval runner. This remains supported as an option during the migration,
@@ -53,8 +63,6 @@ export class KibanaPhoenixClient implements EvalsExecutorClient {
   }
 
   private async syncDataSet(dataset: EvaluationDataset): Promise<{ datasetId: string }> {
-    const datasets = await import('@arizeai/phoenix-client/datasets');
-
     const getDatasetsByNameResponse = await this.phoenixClient.GET('/v1/datasets', {
       params: {
         query: {
@@ -64,7 +72,7 @@ export class KibanaPhoenixClient implements EvalsExecutorClient {
     });
 
     if (!getDatasetsByNameResponse.data?.data.length) {
-      const { datasetId } = await datasets.createDataset({
+      const { datasetId } = await datasetsApi.createDataset({
         client: this.phoenixClient,
         name: dataset.name,
         description: dataset.description,
@@ -119,7 +127,7 @@ export class KibanaPhoenixClient implements EvalsExecutorClient {
         params: { path: { id: storedDataset.id } },
       });
 
-      const { datasetId } = await datasets.createDataset({
+      const { datasetId } = await datasetsApi.createDataset({
         client: this.phoenixClient,
         name: dataset.name,
         description: dataset.description,
@@ -189,9 +197,7 @@ export class KibanaPhoenixClient implements EvalsExecutorClient {
         ? (await this.getDatasetByName(dataset.name)).id
         : (await this.syncDataSet(dataset)).datasetId;
 
-      const experiments = await import('@arizeai/phoenix-client/experiments');
-
-      const ran = await experiments.runExperiment({
+      const ran = await experimentsApi.runExperiment({
         client: this.phoenixClient,
         dataset: { datasetId },
         experimentName: `Run ID: ${this.options.runId} - Dataset: ${dataset.name}`,

@@ -31,14 +31,16 @@ export function getConnectorType(): ConnectorTypeModel<
   return {
     id: CONNECTOR_ID,
     actionTypeTitle: CONNECTOR_NAME,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: i18n.translate('xpack.stackConnectors.security.tines.config.selectMessageText', {
       defaultMessage: 'Send events to a Story.',
     }),
     validateParams: async (
       actionParams: TinesExecuteActionParams
     ): Promise<GenericValidationResult<ValidationErrors>> => {
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors: ValidationErrors = {
         subAction: [],
         story: [],
@@ -87,7 +89,15 @@ export function getConnectorType(): ConnectorTypeModel<
       }
       return { errors };
     },
-    actionConnectorFields: lazy(() => import('./tines_connector')),
-    actionParamsFields: lazy(() => import('./tines_params')),
+    actionConnectorFields: lazy(() =>
+      import('./tines_connector.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./tines_params.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
   };
 }

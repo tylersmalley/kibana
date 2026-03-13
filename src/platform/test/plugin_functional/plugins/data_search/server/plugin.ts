@@ -86,7 +86,6 @@ export class DataSearchTestPlugin
           req
         );
         const ids = await indexPatterns.getIds();
-        // @ts-expect-error Force overwriting the request
         req.body.index = ids[0];
         const searchSource = await service.create(req.body);
 

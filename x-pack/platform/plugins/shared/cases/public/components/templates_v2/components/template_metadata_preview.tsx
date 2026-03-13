@@ -57,7 +57,7 @@ export const TemplateMetadataPreview: FC<TemplateMetadataPreviewProps> = ({ pars
       {tags && tags.length > 0 && (
         <MetadataRow label={commonI18n.TAGS}>
           <EuiFlexGroup gutterSize="xs" wrap responsive={false}>
-            {tags.map((tag, i) => (
+            {tags.map((tag: string, i: number) => (
               <EuiBadge
                 css={css`
                   max-width: 100px;

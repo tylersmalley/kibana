@@ -13,4 +13,10 @@ import type { DiscoverContainerInternalProps } from './discover_container';
 
 export type DiscoverContainerProps = Omit<DiscoverContainerInternalProps, 'getDiscoverServices'>;
 
-export const DiscoverContainerInternal = withSuspense(lazy(() => import('./discover_container')));
+export const DiscoverContainerInternal = withSuspense(
+  lazy(() =>
+    import('./discover_container.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
+);

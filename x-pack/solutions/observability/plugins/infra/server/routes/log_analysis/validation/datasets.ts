@@ -12,6 +12,7 @@ import { createRouteValidationFunction } from '@kbn/io-ts-utils';
 import type { InfraBackendLibs } from '../../../lib/infra_types';
 
 import { logAnalysisValidationV1 } from '../../../../common/http_api';
+import type { ValidateLogEntryDatasetsRequestPayload } from '../../../../common/http_api/log_analysis/validation/v1/datasets';
 
 export const initValidateLogAnalysisDatasetsRoute = ({
   framework,
@@ -41,21 +42,25 @@ export const initValidateLogAnalysisDatasetsRoute = ({
           } = request.body;
 
           const datasets = await Promise.all(
-            indices.map(async (indexName) => {
-              const indexDatasets = await logEntries.getLogEntryDatasets(
-                requestContext,
-                timestampField,
-                indexName,
-                startTime,
-                endTime,
-                runtimeMappings as estypes.MappingRuntimeFields
-              );
+            indices.map(
+              async (
+                indexName: ValidateLogEntryDatasetsRequestPayload['data']['indices'][number]
+              ) => {
+                const indexDatasets = await logEntries.getLogEntryDatasets(
+                  requestContext,
+                  timestampField,
+                  indexName,
+                  startTime,
+                  endTime,
+                  runtimeMappings as estypes.MappingRuntimeFields
+                );
 
-              return {
-                indexName,
-                datasets: indexDatasets,
-              };
-            })
+                return {
+                  indexName,
+                  datasets: indexDatasets,
+                };
+              }
+            )
           );
 
           return response.ok({

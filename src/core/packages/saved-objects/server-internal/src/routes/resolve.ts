@@ -52,7 +52,7 @@ export const registerResolveRoute = (
         }),
       },
     },
-    router.handleLegacyErrors(async (context, request, response) => {
+    router.handleLegacyErrors(async (context: any, request: any, response: any) => {
       logWarnOnExternalRequest({
         method: 'get',
         path: '/api/saved_objects/resolve/{type}/{id}',

@@ -9,7 +9,9 @@ import React, { lazy, Suspense } from 'react';
 import { EuiLoadingSpinner } from '@elastic/eui';
 import type { TagsListProps } from './tags_list';
 
-const TagsListLazy = lazy(() => import('./tags_list'));
+const TagsListLazy = lazy(() =>
+  import('./tags_list.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export function TagsList(props: TagsListProps) {
   return (

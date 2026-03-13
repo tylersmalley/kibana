@@ -24,10 +24,16 @@ import type {
 } from './types';
 import FieldStatsUnavailableMessage from './embeddable_error_msg';
 
-const EmbeddableESQLFieldStatsTableWrapper = dynamic(
-  () => import('./embeddable_esql_field_stats_table')
+const EmbeddableESQLFieldStatsTableWrapper = dynamic(() =>
+  import('./embeddable_esql_field_stats_table.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
-const EmbeddableFieldStatsTableWrapper = dynamic(() => import('./embeddable_field_stats_table'));
+const EmbeddableFieldStatsTableWrapper = dynamic(() =>
+  import('./embeddable_field_stats_table.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 function isESQLFieldStatisticTableEmbeddableState(
   input: FieldStatisticTableEmbeddableProps

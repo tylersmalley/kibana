@@ -5,8 +5,9 @@
  * 2.0.
  */
 
-import { schema } from '@kbn/config-schema';
+import { schema, type TypeOf } from '@kbn/config-schema';
 import { SavedObjectsErrorHelpers } from '@kbn/core/server';
+import type { KibanaRequest } from '@kbn/core/server';
 
 import type { InternalRouteDeps } from '.';
 import type { SolutionView, Space } from '../../../../common';
@@ -25,6 +26,7 @@ const spaceSolutionSchema = schema.oneOf([
     ]),
   }),
 ]);
+type SpaceSolutionRequestBody = TypeOf<typeof spaceSolutionSchema>;
 
 /* FUTURE Engineer
  * This route /internal/spaces/space/{id}/solution is and will be used by cloud (control panel)
@@ -55,28 +57,34 @@ export function initSetSolutionSpaceApi(deps: InternalRouteDeps) {
         body: spaceSolutionSchema,
       },
     },
-    createLicensedRouteHandler(async (context, request, response) => {
-      const spacesClient = (await getSpacesService()).createSpacesClient(request);
-      const id = request.params.id;
-      let solutionToUpdate: SolutionView | undefined;
+    createLicensedRouteHandler(
+      async (
+        context,
+        request: KibanaRequest<{ id: string }, unknown, SpaceSolutionRequestBody>,
+        response
+      ) => {
+        const spacesClient = (await getSpacesService()).createSpacesClient(request);
+        const id = request.params.id;
+        let solutionToUpdate: SolutionView | undefined;
 
-      let result: Space;
-      try {
-        if ('solution' in request.body) {
-          solutionToUpdate = request.body.solution;
-        } else {
-          solutionToUpdate = parseCloudSolution(request.body.solution_type);
+        let result: Space;
+        try {
+          if ('solution' in request.body) {
+            solutionToUpdate = request.body.solution;
+          } else {
+            solutionToUpdate = parseCloudSolution(request.body.solution_type);
+          }
+          const space = await spacesClient?.get(id);
+          result = await spacesClient.update(id, { ...space, solution: solutionToUpdate });
+        } catch (error) {
+          if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
+            return response.notFound();
+          }
+          return response.customError(wrapError(error));
         }
-        const space = await spacesClient?.get(id);
-        result = await spacesClient.update(id, { ...space, solution: solutionToUpdate });
-      } catch (error) {
-        if (SavedObjectsErrorHelpers.isNotFoundError(error)) {
-          return response.notFound();
-        }
-        return response.customError(wrapError(error));
+
+        return response.ok({ body: result });
       }
-
-      return response.ok({ body: result });
-    })
+    )
   );
 }

@@ -13,6 +13,7 @@ import type { ParsedTemplateDefinitionSchema } from '../../../../common/types/do
 import { controlRegistry } from './field_types_registry';
 
 type ParsedTemplateDefinition = z.infer<typeof ParsedTemplateDefinitionSchema>;
+type TemplateField = ParsedTemplateDefinition['fields'][number];
 
 export interface TemplateFieldRendererProps {
   parsedTemplate: ParsedTemplateDefinition;
@@ -35,8 +36,9 @@ export const TemplateFieldRenderer: FC<TemplateFieldRendererProps> = ({
 
   return (
     <FormProvider form={form}>
-      {parsedTemplate.fields.map((field) => {
-        const Control = controlRegistry[field.control] as FC<Record<string, unknown>>;
+      {parsedTemplate.fields.map((field: TemplateField) => {
+        const controlType = field.control as keyof typeof controlRegistry;
+        const Control = controlRegistry[controlType] as FC<Record<string, unknown>>;
         const controlProps = { ...field, value: values[field.name] };
 
         return <Control key={field.name} {...controlProps} />;

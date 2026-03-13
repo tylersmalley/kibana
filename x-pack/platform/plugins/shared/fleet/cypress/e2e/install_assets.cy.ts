@@ -5,11 +5,17 @@
  * 2.0.
  */
 
-import type { Interception } from 'cypress/types/net-stubbing';
-
 import { CONFIRM_MODAL } from '../screens/navigation';
 import { SETTINGS } from '../screens/integrations';
 import { login } from '../tasks/login';
+
+interface Interception {
+  request?: {
+    body?: {
+      force?: boolean;
+    };
+  };
+}
 
 describe('Install unverified package assets', () => {
   beforeEach(() => {

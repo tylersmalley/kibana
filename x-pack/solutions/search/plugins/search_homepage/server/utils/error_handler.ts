@@ -13,16 +13,18 @@ function isKibanaServerError(error: any): error is KibanaServerError {
   return error.statusCode && error.message;
 }
 
-export const errorHandler: (logger: Logger) => RequestHandlerWrapper = (logger) => (handler) => {
-  return async (context, request, response) => {
-    try {
-      return await handler(context, request, response);
-    } catch (e) {
-      logger.error(e);
-      if (isKibanaServerError(e)) {
-        return response.customError({ statusCode: e.statusCode, body: e.message });
+export const errorHandler: (logger: Logger) => RequestHandlerWrapper =
+  (logger) =>
+  <THandler extends Parameters<RequestHandlerWrapper>[0]>(handler: THandler): THandler =>
+    (async (...args: Parameters<THandler>) => {
+      const [context, request, response] = args;
+      try {
+        return await handler(context, request, response);
+      } catch (e) {
+        logger.error(e);
+        if (isKibanaServerError(e)) {
+          return response.customError({ statusCode: e.statusCode, body: e.message });
+        }
+        throw e;
       }
-      throw e;
-    }
-  };
-};
+    }) as THandler;

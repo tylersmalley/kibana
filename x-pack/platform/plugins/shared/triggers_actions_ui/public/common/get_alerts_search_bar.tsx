@@ -10,8 +10,12 @@ import { QueryClient, QueryClientProvider } from '@kbn/react-query';
 import React, { lazy, Suspense } from 'react';
 import type { AlertsSearchBarProps } from '../application/sections/alerts_search_bar';
 
-const AlertsSearchBarLazy: React.FC<AlertsSearchBarProps> = lazy(
-  () => import('../application/sections/alerts_search_bar/alerts_search_bar')
+const AlertsSearchBarLazy: React.FC<AlertsSearchBarProps> = lazy(() =>
+  import('../application/sections/alerts_search_bar/alerts_search_bar.js').then(
+    ({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    })
+  )
 );
 
 const queryClient = new QueryClient();

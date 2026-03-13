@@ -10,6 +10,7 @@
 import type { BuiltinToolDefinition } from '@kbn/agent-builder-server';
 import type { ToolHandlerStandardReturn } from '@kbn/agent-builder-server/tools';
 import { builtInStepDefinitions } from '@kbn/workflows';
+import { z } from '@kbn/zod/v4';
 import { registerGetStepDefinitionsTool } from './get_step_definitions_tool';
 
 const mockGetAllConnectors = jest.fn();
@@ -31,7 +32,6 @@ describe('registerGetStepDefinitionsTool', () => {
   } as any;
 
   beforeEach(async () => {
-    const { z } = await import('@kbn/zod/v4');
     mockGetAllConnectors.mockReturnValue([
       {
         type: 'kibana.createCase',

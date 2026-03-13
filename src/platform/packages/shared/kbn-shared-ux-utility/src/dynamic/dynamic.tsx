@@ -9,9 +9,23 @@
 
 import React, { Suspense } from 'react';
 
-type Loader<TElement extends React.ComponentType<any>> = () => Promise<{
+interface DynamicComponentModule<TElement extends React.ComponentType<any>> {
   default: TElement;
-}>;
+}
+
+interface DynamicInteropModule<TElement extends React.ComponentType<any>> {
+  default: DynamicComponentModule<TElement>;
+}
+
+type Loader<TElement extends React.ComponentType<any>> = () => Promise<
+  DynamicComponentModule<TElement> | DynamicInteropModule<TElement>
+>;
+
+const isDynamicInteropModule = <TElement extends React.ComponentType<any>>(
+  value: TElement | DynamicComponentModule<TElement>
+): value is DynamicComponentModule<TElement> => {
+  return typeof value === 'object' && value !== null && 'default' in value;
+};
 
 /**
  * Options for the lazy loaded component
@@ -36,7 +50,20 @@ export function dynamic<TElement extends React.ComponentType<any>, TRef = {}>(
   loader: Loader<TElement>,
   options: DynamicOptions = {}
 ) {
-  const Component = React.lazy(loader);
+  const loadComponent = async (): Promise<DynamicComponentModule<TElement>> => {
+    const module = await loader();
+    const defaultExport = module.default;
+
+    // Under NodeNext, dynamically importing CommonJS-compiled modules yields
+    // `{ default: { default: Component, ...namedExports } }`.
+    if (isDynamicInteropModule(defaultExport)) {
+      return defaultExport;
+    }
+
+    return { default: defaultExport };
+  };
+
+  const Component = React.lazy(loadComponent);
 
   return React.forwardRef<TRef, React.ComponentPropsWithRef<TElement>>((props, ref) => (
     <Suspense fallback={options.fallback ?? null}>

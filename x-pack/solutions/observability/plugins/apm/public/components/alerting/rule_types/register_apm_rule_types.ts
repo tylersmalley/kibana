@@ -48,7 +48,11 @@ export function registerApmRuleTypes(observabilityRuleTypeRegistry: Observabilit
     documentationUrl(docLinks) {
       return `${docLinks.links.alerting.apmRulesErrorCount}`;
     },
-    ruleParamsExpression: lazy(() => import('./error_count_rule_type')),
+    ruleParamsExpression: lazy(() =>
+      import('./error_count_rule_type/index.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validate: () => ({
       errors: [],
     }),
@@ -80,11 +84,19 @@ export function registerApmRuleTypes(observabilityRuleTypeRegistry: Observabilit
     documentationUrl(docLinks) {
       return `${docLinks.links.alerting.apmRulesTransactionDuration}`;
     },
-    ruleParamsExpression: lazy(() => import('./transaction_duration_rule_type')),
+    ruleParamsExpression: lazy(() =>
+      import('./transaction_duration_rule_type/index.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validate: () => ({
       errors: [],
     }),
-    alertDetailsAppSection: lazy(() => import('../ui_components/alert_details_app_section')),
+    alertDetailsAppSection: lazy(() =>
+      import('../ui_components/alert_details_app_section/index.js').then(
+        ({ default: lazyModule }) => ({ default: lazyModule.default })
+      )
+    ),
     requiresAppContext: false,
     defaultActionMessage: transactionDurationMessage,
     defaultRecoveryMessage: transactionDurationRecoveryMessage,
@@ -111,7 +123,11 @@ export function registerApmRuleTypes(observabilityRuleTypeRegistry: Observabilit
     documentationUrl(docLinks) {
       return `${docLinks.links.alerting.apmRulesTransactionError}`;
     },
-    ruleParamsExpression: lazy(() => import('./transaction_error_rate_rule_type')),
+    ruleParamsExpression: lazy(() =>
+      import('./transaction_error_rate_rule_type/index.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validate: () => ({
       errors: [],
     }),
@@ -141,7 +157,11 @@ export function registerApmRuleTypes(observabilityRuleTypeRegistry: Observabilit
     documentationUrl(docLinks) {
       return `${docLinks.links.alerting.apmRulesAnomaly}`;
     },
-    ruleParamsExpression: lazy(() => import('./anomaly_rule_type')),
+    ruleParamsExpression: lazy(() =>
+      import('./anomaly_rule_type/index.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validate: validateAnomalyRule,
     requiresAppContext: false,
     defaultActionMessage: anomalyMessage,

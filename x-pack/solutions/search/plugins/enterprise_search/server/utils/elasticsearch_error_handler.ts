@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import type { RequestHandler } from '@kbn/core/server';
 import type { Logger } from '@kbn/core/server';
+import type { RequestHandlerWrapper } from '@kbn/core-http-server';
 
 import { i18n } from '@kbn/i18n';
 
@@ -16,11 +16,12 @@ import type { EnterpriseSearchError } from './create_error';
 import { createError } from './create_error';
 import { isUnauthorizedException } from './identify_exceptions';
 
-export function elasticsearchErrorHandler<ContextType, RequestType, ResponseType>(
+export function elasticsearchErrorHandler<THandler extends Parameters<RequestHandlerWrapper>[0]>(
   log: Logger,
-  requestHandler: RequestHandler<ContextType, RequestType, ResponseType>
-): RequestHandler<ContextType, RequestType, ResponseType> {
-  return async (context, request, response) => {
+  requestHandler: THandler
+): THandler {
+  return (async (...args: Parameters<THandler>) => {
+    const [context, request, response] = args;
     try {
       return await requestHandler(context, request, response);
     } catch (error) {
@@ -70,5 +71,5 @@ export function elasticsearchErrorHandler<ContextType, RequestType, ResponseType
 
       throw error;
     }
-  };
+  }) as THandler;
 }

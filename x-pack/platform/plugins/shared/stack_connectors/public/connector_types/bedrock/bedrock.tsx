@@ -18,7 +18,9 @@ interface ValidationErrors {
 export function getConnectorType(): BedrockConnector {
   return {
     id: CONNECTOR_ID,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: i18n.translate('xpack.stackConnectors.components.bedrock.selectMessageText', {
       defaultMessage: 'Send a request to Amazon Bedrock.',
     }),
@@ -27,7 +29,7 @@ export function getConnectorType(): BedrockConnector {
       actionParams: BedrockActionParams
     ): Promise<GenericValidationResult<ValidationErrors>> => {
       const { subAction, subActionParams } = actionParams;
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors: ValidationErrors = {
         body: [],
         subAction: [],
@@ -54,8 +56,16 @@ export function getConnectorType(): BedrockConnector {
       }
       return { errors };
     },
-    actionConnectorFields: lazy(() => import('./connector')),
-    actionParamsFields: lazy(() => import('./params')),
-    actionReadOnlyExtraComponent: lazy(() => import('./dashboard_link')),
+    actionConnectorFields: lazy(() =>
+      import('./connector.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./params.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
+    actionReadOnlyExtraComponent: lazy(() =>
+      import('./dashboard_link.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
   };
 }

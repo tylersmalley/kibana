@@ -17,12 +17,11 @@ export const startRuleMigrationCardConfig: OnboardingCardConfig<StartMigrationCa
   id: OnboardingCardId.siemMigrationsRules,
   title: START_MIGRATION_CARD_TITLE,
   icon: IconRules,
-  Component: React.lazy(
-    () =>
-      import(
-        /* webpackChunkName: "onboarding_siem_migrations_start_migration_card" */
-        './start_migration_card'
-      )
+  Component: React.lazy(() =>
+    import(
+      /* webpackChunkName: "onboarding_siem_migrations_start_migration_card" */
+      './start_migration_card.js'
+    ).then(({ default: lazyModule }) => ({ default: lazyModule.default }))
   ),
   checkComplete: checkStartMigrationCardComplete,
 };

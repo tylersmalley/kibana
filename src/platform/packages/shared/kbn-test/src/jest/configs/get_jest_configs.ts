@@ -8,6 +8,7 @@
  */
 
 import { REPO_ROOT } from '@kbn/repo-info';
+import { createRequire } from 'node:module';
 import { dirname, resolve, sep as osSep } from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -15,6 +16,7 @@ import { readFileSync, existsSync } from 'fs';
 import { asyncMapWithLimit } from '@kbn/std';
 
 const execAsync = promisify(exec);
+const lazyRequire = createRequire(__filename);
 
 interface JestConfigRules {
   roots: string[];
@@ -308,16 +310,14 @@ const NO_WARNINGS_CONSOLE = {
  */
 async function getTestPathsWithSearchSource(configPath: string): Promise<string[]> {
   try {
-    // Use dynamic imports to avoid loading Jest modules in test environment
-    const [{ readConfig }, { SearchSource }, Runtime] = await Promise.all([
-      import('jest-config'),
-      import('jest'),
-      import('jest-runtime'),
-    ]);
+    // Use lazy require() to preserve CommonJS interop for Jest's runtime package.
+    const { readConfig } = lazyRequire('jest-config') as typeof import('jest-config');
+    const { SearchSource } = lazyRequire('jest') as typeof import('jest');
+    const Runtime = lazyRequire('jest-runtime').default as typeof import('jest-runtime').default;
 
     const config = await readConfig(EMPTY_ARGV, configPath);
     const searchSource = new SearchSource(
-      await Runtime.default.createContext(config.projectConfig, {
+      await Runtime.createContext(config.projectConfig, {
         maxWorkers: 1,
         watchman: false,
         watch: false,

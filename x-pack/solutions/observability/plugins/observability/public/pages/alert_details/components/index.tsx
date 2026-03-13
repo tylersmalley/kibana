@@ -8,7 +8,9 @@
 import React, { lazy, Suspense } from 'react';
 import type { SourceBarProps } from './source_bar';
 
-const SourceBarLazy = lazy(() => import('./source_bar'));
+const SourceBarLazy = lazy(() =>
+  import('./source_bar.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+);
 
 export function SourceBar(props: SourceBarProps) {
   return (

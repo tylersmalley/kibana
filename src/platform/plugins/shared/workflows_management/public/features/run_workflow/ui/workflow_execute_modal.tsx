@@ -42,7 +42,9 @@ function getDefaultTrigger(definition: WorkflowYaml | null): WorkflowTriggerTab 
     return 'alert';
   }
 
-  const hasManualTrigger = definition.triggers?.some((trigger) => trigger.type === 'manual');
+  const hasManualTrigger = definition.triggers?.some(
+    (trigger: { type: string }) => trigger.type === 'manual'
+  );
   // Check if inputs exist and have properties (handles both new and legacy formats)
   const normalizedInputs = normalizeInputsToJsonSchema(definition.inputs);
   const hasInputs =
@@ -118,7 +120,9 @@ export const WorkflowExecuteModal = React.memo<WorkflowExecuteModalProps>(
       if (!definition) {
         return false;
       }
-      const hasAlertTrigger = definition.triggers?.some((trigger) => trigger.type === 'alert');
+      const hasAlertTrigger = definition.triggers?.some(
+        (trigger: { type: string }) => trigger.type === 'alert'
+      );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const normalizedInputs = normalizeInputsToJsonSchema(inputs as any);
       const hasInputs =
@@ -139,7 +143,7 @@ export const WorkflowExecuteModal = React.memo<WorkflowExecuteModalProps>(
         return;
       }
       // Default trigger selection when no initialExecutionId
-      if (definition?.triggers?.some((trigger) => trigger.type === 'alert')) {
+      if (definition?.triggers?.some((trigger: { type: string }) => trigger.type === 'alert')) {
         setSelectedTrigger('alert');
         return;
       }
@@ -170,19 +174,18 @@ export const WorkflowExecuteModal = React.memo<WorkflowExecuteModalProps>(
     return (
       <>
         {/*
-        The following Global CSS is needed to ensure that modal will not overlay SearchBar's
-        autocomplete popup. The autocomplete popup has z-index 4001, so we need to ensure
-        the modal and its overlay don't block it.
+        The following Global CSS is needed to ensure that the query autocomplete popup
+        renders above the modal while keeping the overlay below it.
       */}
         <Global
           styles={css`
             .euiOverlayMask:has(.workflowExecuteModal) {
-              z-index: 4000;
+              z-index: ${euiTheme.levels.modal};
             }
             /* Ensure query input container allows autocomplete to overflow */
             .workflowExecuteModal [data-test-subj='workflow-query-input'] {
               position: relative;
-              z-index: 1;
+              z-index: ${euiTheme.levels.content};
             }
             /* Allow autocomplete popup to render above modal */
             .workflowExecuteModal .kbnQueryBar__textareaWrapOuter {
@@ -190,7 +193,7 @@ export const WorkflowExecuteModal = React.memo<WorkflowExecuteModalProps>(
             }
             .workflowExecuteModal .kbnTypeahead,
             .workflowExecuteModal .kbnTypeahead__popover {
-              z-index: 4002 !important;
+              z-index: calc(${euiTheme.levels.modal} + 2) !important;
             }
           `}
         />

@@ -31,7 +31,9 @@ export function workflowMatchesTriggerCondition(
     return false;
   }
 
-  const matchingTrigger = triggers.find((t) => t && t.type === triggerId);
+  const matchingTrigger = triggers.find(
+    (trigger: { type?: string } | null | undefined) => trigger && trigger.type === triggerId
+  );
   if (!matchingTrigger) {
     return false;
   }

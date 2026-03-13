@@ -5,6 +5,7 @@
  * 2.0.
  */
 
+import { AvailablePackagesHook as loadAvailablePackagesHook } from '@kbn/fleet-plugin/public';
 import type { AvailablePackagesHookType, IntegrationCardItem } from '@kbn/fleet-plugin/public';
 import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
@@ -32,9 +33,7 @@ type WrapperProps = Props & {
 };
 
 const fetchAvailablePackagesHook = (): Promise<AvailablePackagesHookType> =>
-  import('@kbn/fleet-plugin/public')
-    .then((module) => module.AvailablePackagesHook())
-    .then((hook) => hook.useAvailablePackages);
+  loadAvailablePackagesHook().then((hook) => hook.useAvailablePackages);
 
 const Loading = () => <EuiSkeletonText isLoading={true} lines={5} />;
 
@@ -99,6 +98,7 @@ export const PackageListSearchForm = React.forwardRef(
     if (errorLoading)
       return (
         <EuiCallOut
+          announceOnMount
           title={i18n.translate('xpack.observability_onboarding.asyncLoadFailureCallout.title', {
             defaultMessage: 'Loading failure',
           })}

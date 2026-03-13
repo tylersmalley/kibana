@@ -20,8 +20,10 @@ export type GetAllCasesSelectorModalProps = Omit<
   | 'getFilesClient'
 >;
 
-const AllCasesSelectorModalLazy: React.FC<AllCasesSelectorModalProps> = lazy(
-  () => import('../../components/all_cases/selector_modal')
+const AllCasesSelectorModalLazy: React.FC<AllCasesSelectorModalProps> = lazy(() =>
+  import('../../components/all_cases/selector_modal/index.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 export const getAllCasesSelectorModalLazy = ({
   externalReferenceAttachmentTypeRegistry,

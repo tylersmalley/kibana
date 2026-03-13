@@ -20,7 +20,11 @@ import * as i18n from './translations';
 
 const { urlField } = fieldValidators;
 
-const LazyLoadedAuthConfig = React.lazy(() => import('../../common/auth/auth_config'));
+const LazyLoadedAuthConfig = React.lazy(() =>
+  import('../../common/auth/auth_config.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 const HttpActionConnectorFields: React.FunctionComponent<ActionConnectorFieldsProps> = ({
   readOnly,

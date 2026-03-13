@@ -59,20 +59,17 @@ export const sharedValidationSchemas = {
     .min(1, { message: sharedI18nMessages.toolId.requiredError })
     .max(toolIdMaxLength, { message: sharedI18nMessages.toolId.tooLongError })
     .regex(toolIdRegexp, { message: sharedI18nMessages.toolId.formatError })
-    .check((ctx) => {
-      const name = ctx.value as string;
+    .superRefine((name: string, ctx: z.RefinementCtx) => {
       if (isReservedToolId(name)) {
-        ctx.issues.push({
-          code: 'custom',
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
           message: sharedI18nMessages.toolId.reservedError(name),
-          input: name,
         });
       }
       if (isInProtectedNamespace(name) || hasNamespaceName(name)) {
-        ctx.issues.push({
-          code: 'custom',
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
           message: sharedI18nMessages.toolId.protectedNamespaceError(name),
-          input: name,
         });
       }
     }),

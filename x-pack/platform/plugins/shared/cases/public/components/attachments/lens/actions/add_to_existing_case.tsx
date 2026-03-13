@@ -6,6 +6,7 @@
  */
 
 import { createAction, IncompatibleActionError } from '@kbn/ui-actions-plugin/public';
+import { isLensApi } from '@kbn/lens-plugin/public';
 
 import type { EmbeddableApiContext } from '@kbn/presentation-publishing';
 import type { CasesActionContextProps, Services } from './types';
@@ -30,13 +31,12 @@ export const createAddToExistingCaseLensAction = (
     getIconType: () => 'casesApp',
     getDisplayName: () => ADD_TO_EXISTING_CASE_DISPLAYNAME,
     isCompatible: async ({ embeddable }) => {
-      const { isCompatible } = await import('./is_compatible');
+      const { isCompatible } = await import('./is_compatible.js');
       return isCompatible(embeddable, currentAppId, services.core);
     },
     execute: async ({ embeddable }) => {
-      const { isLensApi } = await import('@kbn/lens-plugin/public');
       if (!isLensApi(embeddable)) throw new IncompatibleActionError();
-      const { openModal } = await import('./open_modal');
+      const { openModal } = await import('./open_modal.js');
       openModal(embeddable, currentAppId, casesActionContextProps, services);
     },
   });

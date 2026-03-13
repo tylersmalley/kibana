@@ -9,7 +9,13 @@
 
 import type { UsageCounter } from '@kbn/usage-collection-plugin/server';
 import { schema } from '@kbn/config-schema';
-import type { IRouter, StartServicesAccessor, SavedObjectsFindOptions } from '@kbn/core/server';
+import type {
+  IRouter,
+  SavedObject,
+  SavedObjectReference,
+  SavedObjectsFindOptions,
+  StartServicesAccessor,
+} from '@kbn/core/server';
 import type { DataViewsService } from '../../../common';
 import { handleErrors } from './util/handle_errors';
 import type {
@@ -144,11 +150,11 @@ export const swapReferencesRoute =
             const { saved_objects: savedObjects } = await savedObjectsClient.find(findParams);
 
             const filteredSavedObjects = searchId
-              ? savedObjects.filter((so) => searchId?.includes(so.id))
+              ? savedObjects.filter((so: SavedObject) => searchId?.includes(so.id))
               : savedObjects;
 
             // create summary of affected objects
-            const resultSummary = filteredSavedObjects.map((savedObject) => ({
+            const resultSummary = filteredSavedObjects.map((savedObject: SavedObject) => ({
               id: savedObject.id,
               type: savedObject.type,
             }));
@@ -169,7 +175,7 @@ export const swapReferencesRoute =
 
             // iterate over list and update references
             for (const savedObject of filteredSavedObjects) {
-              const updatedRefs = savedObject.references.map((ref) => {
+              const updatedRefs = savedObject.references.map((ref: SavedObjectReference) => {
                 if (ref.type === type && ref.id === req.body.fromId) {
                   return { ...ref, id: req.body.toId };
                 } else {

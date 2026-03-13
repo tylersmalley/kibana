@@ -12,7 +12,13 @@ import { withSuspense } from '@kbn/shared-ux-utility';
 import type { ESQLEditorProps } from '@kbn/esql-editor';
 import { KibanaContextProvider } from '@kbn/kibana-react-plugin/public';
 
-const ESQLEditorLazy = React.lazy(() => import('@kbn/esql-editor'));
+type ESQLEditorModule = typeof import('@kbn/esql-editor');
+
+const ESQLEditorLazy = React.lazy(() =>
+  import('@kbn/esql-editor').then(({ default: esqlEditorModule }) => ({
+    default: esqlEditorModule.default as ESQLEditorModule['default'],
+  }))
+);
 const ESQLEditor = withSuspense(ESQLEditorLazy);
 
 function createEditor() {

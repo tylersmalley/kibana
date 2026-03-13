@@ -6,13 +6,7 @@
  */
 
 import { i18n } from '@kbn/i18n';
-import type {
-  Logger,
-  KibanaRequest,
-  KibanaResponseFactory,
-  RequestHandler,
-  RequestHandlerContext,
-} from '@kbn/core/server';
+import type { Logger, RequestHandler, RequestHandlerContext, RouteMethod } from '@kbn/core/server';
 
 import type {
   ILicense,
@@ -94,14 +88,13 @@ export class License {
     });
   }
 
-  guardApiRoute<Context extends RequestHandlerContext, Params, Query, Body>(
-    handler: RequestHandler<Params, Query, Body, Context>
-  ) {
-    return (
-      ctx: Context,
-      request: KibanaRequest<Params, Query, Body>,
-      response: KibanaResponseFactory
-    ) => {
+  guardApiRoute<
+    Context extends RequestHandlerContext,
+    Method extends RouteMethod,
+    THandler extends RequestHandler<any, any, any, Context, Method, any>
+  >(handler: THandler): THandler {
+    return ((...args: Parameters<THandler>) => {
+      const [ctx, request, response] = args;
       // We'll only surface license errors if users attempt disallowed access to the API.
       if (this.licenseCheckState !== 'valid') {
         const licenseErrorMessage = this.getLicenseErrorMessage(this.licenseCheckState);
@@ -115,7 +108,7 @@ export class License {
       }
 
       return handler(ctx, request, response);
-    };
+    }) as THandler;
   }
 
   public get isEsSecurityEnabled() {

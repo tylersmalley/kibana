@@ -8,14 +8,7 @@
  */
 
 import type { Client as ESClient } from 'elasticsearch-8.x'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
-import type {
-  AggregationsAvgAggregate,
-  AggregationsMaxAggregate,
-  AggregationsPercentilesBucketAggregate,
-  AggregationsStatsBucketAggregate,
-  AggregationsStringTermsBucket,
-  SearchResponse,
-} from 'elasticsearch-8.x/lib/api/types'; // Switch to `@elastic/elasticsearch/lib/api/types` when the CI cluster is upgraded.
+import type { estypes } from 'elasticsearch-8.x'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
 import fs from 'node:fs';
 import path from 'node:path';
 import { z } from '@kbn/zod/v4';
@@ -116,19 +109,19 @@ export class ScoutTestConfigStats {
     }
 
     // Fetch stats from ES
-    const rsp: SearchResponse<
+    const rsp: estypes.SearchResponse<
       any,
       {
         config_path: {
           buckets: Array<
-            AggregationsStringTermsBucket & {
-              avg: AggregationsAvgAggregate;
-              percentile: AggregationsPercentilesBucketAggregate;
-              max: AggregationsMaxAggregate;
+            estypes.AggregationsStringTermsBucket & {
+              avg: estypes.AggregationsAvgAggregate;
+              percentile: estypes.AggregationsPercentilesBucketAggregate;
+              max: estypes.AggregationsMaxAggregate;
             }
           >;
         };
-        config_path_stats: AggregationsStatsBucketAggregate;
+        config_path_stats: estypes.AggregationsStatsBucketAggregate;
       }
     > = await es.search({
       size: 0,

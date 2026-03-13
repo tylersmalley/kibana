@@ -7,6 +7,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor, act } from '@testing-library/react';
 
+import type { PackageListGridProps } from '@kbn/fleet-plugin/public';
 import type { SecurityIntegrationsGridTabsProps } from './security_integrations_grid_tabs';
 import { SecurityIntegrationsGridTabs } from './security_integrations_grid_tabs';
 import * as module from '@kbn/fleet-plugin/public';
@@ -29,15 +30,19 @@ jest.mock('../../kibana', () => ({
   }),
 }));
 
-const mockPackageList = jest.fn<
-  React.JSX.Element,
-  Array<{ showSearchTools?: boolean; searchTerm: string; list: unknown[] }>
->(() => <div data-test-subj="packageList" />);
+type PackageListModule = Awaited<ReturnType<typeof module.PackageList>>;
+
+const mockPackageList = jest.fn<React.JSX.Element, [PackageListGridProps]>(() => (
+  <div data-test-subj="packageList" />
+));
 
 jest.mock('@kbn/fleet-plugin/public');
-jest
-  .spyOn(module, 'PackageList')
-  .mockImplementation(() => Promise.resolve({ PackageListGrid: mockPackageList }));
+jest.spyOn(module, 'PackageList').mockImplementation(() =>
+  Promise.resolve({
+    default: {} as PackageListModule['default'],
+    PackageListGrid: mockPackageList,
+  })
+);
 
 const mockUseStoredIntegrationTabId = useStoredIntegrationTabId as jest.MockedFunction<
   typeof useStoredIntegrationTabId

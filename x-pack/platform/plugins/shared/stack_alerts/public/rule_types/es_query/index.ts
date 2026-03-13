@@ -11,14 +11,16 @@ import type { RuleTypeModel } from '@kbn/triggers-actions-ui-plugin/public';
 import type { PluginSetupContract as AlertingSetup } from '@kbn/alerting-plugin/public';
 import type { SanitizedRule } from '@kbn/alerting-plugin/common';
 import { ES_QUERY_ID, STACK_ALERTS_FEATURE_ID } from '@kbn/rule-data-utils';
-import type { EsQueryRuleParams, SearchType } from './types';
+import type { EsQueryRuleMetaData, EsQueryRuleParams, SearchType } from './types';
 import { validateExpression } from './validation';
 import { isSearchSourceRule } from './util';
 import { getDescriptionFields } from './get_description_fields';
 
 const PLUGIN_ID = 'discover';
 
-export function getRuleType(alerting: AlertingSetup): RuleTypeModel<EsQueryRuleParams> {
+export function getRuleType(
+  alerting: AlertingSetup
+): RuleTypeModel<EsQueryRuleParams, EsQueryRuleMetaData> {
   registerNavigation(alerting);
   return {
     id: ES_QUERY_ID,
@@ -27,7 +29,11 @@ export function getRuleType(alerting: AlertingSetup): RuleTypeModel<EsQueryRuleP
     }),
     iconClass: 'logoElastic',
     documentationUrl: (docLinks) => docLinks.links.alerting.esQuery,
-    ruleParamsExpression: lazy(() => import('./expression')),
+    ruleParamsExpression: lazy(() =>
+      import('./expression/index.js').then(({ default: lazyModule }) => ({
+        default: lazyModule.default,
+      }))
+    ),
     validate: validateExpression,
     defaultActionMessage: i18n.translate(
       'xpack.stackAlerts.esQuery.ui.alertType.defaultActionMessage',

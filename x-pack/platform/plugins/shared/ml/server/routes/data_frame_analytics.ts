@@ -5,6 +5,7 @@
  * 2.0.
  */
 
+import type { MlDataframeAnalyticsSource } from '@elastic/elasticsearch/lib/api/types';
 import type { IScopedClusterClient } from '@kbn/core/server';
 import type { RuntimeField } from '@kbn/data-views-plugin/common';
 import type { Field, Aggregation } from '@kbn/ml-anomaly-utils';
@@ -291,10 +292,27 @@ export function dataFrameAnalyticsRoutes(
           };
 
           try {
+            const { analysis, ...requestBody } = request.body;
+            const source: MlDataframeAnalyticsSource = requestBody.source._source
+              ? {
+                  ...requestBody.source,
+                  _source: {
+                    ...requestBody.source._source,
+                    includes: requestBody.source._source.includes?.filter(
+                      (field): field is string => field !== undefined
+                    ),
+                    excludes: requestBody.source._source.excludes?.filter(
+                      (field): field is string => field !== undefined
+                    ),
+                  },
+                }
+              : (requestBody.source as MlDataframeAnalyticsSource);
+
             const resp = await mlClient.putDataFrameAnalytics({
+              ...requestBody,
+              source,
+              analysis,
               id: analyticsId,
-              // @ts-expect-error @elastic-elasticsearch Data frame types incomplete
-              body: request.body,
             });
 
             if (resp.id && resp.create_time) {
@@ -353,10 +371,7 @@ export function dataFrameAnalyticsRoutes(
       },
       routeGuard.fullLicenseAPIGuard(async ({ mlClient, request, response }) => {
         try {
-          const body = await mlClient.evaluateDataFrame({
-            // @ts-expect-error @elastic-elasticsearch Data frame types incomplete
-            body: request.body,
-          });
+          const body = await mlClient.evaluateDataFrame(request.body);
           return response.ok({
             body,
           });
@@ -767,7 +782,6 @@ export function dataFrameAnalyticsRoutes(
             results = await getExtendedMap(
               mlClient,
               client,
-              // @ts-expect-error never used as analyticsId
               {
                 analyticsId: type !== JOB_MAP_NODE_TYPES.INDEX ? analyticsId : undefined,
                 index: type === JOB_MAP_NODE_TYPES.INDEX ? analyticsId : undefined,
@@ -871,7 +885,6 @@ export function dataFrameAnalyticsRoutes(
       routeGuard.fullLicenseAPIGuard(async ({ client, request, response }) => {
         const jobConfig = request.body;
         try {
-          // @ts-expect-error DFA schemas are incorrect
           const results = await validateAnalyticsJob(client, jobConfig);
           return response.ok({
             body: results,

@@ -34,7 +34,11 @@ import { useAppContext } from '../../../../../app_context';
 import { useLoadInferenceEndpoints } from '../../../../../services/api';
 import { documentationService, UseField } from '../../../shared_imports';
 
-const InferenceFlyoutWrapper = lazy(() => import('@kbn/inference-endpoint-ui-common'));
+const InferenceFlyoutWrapper = lazy(() =>
+  import('@kbn/inference-endpoint-ui-common').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 export interface SelectInferenceIdProps {
   'data-test-subj'?: string;
 }
@@ -325,7 +329,10 @@ const SelectInferenceIdContent: React.FC<SelectInferenceIdContentProps> = ({
               </EuiPanel>
             </EuiContextMenuPanel>
             <EuiHorizontalRule margin="none" />
-            <EuiContextMenuItem icon={<EuiIcon type="question" color="primary" />} size="m">
+            <EuiContextMenuItem
+              icon={<EuiIcon type="question" color="primary" aria-hidden={true} />}
+              size="m"
+            >
               <EuiLink
                 href={docLinks.links.inferenceManagement.inferenceAPIDocumentation}
                 target="_blank"

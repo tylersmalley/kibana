@@ -19,13 +19,15 @@ interface ValidationErrors {
 export function getConnectorType(): XSOARConnector {
   return {
     id: CONNECTOR_ID,
-    iconClass: lazy(() => import('./logo')),
+    iconClass: lazy(() =>
+      import('./logo.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
     selectMessage: i18n.SELECT_MESSAGE,
     actionTypeTitle: CONNECTOR_NAME,
     validateParams: async (
       actionParams: ExecutorParams
     ): Promise<GenericValidationResult<ValidationErrors>> => {
-      const translations = await import('./translations');
+      const translations = await import('./translations.js');
       const errors: ValidationErrors = {
         name: [],
       };
@@ -38,7 +40,11 @@ export function getConnectorType(): XSOARConnector {
       }
       return { errors };
     },
-    actionConnectorFields: lazy(() => import('./connector')),
-    actionParamsFields: lazy(() => import('./params')),
+    actionConnectorFields: lazy(() =>
+      import('./connector.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
+    actionParamsFields: lazy(() =>
+      import('./params.js').then(({ default: lazyModule }) => ({ default: lazyModule.default }))
+    ),
   };
 }

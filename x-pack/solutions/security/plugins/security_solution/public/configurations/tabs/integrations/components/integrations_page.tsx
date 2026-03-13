@@ -8,6 +8,7 @@
 import React, { lazy } from 'react';
 import { EuiFlexGroup, EuiFlexItem, EuiSpacer } from '@elastic/eui';
 import { css } from '@emotion/react';
+import { PackageList as loadPackageList } from '@kbn/fleet-plugin/public';
 import type { IntegrationCardItem } from '@kbn/fleet-plugin/public';
 import { noop } from 'lodash';
 import { FACETS_MAX_WIDTH_PX, INTEGRATIONS_GRID_MAX_WIDTH_PX } from './constants';
@@ -15,9 +16,9 @@ import { IntegrationViewFacets } from './view_facets';
 import { IntegrationsFacets } from '../../../constants';
 
 export const PackageListGrid = lazy(async () => ({
-  default: await import('@kbn/fleet-plugin/public')
-    .then((module) => module.PackageList())
-    .then((pkg) => pkg.PackageListGrid),
+  default: await loadPackageList().then(({ PackageListGrid: FleetPackageListGrid }) => {
+    return FleetPackageListGrid;
+  }),
 }));
 
 export interface IntegrationsGridProps {

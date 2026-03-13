@@ -8,8 +8,10 @@
 import type { FC } from 'react';
 import React from 'react';
 
-const MLJobsAwaitingNodeWarningComponent = React.lazy(
-  () => import('./new_job_awaiting_node_shared')
+const MLJobsAwaitingNodeWarningComponent = React.lazy(() =>
+  import('./new_job_awaiting_node_shared.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
 );
 
 interface Props {

@@ -11,7 +11,11 @@ import React, { lazy, Suspense } from 'react';
 import type { ComponentType } from 'react';
 import type { SidebarProps } from './sidebar';
 
-const SidebarLazy = lazy(() => import('./sidebar'));
+const SidebarLazy = lazy(() =>
+  import('./sidebar.js').then(({ Sidebar }) => ({
+    default: Sidebar,
+  }))
+);
 
 export const Sidebar: ComponentType<SidebarProps> = (props) => (
   <Suspense fallback={null}>

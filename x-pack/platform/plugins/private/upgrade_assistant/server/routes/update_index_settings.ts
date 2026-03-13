@@ -10,6 +10,8 @@ import { versionCheckHandlerWrapper } from '@kbn/upgrade-assistant-pkg-server';
 import { API_BASE_PATH } from '../../common/constants';
 import type { RouteDependencies } from '../types';
 
+type IndexSettingsToDelete = Record<string, null>;
+
 export function registerUpdateSettingsRoute({ router, current }: RouteDependencies) {
   router.post(
     {
@@ -37,10 +39,13 @@ export function registerUpdateSettingsRoute({ router, current }: RouteDependenci
         const { indexName } = request.params;
         const { settings } = request.body;
 
-        const settingsToDelete = settings.reduce((settingsBody, currentSetting) => {
-          settingsBody[currentSetting] = null;
-          return settingsBody;
-        }, {} as { [key: string]: null });
+        const settingsToDelete = settings.reduce(
+          (settingsBody: IndexSettingsToDelete, currentSetting: string) => {
+            settingsBody[currentSetting] = null;
+            return settingsBody;
+          },
+          {} as IndexSettingsToDelete
+        );
 
         const settingsResponse = await client.asCurrentUser.indices.putSettings({
           index: indexName,

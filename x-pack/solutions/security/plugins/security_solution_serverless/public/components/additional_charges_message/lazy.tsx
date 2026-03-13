@@ -8,7 +8,11 @@
 import React, { lazy, Suspense } from 'react';
 import { EuiLoadingSpinner } from '@elastic/eui';
 
-const AdditionalChargesMessageLazy = lazy(() => import('./additional_charges_message'));
+const AdditionalChargesMessageLazy = lazy(() =>
+  import('./additional_charges_message.js').then(({ default: lazyModule }) => ({
+    default: lazyModule.default,
+  }))
+);
 
 export const AdditionalChargesMessage = () => (
   <Suspense fallback={<EuiLoadingSpinner size="s" />}>

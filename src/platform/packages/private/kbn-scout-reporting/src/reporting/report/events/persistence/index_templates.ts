@@ -7,11 +7,11 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { IndicesPutIndexTemplateRequest } from 'elasticsearch-8.x/lib/api/types'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
+import type { estypes } from 'elasticsearch-8.x'; // Switch to `@elastic/elasticsearch` when the CI cluster is upgraded.
 import { SCOUT_TEST_EVENTS_TEMPLATE_NAME, SCOUT_TEST_EVENTS_INDEX_PATTERN } from '@kbn/scout-info';
 import * as componentTemplates from './component_templates';
 
-export const testEvents: IndicesPutIndexTemplateRequest = {
+export const testEvents: estypes.IndicesPutIndexTemplateRequest = {
   name: SCOUT_TEST_EVENTS_TEMPLATE_NAME,
   version: 1,
   data_stream: {},

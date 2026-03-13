@@ -9,7 +9,11 @@
 
 import { z } from '@kbn/zod/v4';
 
-export function getZodTypeName(schema: z.ZodType): string {
+type SupportedZodType = z.ZodType | z.core.$ZodType;
+
+const asClassicZodType = (schema: SupportedZodType): z.ZodType => schema as unknown as z.ZodType;
+
+export function getZodTypeName(schema: SupportedZodType): string {
   return getZodTypeNameRecursively(schema);
 }
 /**
@@ -19,7 +23,9 @@ export function getZodTypeName(schema: z.ZodType): string {
  * @returns String representation of the zod schema type, unwrapping optional and default wrappers and resolving literals to their value.
  * @private
  */
-function getZodTypeNameRecursively(schema: z.ZodType, depth: number = 0) {
+function getZodTypeNameRecursively(schemaLike: SupportedZodType, depth: number = 0) {
+  const schema = asClassicZodType(schemaLike);
+
   if (depth > 10) {
     return 'unknown';
   }
@@ -58,7 +64,7 @@ export function getArrayDescription(arraySchema: z.ZodArray, depth: number = 0):
 
 export function getUnionDescription(unionSchema: z.ZodUnion): string {
   // Check if all union members are arrays - if so, treat as array type
-  const optionsTypes = unionSchema.options.map((option) => getZodTypeName(option as z.ZodType));
+  const optionsTypes = unionSchema.options.map((option) => getZodTypeName(option));
   if (new Set(optionsTypes).size === 1) {
     return optionsTypes[0];
   }
@@ -66,7 +72,7 @@ export function getUnionDescription(unionSchema: z.ZodUnion): string {
 }
 
 export function getEnumDescription(schema: z.ZodEnum): string {
-  return schema.options.map((o) => `"${o}"`).join(' | ');
+  return schema.options.map((option) => JSON.stringify(option)).join(' | ');
 }
 
 export function getLiteralDescription(schema: z.ZodLiteral): string {

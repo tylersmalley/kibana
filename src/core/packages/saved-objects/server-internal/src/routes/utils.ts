@@ -17,7 +17,7 @@ import {
   createConcatStream,
 } from '@kbn/utils';
 import Boom from '@hapi/boom';
-import type { KibanaRequest, RequestHandlerWrapper } from '@kbn/core-http-server';
+import type { KibanaRequest, RequestHandler } from '@kbn/core-http-server';
 import type {
   SavedObject,
   ISavedObjectTypeRegistry,
@@ -75,7 +75,7 @@ export function validateObjects(
  *
  * TODO: Remove once https://github.com/elastic/kibana/issues/65291 is fixed.
  */
-export const catchAndReturnBoomErrors: RequestHandlerWrapper = (handler) => {
+export const catchAndReturnBoomErrors = (handler: any): RequestHandler => {
   return async (context, request, response) => {
     try {
       return await handler(context, request, response);

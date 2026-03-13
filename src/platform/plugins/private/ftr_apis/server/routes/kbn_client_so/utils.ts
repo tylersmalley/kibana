@@ -20,7 +20,7 @@ export const listHiddenTypes = (registry: ISavedObjectTypeRegistry): string[] =>
 };
 
 export const catchAndReturnBoomErrors: RequestHandlerWrapper = (handler) => {
-  return async (context, request, response) => {
+  return (async (context, request, response) => {
     try {
       return await handler(context, request, response);
     } catch (e) {
@@ -33,5 +33,5 @@ export const catchAndReturnBoomErrors: RequestHandlerWrapper = (handler) => {
       }
       throw e;
     }
-  };
+  }) as typeof handler;
 };

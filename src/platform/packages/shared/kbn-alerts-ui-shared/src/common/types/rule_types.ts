@@ -109,7 +109,10 @@ export interface RuleTypeParamsExpressionProps<
   unifiedSearch: UnifiedSearchPublicPluginStart;
 }
 
-export interface RuleTypeModel<Params extends RuleTypeParams = RuleTypeParams> {
+export interface RuleTypeModel<
+  Params extends RuleTypeParams = RuleTypeParams,
+  MetaData = Record<string, unknown>
+> {
   id: string;
   description: string;
   iconClass: string;
@@ -117,7 +120,7 @@ export interface RuleTypeModel<Params extends RuleTypeParams = RuleTypeParams> {
   validate: (ruleParams: Params, isServerless?: boolean) => ValidationResult;
   ruleParamsExpression:
     | React.FunctionComponent<any>
-    | React.LazyExoticComponent<ComponentType<RuleTypeParamsExpressionProps<Params>>>;
+    | React.LazyExoticComponent<ComponentType<RuleTypeParamsExpressionProps<Params, MetaData>>>;
   requiresAppContext: boolean;
   defaultActionMessage?: string;
   defaultRecoveryMessage?: string;

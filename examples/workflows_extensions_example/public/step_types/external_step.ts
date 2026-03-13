@@ -39,6 +39,9 @@ export const getExternalStepDefinition = (deps: { externalService: IExampleExter
                 }));
             },
             resolve: async (value, _context) => {
+              if (typeof value !== 'string') {
+                return null;
+              }
               const proxy = await deps.externalService.getProxy(value);
               if (!proxy) {
                 return null;
@@ -50,6 +53,7 @@ export const getExternalStepDefinition = (deps: { externalService: IExampleExter
               };
             },
             getDetails: async (value, _context, option) => {
+              const proxyId = typeof value === 'string' ? value : String(value);
               if (option) {
                 return {
                   message: `Proxy "${option.label}" is connected`,
@@ -57,7 +61,7 @@ export const getExternalStepDefinition = (deps: { externalService: IExampleExter
                 };
               }
               return {
-                message: `Proxy "${value}" not found. Please select an existing proxy or create a new one.`,
+                message: `Proxy "${proxyId}" not found. Please select an existing proxy or create a new one.`,
                 links: [
                   { text: 'Create proxy', path: 'https://example.com/proxies/new' },
                   { text: 'Manage proxies', path: 'https://example.com/proxies' },

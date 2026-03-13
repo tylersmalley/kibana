@@ -10,6 +10,7 @@
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { dynamic } from './dynamic';
+import { ForwardeRefTestComponent, TestComponent } from './test_component';
 
 export type ExpectTrue<T extends true> = T;
 
@@ -19,9 +20,13 @@ export type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T exte
 
 type MatchesProperty<T, K extends keyof T> = K extends keyof T ? true : false;
 
+const loadTestComponent = async () => ({ default: TestComponent });
+const loadNestedDefaultTestComponent = async () => ({ default: { default: TestComponent } });
+const loadForwardeRefTestComponent = async () => ({ default: ForwardeRefTestComponent });
+
 describe('dynamic', () => {
-  it(`should create a lazy loaded component starting from a dynamic default import`, async () => {
-    const LazyTestComponent = dynamic(() => import('./test_component'));
+  it(`should create a lazy loaded component starting from a dynamic named import`, async () => {
+    const LazyTestComponent = dynamic(loadTestComponent);
 
     const { queryByText } = render(<LazyTestComponent>Hello</LazyTestComponent>);
 
@@ -31,10 +36,8 @@ describe('dynamic', () => {
     await waitFor(() => expect(queryByText('Hello Test component')).toBeInTheDocument());
   });
 
-  it(`should create a lazy loaded component starting from a dynamic named import`, async () => {
-    const LazyTestComponent = dynamic(() =>
-      import('./test_component').then((mod) => ({ default: mod.TestComponent }))
-    );
+  it('should support loaders that resolve a nested default export', async () => {
+    const LazyTestComponent = dynamic(loadNestedDefaultTestComponent);
 
     const { queryByText } = render(<LazyTestComponent>Hello</LazyTestComponent>);
 
@@ -45,7 +48,7 @@ describe('dynamic', () => {
   });
 
   it(`should accept an optional "fallback" node to display while loading the component`, async () => {
-    const LazyTestComponent = dynamic(() => import('./test_component'), {
+    const LazyTestComponent = dynamic(loadTestComponent, {
       fallback: <span>Loading</span>,
     });
 
@@ -60,9 +63,7 @@ describe('dynamic', () => {
 
   describe('the created lazy loaded component', () => {
     it(`should forward the ref property if provided`, async () => {
-      const LazyForwardeRefTestComponent = dynamic(() =>
-        import('./test_component').then((mod) => ({ default: mod.ForwardeRefTestComponent }))
-      );
+      const LazyForwardeRefTestComponent = dynamic(loadForwardeRefTestComponent);
 
       const ref = React.createRef<HTMLSpanElement>();
 
@@ -77,12 +78,14 @@ describe('dynamic', () => {
     });
 
     it('should be properly typed respecting the original properties contract', () => {
-      const LazyTestComponent = dynamic(() => import('./test_component'));
-      const LazyForwardeRefTestComponent = dynamic(() =>
-        import('./test_component').then((mod) => ({ default: mod.ForwardeRefTestComponent }))
-      );
+      const LazyTestComponent = dynamic(loadTestComponent);
+      const LazyDefaultImportTestComponent = dynamic(() => import('./test_component.js'));
+      const LazyForwardeRefTestComponent = dynamic(loadForwardeRefTestComponent);
 
       type LazyTestComponentProps = React.ComponentPropsWithRef<typeof LazyTestComponent>;
+      type LazyDefaultImportTestComponentProps = React.ComponentPropsWithRef<
+        typeof LazyDefaultImportTestComponent
+      >;
       type LazyForwardeRefTestComponentProps = React.ComponentPropsWithRef<
         typeof LazyForwardeRefTestComponent
       >;
@@ -92,6 +95,9 @@ describe('dynamic', () => {
         ExpectTrue<MatchesProperty<LazyTestComponentProps, 'children'>>,
         ExpectTrue<MatchesProperty<LazyTestComponentProps, 'ref'>>,
         ExpectTrue<MatchesProperty<LazyTestComponentProps, 'customProp'>>,
+        ExpectTrue<MatchesProperty<LazyDefaultImportTestComponentProps, 'children'>>,
+        ExpectTrue<MatchesProperty<LazyDefaultImportTestComponentProps, 'ref'>>,
+        ExpectTrue<MatchesProperty<LazyDefaultImportTestComponentProps, 'customProp'>>,
         ExpectTrue<MatchesProperty<LazyForwardeRefTestComponentProps, 'children'>>,
         ExpectTrue<MatchesProperty<LazyForwardeRefTestComponentProps, 'ref'>>,
         ExpectTrue<MatchesProperty<LazyForwardeRefTestComponentProps, 'customProp'>>

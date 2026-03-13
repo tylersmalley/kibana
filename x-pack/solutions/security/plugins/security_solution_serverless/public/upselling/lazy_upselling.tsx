@@ -10,36 +10,40 @@ import { lazy } from 'react';
 import { withSuspenseUpsell } from '@kbn/security-solution-upselling/helpers';
 
 export const ThreatIntelligencePaywallLazy = withSuspenseUpsell(
-  lazy(() => import('./pages/threat_intelligence_paywall'))
+  lazy(() =>
+    import('./pages/threat_intelligence_paywall.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
 );
 
 export const OsqueryResponseActionsUpsellingSectionLazy = withSuspenseUpsell(
-  lazy(() => import('./pages/osquery_automated_response_actions'))
+  lazy(() =>
+    import('./pages/osquery_automated_response_actions.js').then(({ default: lazyModule }) => ({
+      default: lazyModule.default,
+    }))
+  )
 );
 
 export const EntityAnalyticsUpsellingPageLazy = withSuspenseUpsell(
   lazy(() =>
-    import('@kbn/security-solution-upselling/pages/entity_analytics').then(
-      ({ EntityAnalyticsUpsellingPage }) => ({
-        default: EntityAnalyticsUpsellingPage,
-      })
-    )
+    import('./pages/entity_analytics.js').then(({ EntityAnalyticsUpsellingPage }) => ({
+      default: EntityAnalyticsUpsellingPage,
+    }))
   )
 );
 
 export const EntityAnalyticsUpsellingSectionLazy = withSuspenseUpsell(
   lazy(() =>
-    import('@kbn/security-solution-upselling/sections/entity_analytics').then(
-      ({ EntityAnalyticsUpsellingSection }) => ({
-        default: EntityAnalyticsUpsellingSection,
-      })
-    )
+    import('./sections/entity_analytics.js').then(({ EntityAnalyticsUpsellingSection }) => ({
+      default: EntityAnalyticsUpsellingSection,
+    }))
   )
 );
 
 export const SiemMigrationsStartUpsellSectionLazy = withSuspenseUpsell(
   lazy(() =>
-    import('./sections/siem_migrations/siem_migrations_start').then(
+    import('./sections/siem_migrations/siem_migrations_start.js').then(
       ({ SiemMigrationStartUpsellSection }) => ({ default: SiemMigrationStartUpsellSection })
     )
   )
@@ -47,7 +51,7 @@ export const SiemMigrationsStartUpsellSectionLazy = withSuspenseUpsell(
 
 export const SiemMigrationsTranslatedRulesUpsellPageLazy = withSuspenseUpsell(
   lazy(() =>
-    import('./pages/siem_migrations_translated_rules').then(
+    import('./pages/siem_migrations_translated_rules.js').then(
       ({ SiemMigrationsTranslatedRulesUpsellPage }) => ({
         default: SiemMigrationsTranslatedRulesUpsellPage,
       })
@@ -57,8 +61,10 @@ export const SiemMigrationsTranslatedRulesUpsellPageLazy = withSuspenseUpsell(
 
 export const AttackDiscoveryUpsellingPageLazy = withSuspenseUpsell(
   lazy(() =>
-    import('./pages/attack_discovery').then(({ AttackDiscoveryUpsellingPageServerless }) => ({
-      default: AttackDiscoveryUpsellingPageServerless,
-    }))
+    import('./pages/attack_discovery/index.js').then(
+      ({ AttackDiscoveryUpsellingPageServerless }) => ({
+        default: AttackDiscoveryUpsellingPageServerless,
+      })
+    )
   )
 );
