@@ -5,7 +5,8 @@
  * 2.0.
  */
 import React from 'react';
-import { render, act, fireEvent, waitForElementToBeRemoved, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { __IntlProvider as IntlProvider } from '@kbn/i18n-react';
 
 import { AgentStatusFilter } from './agent_status_filter';
@@ -16,6 +17,11 @@ const mockStorage: Record<any, any> = {};
 jest.mock('../../../../../../hooks/use_core', () => {
   return {
     useStartServices: jest.fn(() => ({
+      notifications: {
+        tours: {
+          isEnabled: jest.fn(() => true),
+        },
+      },
       uiSettings: {
         get: jest.fn(() => false),
       },
@@ -35,8 +41,27 @@ const renderComponent = (props: React.ComponentProps<typeof AgentStatusFilter>) 
   );
 };
 
-// FLAKY: https://github.com/elastic/kibana/issues/200788
-describe.skip('AgentStatusFilter', () => {
+describe('AgentStatusFilter', () => {
+  let user: UserEvent;
+
+  beforeEach(() => {
+    jest.useFakeTimers();
+    user = userEvent.setup({
+      advanceTimers: jest.advanceTimersByTime,
+      pointerEventsCheck: 0,
+    });
+    Object.keys(mockStorage).forEach((key) => {
+      delete mockStorage[key];
+    });
+  });
+
+  afterEach(() => {
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
+    jest.useRealTimers();
+  });
+
   it('Renders all statuses', () => {
     const { getByText } = renderComponent({
       selectedStatus: [],
@@ -54,29 +79,26 @@ describe.skip('AgentStatusFilter', () => {
   });
 
   it('Shows tour and inactive count if first time seeing newly inactive agents', async () => {
-    const { container, getByText, queryByText } = renderComponent({
+    const { getByText } = renderComponent({
       selectedStatus: [],
       onSelectedStatusChange: () => {},
       totalInactiveAgents: 999,
     });
 
+    expect(getByText(PARTIAL_TOUR_TEXT, { exact: false })).toBeVisible();
+
+    const statusFilterButton = screen.getByTestId('agentList.statusFilter');
+
+    await user.click(statusFilterButton);
+
     await act(async () => {
-      expect(getByText(PARTIAL_TOUR_TEXT, { exact: false })).toBeVisible();
-
-      const statusFilterButton = container.querySelector(
-        '[data-test-subj="agentList.statusFilter"]'
-      );
-
-      expect(statusFilterButton).not.toBeNull();
-
-      fireEvent.click(statusFilterButton!);
-
-      await waitForElementToBeRemoved(() => queryByText(PARTIAL_TOUR_TEXT, { exact: false }));
-
-      expect(getByText('999')).toBeInTheDocument();
-
-      expect(mockStorage['fleet.inactiveAgentsTour']).toEqual({ active: false });
+      jest.runOnlyPendingTimers();
     });
+
+    expect(screen.getByTestId('agentList.agentStatusFilterOptions')).toBeInTheDocument();
+    expect(screen.queryByText(PARTIAL_TOUR_TEXT, { exact: false })).not.toBeInTheDocument();
+    expect(getByText('999')).toBeInTheDocument();
+    expect(mockStorage['fleet.inactiveAgentsTour']).toEqual({ active: false });
   });
 
   it('Should not show tour if previously been dismissed', async () => {
@@ -87,29 +109,26 @@ describe.skip('AgentStatusFilter', () => {
       onSelectedStatusChange: () => {},
       totalInactiveAgents: 999,
     });
-    await act(async () => {
-      expect(queryByText(PARTIAL_TOUR_TEXT, { exact: false })).toBeNull();
-    });
+
+    expect(queryByText(PARTIAL_TOUR_TEXT, { exact: false })).toBeNull();
   });
 
   it('Should should show difference between last seen inactive agents and total agents', async () => {
     mockStorage['fleet.lastSeenInactiveAgentsCount'] = '100';
 
-    const { getByText, getByTestId } = renderComponent({
+    const { getByText } = renderComponent({
       selectedStatus: [],
       onSelectedStatusChange: () => {},
       totalInactiveAgents: 999,
     });
 
+    await user.click(screen.getByTestId('agentList.statusFilter'));
+
     await act(async () => {
-      const statusFilterButton = getByTestId('agentList.statusFilter');
-
-      fireEvent.click(statusFilterButton);
-
-      await waitFor(() => {
-        expect(getByTestId('agentList.agentStatusFilterOptions')).toBeInTheDocument();
-        expect(getByText('899')).toBeInTheDocument();
-      });
+      jest.runOnlyPendingTimers();
     });
+
+    expect(screen.getByTestId('agentList.agentStatusFilterOptions')).toBeInTheDocument();
+    expect(getByText('899')).toBeInTheDocument();
   });
 });

@@ -6,12 +6,32 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
+import { waitForEuiToolTipVisible } from '@elastic/eui/lib/test/rtl';
 
 import { Tags } from './tags';
 
-// FLAKY: https://github.com/elastic/kibana/issues/204465
-describe.skip('Tags', () => {
+const TOOLTIP_DELAY_MS = 300;
+
+describe('Tags', () => {
+  let user: UserEvent;
+
+  beforeEach(() => {
+    jest.useFakeTimers();
+    user = userEvent.setup({
+      advanceTimers: jest.advanceTimersByTime,
+      pointerEventsCheck: 0,
+    });
+  });
+
+  afterEach(() => {
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
+    jest.useRealTimers();
+  });
+
   describe('when list is short', () => {
     it('renders a comma-separated list of tags', () => {
       const tags = ['tag1', 'tag2'];
@@ -30,10 +50,11 @@ describe.skip('Tags', () => {
 
       expect(tagsNode).toHaveTextContent('tag1, tag2, tag3 + 2 more');
 
-      fireEvent.mouseEnter(tagsNode);
-      await waitFor(() => {
-        screen.getByTestId('agentTagsTooltip');
+      await user.hover(tagsNode);
+      act(() => {
+        jest.advanceTimersByTime(TOOLTIP_DELAY_MS);
       });
+      await waitForEuiToolTipVisible();
 
       expect(screen.getByTestId('agentTagsTooltip')).toHaveTextContent(
         'tag1, tag2, tag3, tag4, tag5'
@@ -48,10 +69,11 @@ describe.skip('Tags', () => {
 
       expect(tagsNode).toHaveTextContent('tag1, tag2, tag3');
 
-      fireEvent.mouseEnter(tagsNode);
-      await waitFor(() => {
-        screen.getByTestId('agentTagsTooltip');
+      await user.hover(tagsNode);
+      act(() => {
+        jest.advanceTimersByTime(TOOLTIP_DELAY_MS);
       });
+      await waitForEuiToolTipVisible();
 
       expect(screen.getByTestId('agentTagsTooltip')).toHaveTextContent('tag1, tag2, tag3');
     });
