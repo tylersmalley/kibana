@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kibana Privilege Deprecation"
+  short_description: "Help with Kibana Privilege Deprecation tasks"

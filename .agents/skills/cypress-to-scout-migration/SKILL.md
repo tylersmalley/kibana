@@ -36,9 +36,13 @@ A Cypress E2E test should only become a Scout E2E test if it genuinely tests a u
 
 All paths relative to this skill's directory.
 
-## Step 0: Load solution-specific skill `[mandatory]`
+## Step 0: Load solution-specific skill if available
 
-Before starting triage or migration, check the References section for a solution-specific extension skill that matches the Cypress test's location. If one exists, **read it immediately** — it overrides general conventions with solution-specific paths, packages, roles, API services, and templates. All subsequent phases must follow the solution-specific conventions when they conflict with this skill.
+Before starting triage or migration, check whether a solution-specific extension skill exists for
+the Cypress test's location. If one exists, read it immediately because it overrides general
+conventions with solution-specific paths, packages, roles, API services, and templates. If no
+extension skill exists, continue with this skill and capture any reusable solution-specific patterns
+for later extraction.
 
 ## Phase 1: Triage (before touching any code) `[medium freedom]`
 
@@ -246,7 +250,8 @@ After every migration, review what you learned and suggest updating this skill i
 
 - **New Kibana/EUI component interaction pattern** — a component required a non-obvious Playwright approach (e.g., `pressSequentially` for query bars, `dispatchEvent` for unstable popovers, CSS `:has()` for tooltip anchors)
 - **New flakiness pattern** — a Cypress pattern caused flakiness in Scout that isn't already in `references/flakiness-risk-patterns.md`
-- **New API service or page object** — reusable infrastructure warrants documenting in the solution-specific skill
+- **New API service or page object** — reusable infrastructure warrants documenting in an existing
+  solution-specific skill, or creating one if the solution now has enough repeated patterns
 - **New role or auth method** — a convenience login method was added (e.g., `loginAsT1Analyst`)
 - **Lint rule workaround** — a Playwright lint rule required a non-obvious alternative (e.g., `dispatchEvent` instead of `force: true`, `toContainText([...])` instead of `nth()`)
 - **Ownership or architecture insight** — learned where UI code lives, which plugin owns what, or how data flows
@@ -264,6 +269,5 @@ Open only what you need:
 
 ### Solution-specific extensions (Step 0)
 
-Load the matching skill when migrating tests from that solution:
-
-- **Security Solution** (tests in `x-pack/solutions/security/`): `x-pack/solutions/security/plugins/security_solution/.agents/skills/cypress-to-scout-migration/SKILL.md`
+Search for `<solution>/.agents/skills/cypress-to-scout-migration/SKILL.md`. If none exists, keep
+using this general skill.

@@ -1,6 +1,6 @@
 ---
 name: branch-readiness-checks
-description: "Validate branch readiness before push or PR using base-diff and local-change checks."
+description: "Validate branch readiness before push or PR by resolving affected packages, running scoped checks, and summarizing likely CI failures. Use when asked for pre-push or pre-PR validation."
 disable-model-invocation: true
 ---
 
@@ -8,19 +8,17 @@ disable-model-invocation: true
 
 Run focused checks before push/PR.
 
-## Command Timing
+## Helper script
 
-Use bounded polling rather than agent-specific timeout fields.
-For each command, set a `max_wait_ms`, poll every `poll_interval_ms`, and stop when the command completes or the max wait is reached.
-If `max_wait_ms` is exceeded, report a timeout and continue to the next workflow step.
+Use the skill-local helper to resolve branch base, changed files, affected packages, sibling
+`tsconfig.json` files, and downstream `tsconfig.json` dependents:
 
-| Command type | `max_wait_ms` | `poll_interval_ms` |
-|---|---:|---:|
-| `git diff`, `git merge-base` | 15000 | 1000 |
-| `node scripts/check_changes.ts --ref "$BASE"` | 180000 | 2000 |
-| `node scripts/lint_ts_projects.js`, `yarn test:type_check --project` | 120000 | 2000 |
-| `node scripts/generate codeowners`, `node scripts/regenerate_moon_projects.js` | 60000 | 2000 |
-| `yarn test:jest` (per package) | 300000 | 5000 |
+```bash
+node .agents/skills/branch-readiness-checks/scripts/find_affected_packages.mjs --json
+```
+
+The script is the preferred entry point for Step 0 because it turns the repetitive discovery work
+into deterministic output.
 
 ## Workflow
 
@@ -29,19 +27,18 @@ At the end, summarize issues that are likely to fail CI.
 
 ### Step 0: Identify affected packages
 
-Collect changes relative to branch base, including untracked files. Detect the base branch rather than assuming `main`:
+Use the helper script:
 
 ```bash
-BASE=$(git merge-base HEAD main 2>/dev/null || git merge-base HEAD origin/main)
-# Files changed since the branch base (committed + working tree changes).
-git diff --name-only "$BASE"
-# Untracked files.
-git ls-files --others --exclude-standard
+node .agents/skills/branch-readiness-checks/scripts/find_affected_packages.mjs --json
 ```
 
-Combine and deduplicate results. From the changed file paths, identify:
-- The affected packages — walk up from each changed file to the nearest `kibana.jsonc` and read its `id` field for the package ID.
-- The `tsconfig.json` files for those packages (sibling to `kibana.jsonc`).
+It returns:
+
+- `base`
+- changed and untracked files
+- affected packages (`id`, module root, `kibana.jsonc`, sibling `tsconfig.json`)
+- downstream `tsconfig.json` files whose `kbn_references` include an affected package ID
 
 **Prerequisite check**: verify the TS project map exists by running a quick type check on one package. If it fails with `TS Project map missing`, **stop** and ask the user if they'd like you to run `yarn kbn bootstrap`. Once bootstrap completes (or if the user declines), proceed with the remaining steps.
 
@@ -76,16 +73,8 @@ yarn test:type_check --project path/to/tsconfig.json
 
 **Also check downstream dependents** — find packages whose `kbn_references` include any affected
 package ID and type-check those too. This catches cross-package breakage that CI's full
-`tsc -b tsconfig.refs.json` would find.
-
-Use `rg` if available, otherwise fall back to `grep`:
-
-```bash
-# Preferred (rg).
-rg -l '"@kbn/affected-package-id"' --glob 'tsconfig.json' .
-# Fallback (grep).
-grep -rl '"@kbn/affected-package-id"' --include='tsconfig.json' .
-```
+`tsc -b tsconfig.refs.json` would find. Prefer using the helper script's `downstreamTsconfigs`
+output instead of re-discovering them manually.
 
 Deduplicate against already-checked packages. If a package has more than **20** downstream
 tsconfigs, skip the downstream check and warn the user that a full `tsc -b` may be needed.
