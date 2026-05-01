@@ -21,6 +21,21 @@ interface NavigateProps {
   insertTimestamp: boolean;
   disableWelcomePrompt: boolean;
 }
+
+interface KibanaAppReadyState {
+  appId: string;
+  appPath: string;
+  status: 'mounting' | 'ready' | 'not_found' | 'error' | 'unmounted';
+  errorMessage?: string;
+  sequence: number;
+  timestamp: number;
+}
+
+interface BrowserAppReadySnapshot {
+  href: string;
+  readyState?: KibanaAppReadyState;
+}
+
 export class CommonPageObject extends FtrService {
   private readonly log = this.ctx.getService('log');
   private readonly config = this.ctx.getService('config');
@@ -33,6 +48,85 @@ export class CommonPageObject extends FtrService {
 
   private readonly defaultTryTimeout = this.config.get('timeouts.try');
   private readonly defaultFindTimeout = this.config.get('timeouts.find');
+
+  private async getAppReadySnapshot(): Promise<BrowserAppReadySnapshot> {
+    return await this.browser.execute(() => ({
+      href: window.location.href,
+      readyState: (window as Window & { __kbnTestAppReady?: KibanaAppReadyState })
+        .__kbnTestAppReady,
+    }));
+  }
+
+  private isReadyStateForCurrentApp({ href, readyState }: BrowserAppReadySnapshot): boolean {
+    if (!readyState) {
+      return false;
+    }
+
+    const currentUrl = new URL(href);
+    const currentPath = `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`;
+    const appPath = readyState.appPath.startsWith('/')
+      ? readyState.appPath
+      : `/${readyState.appPath}`;
+    const appPathIndex = currentPath.indexOf(appPath);
+
+    if (appPathIndex === -1) {
+      return false;
+    }
+
+    if (appPath.endsWith('/') || appPath.endsWith('#')) {
+      return true;
+    }
+
+    const nextCharacter = currentPath[appPathIndex + appPath.length];
+    return (
+      !nextCharacter || nextCharacter === '/' || nextCharacter === '?' || nextCharacter === '#'
+    );
+  }
+
+  private async waitForKibanaAppReady(): Promise<void> {
+    let isKibanaApp = false;
+
+    await this.retry.tryForTime(this.defaultFindTimeout * 10, async () => {
+      const snapshot = await this.getAppReadySnapshot();
+      const { href, readyState } = snapshot;
+      isKibanaApp = href.includes('/app/');
+
+      if (!isKibanaApp) {
+        return;
+      }
+
+      if (!readyState) {
+        throw new Error(`Kibana app readiness marker has not been published for ${href}`);
+      }
+
+      if (!this.isReadyStateForCurrentApp(snapshot)) {
+        throw new Error(
+          `Kibana app readiness marker is for "${readyState.appPath}", waiting for ${href}`
+        );
+      }
+
+      if (readyState.status === 'error') {
+        throw new Error(
+          `Kibana app "${readyState.appId}" failed to mount: ${
+            readyState.errorMessage ?? 'unknown error'
+          }`
+        );
+      }
+
+      if (readyState.status !== 'ready' && readyState.status !== 'not_found') {
+        throw new Error(`Kibana app "${readyState.appId}" is not ready yet: ${readyState.status}`);
+      }
+    });
+
+    if (!isKibanaApp) {
+      return;
+    }
+
+    await this.testSubjects.existOrFail('globalLoadingIndicator-hidden', {
+      allowHidden: true,
+      timeout: this.defaultFindTimeout * 10,
+    });
+  }
 
   private getUrlWithoutPort(urlStr: string) {
     const url = new URL(urlStr);
@@ -155,6 +249,8 @@ export class CommonPageObject extends FtrService {
           throw new Error(`expected ${actualUrl}.includes(${expectedUrl})`);
         }
       }
+
+      await this.waitForKibanaAppReady();
     });
   }
 
@@ -375,6 +471,8 @@ export class CommonPageObject extends FtrService {
           }
         });
       }
+
+      await this.waitForKibanaAppReady();
     });
   }
 

@@ -17,6 +17,23 @@ export class ToastsService extends FtrService {
   private readonly find = this.ctx.getService('find');
   private readonly config = this.ctx.getService('config');
   private readonly defaultFindTimeout = this.config.get('timeouts.find');
+
+  private async getVisibleTextWhenPopulated(
+    description: string,
+    getText: () => Promise<string>
+  ): Promise<string> {
+    let text = '';
+
+    await this.retry.try(async () => {
+      text = await getText();
+      if (text.length === 0) {
+        throw new Error(`${description} text is not yet rendered`);
+      }
+    });
+
+    return text;
+  }
+
   /**
    * Returns the title and message of a specific error toast.
    * This method is specific to toasts created via `.addError` since they contain
@@ -67,7 +84,9 @@ export class ToastsService extends FtrService {
   public async getTitleAndDismiss(): Promise<string> {
     const toast = await this.find.byCssSelector('.euiToast', 6 * this.defaultFindTimeout);
     await toast.moveMouseTo();
-    const title = await (await this.testSubjects.find('euiToastHeader__title')).getVisibleText();
+    const title = await this.getVisibleTextWhenPopulated('Toast title', async () => {
+      return await (await this.testSubjects.find('euiToastHeader__title')).getVisibleText();
+    });
 
     await this.testSubjects.click('toastCloseButton');
     return title;
@@ -117,13 +136,63 @@ export class ToastsService extends FtrService {
   public async getTitleByIndex(index: number): Promise<string> {
     const resultToast = await this.getElementByIndex(index);
     const titleElement = await this.testSubjects.findDescendant('euiToastHeader', resultToast);
-    const title: string = await titleElement.getVisibleText();
-    return title;
+    return await this.getVisibleTextWhenPopulated(`Toast ${index} title`, async () => {
+      return await titleElement.getVisibleText();
+    });
   }
 
   public async getContentByIndex(index: number): Promise<string> {
     const elem = await this.getElementByIndex(index);
-    return await elem.getVisibleText();
+    return await this.getVisibleTextWhenPopulated(`Toast ${index} content`, async () => {
+      return await elem.getVisibleText();
+    });
+  }
+
+  public async waitForTitleByIndex(index: number, expectedTitle: string | RegExp): Promise<string> {
+    let title = '';
+
+    await this.retry.try(async () => {
+      title = await this.getTitleByIndex(index);
+      let matches: boolean;
+      if (typeof expectedTitle === 'string') {
+        matches = title.includes(expectedTitle);
+      } else {
+        expectedTitle.lastIndex = 0;
+        matches = expectedTitle.test(title);
+      }
+
+      if (!matches) {
+        throw new Error(`Expected toast ${index} title [${title}] to match [${expectedTitle}]`);
+      }
+    });
+
+    return title;
+  }
+
+  public async waitForContentByIndex(
+    index: number,
+    expectedContent: string | RegExp
+  ): Promise<string> {
+    let content = '';
+
+    await this.retry.try(async () => {
+      content = await this.getContentByIndex(index);
+      let matches: boolean;
+      if (typeof expectedContent === 'string') {
+        matches = content.includes(expectedContent);
+      } else {
+        expectedContent.lastIndex = 0;
+        matches = expectedContent.test(content);
+      }
+
+      if (!matches) {
+        throw new Error(
+          `Expected toast ${index} content [${content}] to match [${expectedContent}]`
+        );
+      }
+    });
+
+    return content;
   }
 
   public async getAll(): Promise<WebElementWrapper[]> {

@@ -30,6 +30,7 @@ describe('AppContainer', () => {
   beforeEach(() => {
     setAppLeaveHandler.mockClear();
     setIsMounting.mockClear();
+    delete window.__kbnTestAppReady;
   });
 
   const flushPromises = async () => {
@@ -40,6 +41,21 @@ describe('AppContainer', () => {
         reject(error);
       }
     });
+  };
+
+  const flushAppReadyState = async () => {
+    await flushPromises();
+    await new Promise<void>((resolve) => {
+      if (typeof window.requestAnimationFrame !== 'function') {
+        setTimeout(resolve, 0);
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => resolve());
+      });
+    });
+    await flushPromises();
   };
 
   const createResolver = (): [Promise<void>, () => void] => {
@@ -146,7 +162,7 @@ describe('AppContainer', () => {
 
     await act(async () => {
       resolvePromise();
-      await flushPromises();
+      await flushAppReadyState();
       wrapper.update();
     });
 
@@ -179,12 +195,81 @@ describe('AppContainer', () => {
 
     await act(async () => {
       resolvePromise();
-      await flushPromises();
+      await flushAppReadyState();
       wrapper.update();
     });
 
     expect(setIsMounting).toHaveBeenCalledTimes(2);
     expect(setIsMounting).toHaveBeenLastCalledWith(false);
+  });
+
+  it('should publish test readiness state around mounting', async () => {
+    const [waitPromise, resolvePromise] = createResolver();
+    const mounter = createMounter(waitPromise);
+
+    const wrapper = mountWithIntl(
+      <AppContainer
+        appPath={`/app/${appId}`}
+        appId={appId}
+        appStatus={AppStatus.accessible}
+        mounter={mounter}
+        setAppLeaveHandler={setAppLeaveHandler}
+        setAppActionMenu={setAppActionMenu}
+        setIsMounting={setIsMounting}
+        createScopedHistory={(appPath: string) =>
+          new ScopedHistory(createMemoryHistory({ initialEntries: [appPath] }), appPath)
+        }
+        theme$={theme$}
+      />
+    );
+
+    expect(window.__kbnTestAppReady).toEqual(
+      expect.objectContaining({
+        appId,
+        appPath: `/app/${appId}`,
+        status: 'mounting',
+      })
+    );
+
+    await act(async () => {
+      resolvePromise();
+      await flushPromises();
+      wrapper.update();
+    });
+
+    expect(window.__kbnTestAppReady).toEqual(
+      expect.objectContaining({
+        appId,
+        appPath: `/app/${appId}`,
+        status: 'ready',
+      })
+    );
+  });
+
+  it('should publish test readiness state for inaccessible apps', () => {
+    mountWithIntl(
+      <AppContainer
+        appPath={`/app/${appId}`}
+        appId={appId}
+        appStatus={AppStatus.inaccessible}
+        mounter={undefined}
+        setAppLeaveHandler={setAppLeaveHandler}
+        setAppActionMenu={setAppActionMenu}
+        setIsMounting={setIsMounting}
+        createScopedHistory={(appPath: string) =>
+          new ScopedHistory(createMemoryHistory({ initialEntries: [appPath] }), appPath)
+        }
+        theme$={theme$}
+      />
+    );
+
+    expect(window.__kbnTestAppReady).toEqual(
+      expect.objectContaining({
+        appId,
+        appPath: `/app/${appId}`,
+        status: 'not_found',
+      })
+    );
   });
 
   it('should show plain spinner', async () => {
@@ -259,5 +344,13 @@ describe('AppContainer', () => {
 
     expect(setIsMounting).toHaveBeenCalledTimes(2);
     expect(setIsMounting).toHaveBeenLastCalledWith(false);
+    expect(window.__kbnTestAppReady).toEqual(
+      expect.objectContaining({
+        appId,
+        appPath: `/app/${appId}`,
+        status: 'error',
+        errorMessage: 'Mounting failed!',
+      })
+    );
   });
 });

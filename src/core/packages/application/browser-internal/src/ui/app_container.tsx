@@ -27,6 +27,21 @@ import { ThrowIfError } from '@kbn/shared-ux-error-boundary';
 import type { Mounter } from '../types';
 import { AppNotFound } from './app_not_found_screen';
 
+interface TestAppReadyState {
+  appId: string;
+  appPath: string;
+  status: 'mounting' | 'ready' | 'not_found' | 'error' | 'unmounted';
+  errorMessage?: string;
+  sequence: number;
+  timestamp: number;
+}
+
+declare global {
+  interface Window {
+    __kbnTestAppReady?: TestAppReadyState;
+  }
+}
+
 interface Props {
   /** Path application is mounted on without the global basePath */
   appPath: string;
@@ -40,6 +55,17 @@ interface Props {
   setIsMounting: (isMounting: boolean) => void;
   showPlainSpinner?: boolean;
 }
+
+const setTestAppReadyState = (
+  nextState: Omit<TestAppReadyState, 'sequence' | 'timestamp'>
+): void => {
+  const sequence = (window.__kbnTestAppReady?.sequence ?? 0) + 1;
+  window.__kbnTestAppReady = {
+    ...nextState,
+    sequence,
+    timestamp: Date.now(),
+  };
+};
 
 export const AppContainer: FC<Props> = ({
   mounter,
@@ -60,7 +86,8 @@ export const AppContainer: FC<Props> = ({
   const unmountRef: MutableRefObject<AppUnmount | null> = useRef<AppUnmount>(null);
 
   useLayoutEffect(() => {
-    const unmount = () => {
+    let active = true;
+    const unmountCurrentApp = () => {
       if (unmountRef.current) {
         unmountRef.current();
         unmountRef.current = null;
@@ -68,17 +95,20 @@ export const AppContainer: FC<Props> = ({
     };
 
     if (!mounter || appStatus !== AppStatus.accessible) {
+      setTestAppReadyState({ appId, appPath, status: 'not_found' });
       return setAppNotFound(true);
     }
     setAppNotFound(false);
 
     setIsMounting(true);
+    setTestAppReadyState({ appId, appPath, status: 'mounting' });
     if (mounter.unmountBeforeMounting) {
-      unmount();
+      unmountCurrentApp();
     }
 
     const mount = async () => {
       setShowSpinner(true);
+      let mountFailed = false;
       try {
         unmountRef.current =
           (await mounter.mount({
@@ -90,6 +120,13 @@ export const AppContainer: FC<Props> = ({
             setHeaderActionMenu: (menuMount) => setAppActionMenu(appId, menuMount),
           })) || null;
       } catch (e) {
+        mountFailed = true;
+        setTestAppReadyState({
+          appId,
+          appPath,
+          status: 'error',
+          errorMessage: e instanceof Error ? e.message : String(e),
+        });
         setError(e);
         // eslint-disable-next-line no-console
         console.error(e);
@@ -98,12 +135,21 @@ export const AppContainer: FC<Props> = ({
           setShowSpinner(false);
         }
         setIsMounting(false);
+        if (active && elementRef.current && !mountFailed) {
+          setTestAppReadyState({ appId, appPath, status: 'ready' });
+        }
       }
     };
 
     mount();
 
-    return unmount;
+    return () => {
+      active = false;
+      unmountCurrentApp();
+      if (window.__kbnTestAppReady?.status !== 'error') {
+        setTestAppReadyState({ appId, appPath, status: 'unmounted' });
+      }
+    };
   }, [
     appId,
     appStatus,
