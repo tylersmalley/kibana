@@ -7,7 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { retryForSuccess } from './retry_for_success';
+import { retryForSuccess, DEFAULT_RETRY_DELAY } from './retry_for_success';
 import { ToolingLog, ToolingLogCollectingWriter } from '@kbn/tooling-log';
 import * as testJestHelpers from '@kbn/test-jest-helpers';
 
@@ -34,10 +34,10 @@ describe('Retry for success', () => {
 
     expect(writer.messages).toMatchInlineSnapshot(`
       Array [
-        " [2mdebg[22m --- retryForSuccess unit test error: whoops, could not find anything - Attempt #: 1",
-        " [2mdebg[22m handled failure",
-        " [2mdebg[22m --- retryForSuccess unit test failed again with the same message... - Attempt #: 2",
-        " [2mdebg[22m handled failure",
+        " debg --- retryForSuccess unit test error: whoops, could not find anything - Attempt #: 1",
+        " debg handled failure",
+        " debg --- retryForSuccess unit test failed again with the same message... - Attempt #: 2",
+        " debg handled failure",
       ]
     `);
   });
@@ -61,10 +61,10 @@ describe('Retry for success', () => {
 
     expect(writer.messages).toMatchInlineSnapshot(`
       Array [
-        " [2mdebg[22m --- retryForSuccess unit test error: whoops, could not find anything",
-        " [2mdebg[22m handled failure",
-        " [2mdebg[22m --- retryForSuccess unit test failed again with the same message...",
-        " [2mdebg[22m handled failure",
+        " debg --- retryForSuccess unit test error: whoops, could not find anything",
+        " debg handled failure",
+        " debg --- retryForSuccess unit test failed again with the same message...",
+        " debg handled failure",
       ]
     `);
   });
@@ -82,6 +82,48 @@ describe('Retry for success', () => {
     });
 
     expect(delaySpy).toHaveBeenCalledWith(initialDelay);
+    delaySpy.mockRestore();
+  });
+
+  it('should use DEFAULT_RETRY_DELAY when no retryDelay is provided', async () => {
+    const delaySpy = jest.spyOn(testJestHelpers, 'delay').mockResolvedValue(undefined);
+    const log = new ToolingLog();
+    let count = 0;
+    const block = async () => {
+      if (++count < 3) throw new Error('not yet');
+    };
+
+    await retryForSuccess(log, {
+      block,
+      timeout: 10000,
+      methodName: 'retryForSuccess default delay test',
+    });
+
+    const delayCallArgs = delaySpy.mock.calls.map(([ms]) => ms);
+    expect(delayCallArgs[0]).toBe(DEFAULT_RETRY_DELAY);
+    expect(delayCallArgs[1]).toBe(DEFAULT_RETRY_DELAY);
+    delaySpy.mockRestore();
+  });
+
+  it('should use a flat delay when an explicit retryDelay is provided', async () => {
+    const delaySpy = jest.spyOn(testJestHelpers, 'delay').mockResolvedValue(undefined);
+    const log = new ToolingLog();
+    let count = 0;
+    const flatDelay = 250;
+    const block = async () => {
+      if (++count < 3) throw new Error('not yet');
+    };
+
+    await retryForSuccess(log, {
+      block,
+      timeout: 10000,
+      methodName: 'retryForSuccess flat delay test',
+      retryDelay: flatDelay,
+    });
+
+    const delayCallArgs = delaySpy.mock.calls.map(([ms]) => ms);
+    expect(delayCallArgs[0]).toBe(flatDelay);
+    expect(delayCallArgs[1]).toBe(flatDelay);
     delaySpy.mockRestore();
   });
 });
