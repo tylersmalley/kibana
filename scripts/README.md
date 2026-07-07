@@ -53,7 +53,7 @@ node scripts/es_archiver.js load <archive> [--es-url=http://username:password@lo
 
 That will load the specified archive located in the archive directory specified by the default functional config file, located in `src/platform/test/functional/config.base.js`. To load archives from other function config files you can pass `--config path/to/config.js`.
 
-*Note:* The `--es-url` and `--kibana-url` options may or may not be neccessary depending on your current Kibana configuration settings, and their values
+*Note:* The `--es-url` and `--kibana-url` options may or may not be necessary depending on your current Kibana configuration settings, and their values
 may also change based on those settings (for example if you are not running with security you will not need the `username:password` portion).
 
 #### Saving data
