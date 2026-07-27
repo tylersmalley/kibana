@@ -158,6 +158,17 @@ describe('agent_images', () => {
       expect(config.diskSizeGb).toBe(200);
     });
 
+    it('returns spot config for custom machine queue', () => {
+      const config = expandAgentQueue('n2-custom-6-13056-spot');
+
+      expect(config).toEqual(
+        expect.objectContaining({
+          machineType: 'n2-custom-6-13056',
+          preemptible: true,
+        })
+      );
+    });
+
     it('returns base config for queue without spot or virt suffix', () => {
       const config = expandAgentQueue('c2-8');
 
