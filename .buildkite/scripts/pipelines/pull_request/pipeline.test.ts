@@ -109,6 +109,7 @@ describe('pull_request pipeline generation', () => {
 
     const parsed = yamlLoad(output) as Record<string, unknown>;
     expect(parsed).toEqual({ steps: [] });
+    expect(output).not.toContain('Store Cache for build');
     expect(mockRunPreBuild).not.toHaveBeenCalled();
   });
 
@@ -127,6 +128,7 @@ describe('pull_request pipeline generation', () => {
 
     const parsed = yamlLoad(output) as Record<string, unknown>;
     expect(parsed).toHaveProperty('steps');
+    expect(output).toContain('Store Cache for build');
     expect(output).toContain('renovate.sh');
   });
 
@@ -152,6 +154,7 @@ describe('pull_request pipeline generation', () => {
     expect(parsed).toHaveProperty('steps');
     const steps = parsed.steps as unknown[];
     expect(steps.length).toBeGreaterThan(0);
+    expect(output).toContain('Store Cache for build');
     expect(output).toContain('Build Kibana Distribution');
     expect(output).toContain('post_build.sh');
   });
@@ -291,6 +294,7 @@ describe('pull_request pipeline generation', () => {
 
     const parsed = yamlLoad(output) as Record<string, unknown>;
     expect(parsed).toEqual({ steps: [] });
+    expect(output).not.toContain('Store Cache for build');
     expect(mockRunPreBuild).not.toHaveBeenCalled();
     expect(mockAreChangesSkippable).not.toHaveBeenCalled();
   });

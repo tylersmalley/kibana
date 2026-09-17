@@ -136,9 +136,13 @@ const isStorybookBuildAffected = async (): Promise<boolean> => {
       doAnyChangesMatch(paths, suiteRelevantChanges);
 
     pipeline.push(getAgentImageConfig({ returnYaml: true }));
+    const storeMoonCacheStep = getPipeline(
+      '.buildkite/pipelines/pull_request/store_moon_cache.yml'
+    );
 
     if (await doAllChangesMatch(/^renovate\.json$/)) {
       pipeline.push(getPipeline('.buildkite/pipelines/pull_request/renovate.yml', false));
+      pipeline.push(storeMoonCacheStep);
       console.warn('Isolated changes to renovate.json. Skipping main PR pipeline.');
       emitPipeline(pipeline);
       return;
@@ -146,6 +150,7 @@ const isStorybookBuildAffected = async (): Promise<boolean> => {
 
     await runPreBuild();
     pipeline.push(getPipeline('.buildkite/pipelines/pull_request/base.yml', false));
+    pipeline.push(storeMoonCacheStep);
     pipeline.push(getPipeline('.buildkite/pipelines/pull_request/local_check.yml', {}));
 
     // Gated together: check_api_contracts depends_on check_oas_snapshot.
